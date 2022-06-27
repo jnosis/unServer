@@ -1,21 +1,6 @@
-import { Application, oakCors } from '../deps.ts';
-import router from './router/router.ts';
+import { opine, opineCors } from '../deps.ts';
 
-const app = new Application();
+const app = opine();
+app.use(opineCors());
 
-app.use(oakCors());
-
-app.use(router.routes());
-
-app.use(async (context, next) => {
-  try {
-    await next();
-  } catch (error) {
-    context.response.status = error.status;
-    const { message = 'unknown error', status = 500, stack = null } = error;
-    context.response.body = { message, status, stack };
-    context.response.type = 'json';
-  }
-});
-
-await app.listen({ port: 8080 });
+app.listen({ port: 3000 });
