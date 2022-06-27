@@ -1,5 +1,5 @@
-import { config } from './config.ts';
 import { MongoClient } from '../deps.ts';
+import { config } from './config.ts';
 
 class Database {
   public client: MongoClient;

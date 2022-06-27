@@ -1,6 +1,6 @@
 import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
-import { Config, DatabaseOptions, CloudinaryOptions } from './types.ts';
 import { envConfig } from '../deps.ts';
+import { Config, DatabaseOptions, CloudinaryOptions } from './types.ts';
 
 envConfig();
 
