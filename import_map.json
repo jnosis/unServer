@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "dotenv": "https://deno.land/std@0.145.0/dotenv/mod.ts",
+    "dotenv/": "https://deno.land/std@0.145.0/dotenv/",
+    "opine": "https://deno.land/x/opine@2.2.0/mod.ts",
+    "cors": "https://deno.land/x/cors@v1.2.2/mod.ts",
+    "mongo": "https://deno.land/x/mongo@v0.30.1/mod.ts"
+  }
+}

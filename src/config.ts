@@ -1,4 +1,4 @@
-import 'https://deno.land/std@0.145.0/dotenv/load.ts';
+import 'dotenv/load.ts';
 import { envConfig } from '../deps.ts';
 import { Config, DatabaseOptions } from './types.ts';
 

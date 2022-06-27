@@ -1,13 +1,5 @@
-export { config as envConfig } from 'https://deno.land/std@0.145.0/dotenv/mod.ts';
-export { opine, Router } from 'https://deno.land/x/opine@2.2.0/mod.ts';
-export type {
-  Handler,
-  OpineRequest,
-  OpineResponse,
-} from 'https://deno.land/x/opine@2.2.0/mod.ts';
-export { opineCors } from 'https://deno.land/x/cors@v1.2.2/mod.ts';
-export {
-  Bson,
-  MongoClient,
-  type ObjectId,
-} from 'https://deno.land/x/mongo@v0.30.1/mod.ts';
+export { config as envConfig } from 'dotenv';
+export { opine, Router } from 'opine';
+export type { Handler, OpineRequest, OpineResponse } from 'opine';
+export { opineCors } from 'cors';
+export { Bson, MongoClient, type ObjectId } from 'mongo';

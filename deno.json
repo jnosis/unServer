@@ -16,5 +16,6 @@
       "singleQuote": true,
       "proseWrap": "preserve"
     }
-  }
+  },
+  "importMap": "./import_map.json"
 }
