@@ -1,4 +1,4 @@
-export { config as envConfig } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
+export { config as envConfig } from 'https://deno.land/std@0.145.0/dotenv/mod.ts';
 export { opine, Router } from 'https://deno.land/x/opine@2.2.0/mod.ts';
 export type {
   Handler,

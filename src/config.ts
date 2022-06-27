@@ -1,4 +1,4 @@
-import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
+import 'https://deno.land/std@0.145.0/dotenv/load.ts';
 import { envConfig } from '../deps.ts';
 import { Config, DatabaseOptions, CloudinaryOptions } from './types.ts';
 
