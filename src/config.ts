@@ -4,14 +4,22 @@ import { Config, DatabaseOptions, CloudinaryOptions } from './types.ts';
 
 envConfig();
 
+function required(key: string, defaultValue?: string): string {
+  const value = Deno.env.get(key) || defaultValue;
+  if (value == null) {
+    throw new Error(`Key ${key} is undefined`);
+  }
+  return value;
+}
+
 const database: DatabaseOptions = {
-  name: Deno.env.get('DATABASE_NAME')!,
-  host: Deno.env.get('DATABASE_HOST')!,
+  name: required('DATABASE_NAME')!,
+  host: required('DATABASE_HOST')!,
 };
 
 const cloudinary: CloudinaryOptions = {
-  uploadPreset: Deno.env.get('CLOUDINARY_UPLOAD_PRESET')!,
-  cloudId: Deno.env.get('CLOUDINARY_CLOUD_ID')!,
+  uploadPreset: required('CLOUDINARY_UPLOAD_PRESET')!,
+  cloudId: required('CLOUDINARY_CLOUD_ID')!,
 };
 
 export const config: Config = {
