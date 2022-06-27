@@ -5,14 +5,8 @@ export type DatabaseOptions = {
   host: string;
 };
 
-export type CloudinaryOptions = {
-  uploadPreset: string;
-  cloudId: string;
-};
-
 export type Config = {
   database: DatabaseOptions;
-  cloudinary: CloudinaryOptions;
 };
 
 export interface IWorkController {
