@@ -1,3 +1,5 @@
+import { Handler } from '../deps.ts';
+
 export type DatabaseOptions = {
   name: string;
   host: string;
@@ -12,6 +14,14 @@ export type Config = {
   database: DatabaseOptions;
   cloudinary: CloudinaryOptions;
 };
+
+export interface IWorkController {
+  getAll: Handler;
+  getByTitle: Handler;
+  add: Handler;
+  update: Handler;
+  delete: Handler;
+}
 
 export type Repo = {
   url: string;
