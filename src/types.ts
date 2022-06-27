@@ -1,22 +1,14 @@
-import { firebase } from '../deps.ts';
+export type DatabaseOptions = {
+  name: string;
+  host: string;
+};
 
-export interface FirebaseOptions {
-  apiKey?: string;
-  authDomain?: string;
-  databaseURL?: string;
-  projectId?: string;
-  storageBucket?: string;
-  messagingSenderId?: string;
-  appId?: string;
-  measurementId?: string;
-}
-
-export interface CloudinaryOptions {
+export type CloudinaryOptions = {
   uploadPreset: string;
   cloudId: string;
-}
+};
 
-export interface Config {
-  firebase: FirebaseOptions;
+export type Config = {
+  database: DatabaseOptions;
   cloudinary: CloudinaryOptions;
-}
+};
