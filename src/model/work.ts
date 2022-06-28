@@ -31,7 +31,7 @@ export async function create(work: WorkInputData) {
 }
 
 export async function update(title: string, work: WorkInputData) {
-  return await Work.updateOne({ title }, work).then(
+  return await Work.updateOne({ title }, { $set: work }).then(
     ({ upsertedId }) =>
       upsertedId && mapOptionalData({ ...work, _id: upsertedId })
   );

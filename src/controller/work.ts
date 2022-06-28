@@ -1,5 +1,5 @@
 import { OpineRequest, OpineResponse } from '../../deps.ts';
-import { Model, WorkData, IWorkController } from '../types.ts';
+import { Model, IWorkController, WorkInputData } from '../types.ts';
 
 export class WorkController implements IWorkController {
   constructor(private workRepository: Model) {
@@ -25,14 +25,14 @@ export class WorkController implements IWorkController {
   };
 
   add = async (req: OpineRequest, res: OpineResponse) => {
-    const body: WorkData = req.body;
+    const body: WorkInputData = req.body;
     const work = await this.workRepository.create(body);
     res.setStatus(201).json(work);
   };
 
   update = async (req: OpineRequest, res: OpineResponse) => {
     const title = req.params.id;
-    const body: WorkData = req.body;
+    const body: WorkInputData = req.body;
     const work = await this.workRepository.getByTitle(title);
 
     if (!work) {
