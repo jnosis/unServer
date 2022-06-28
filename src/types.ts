@@ -30,7 +30,7 @@ export type FileData = {
 };
 
 export type WorkData = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   techs: Techs;
