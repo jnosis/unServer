@@ -1,5 +1,5 @@
 import { type ObjectId } from '../../deps.ts';
-import { WorkData, FileData, Repo, Techs } from './../types.ts';
+import { WorkData, FileData, Repo, Techs, WorkInputData } from './../types.ts';
 import db from '../db.ts';
 
 interface WorkSchema {
@@ -24,13 +24,13 @@ export async function getByTitle(title: string) {
   return await Work.findOne({ title }).then(mapOptionalData);
 }
 
-export async function create(work: WorkData) {
+export async function create(work: WorkInputData) {
   return await Work.insertOne(work).then((insertedId) =>
     mapOptionalData({ ...work, _id: insertedId })
   );
 }
 
-export async function update(title: string, work: WorkData) {
+export async function update(title: string, work: WorkInputData) {
   return await Work.updateOne({ title }, work).then(
     ({ upsertedId }) =>
       upsertedId && mapOptionalData({ ...work, _id: upsertedId })

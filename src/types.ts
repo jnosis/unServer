@@ -39,5 +39,14 @@ export type WorkData = {
   thumbnail: FileData;
 };
 
+export type WorkInputData = {
+  title: string;
+  description: string;
+  techs: Techs;
+  repo: Repo;
+  projectURL?: string;
+  thumbnail: FileData;
+};
+
 import * as model from './model/work.ts';
 export type Model = typeof model;
