@@ -55,7 +55,7 @@ export type Model = typeof model;
 export type Err = {
   status: number;
   method: string;
-  path: string;
+  baseUrl: string;
   param: string;
   message: string;
 };
