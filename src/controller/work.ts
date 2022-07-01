@@ -1,5 +1,6 @@
 import { OpineRequest, OpineResponse } from '../../deps.ts';
 import { Model, IWorkController, WorkInputData } from '../types.ts';
+import { throwError } from './../middleware/errorHandler.ts';
 
 export class WorkController implements IWorkController {
   constructor(private workRepository: Model) {
@@ -16,9 +17,13 @@ export class WorkController implements IWorkController {
     const work = await this.workRepository.getByTitle(title);
 
     if (!work) {
-      return res
-        .setStatus(404)
-        .json({ message: `Work title(${title}) not found` });
+      throwError({
+        status: 404,
+        method: 'GET',
+        path: 'works',
+        param: `${title}`,
+        message: `Work title(${title}) not found`,
+      });
     }
 
     return res.setStatus(200).json(work);
@@ -36,12 +41,22 @@ export class WorkController implements IWorkController {
     const work = await this.workRepository.getByTitle(title);
 
     if (!work) {
-      return res
-        .setStatus(404)
-        .json({ message: `Work title(${title}) not found` });
+      throwError({
+        status: 404,
+        method: 'PUT',
+        path: 'works',
+        param: `${title}`,
+        message: `Work title(${title}) not found`,
+      });
     }
     if (title !== body.title) {
-      return res.setStatus(403).json({ message: `Update access forbidden` });
+      throwError({
+        status: 404,
+        method: 'PUT',
+        path: 'works',
+        param: `${title}`,
+        message: `Update access forbidden`,
+      });
     }
 
     const updated = await this.workRepository.update(title, body);
@@ -53,9 +68,13 @@ export class WorkController implements IWorkController {
     const work = await this.workRepository.getByTitle(title);
 
     if (!work) {
-      return res
-        .setStatus(404)
-        .json({ message: `Work title(${title}) not found` });
+      throwError({
+        status: 404,
+        method: 'DELETE',
+        path: 'works',
+        param: `${title}`,
+        message: `Work title(${title}) not found`,
+      });
     }
 
     await this.workRepository.remove(title);
