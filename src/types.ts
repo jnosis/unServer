@@ -52,11 +52,9 @@ export type WorkInputData = {
 import * as model from './model/work.ts';
 export type Model = typeof model;
 
-type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
-
 export type Err = {
   status: number;
-  method: Method;
+  method: string;
   path: string;
   param: string;
   message: string;

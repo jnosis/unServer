@@ -19,7 +19,7 @@ export class WorkController implements IWorkController {
     if (!work) {
       throwError({
         status: 404,
-        method: 'GET',
+        method: req.method,
         path: 'works',
         param: `${title}`,
         message: `Work title(${title}) not found`,
@@ -43,7 +43,7 @@ export class WorkController implements IWorkController {
     if (!work) {
       throwError({
         status: 404,
-        method: 'PUT',
+        method: req.method,
         path: 'works',
         param: `${title}`,
         message: `Work title(${title}) not found`,
@@ -52,7 +52,7 @@ export class WorkController implements IWorkController {
     if (title !== body.title) {
       throwError({
         status: 404,
-        method: 'PUT',
+        method: req.method,
         path: 'works',
         param: `${title}`,
         message: `Update access forbidden`,
@@ -70,7 +70,7 @@ export class WorkController implements IWorkController {
     if (!work) {
       throwError({
         status: 404,
-        method: 'DELETE',
+        method: req.method,
         path: 'works',
         param: `${title}`,
         message: `Work title(${title}) not found`,
