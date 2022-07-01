@@ -17,5 +17,8 @@
       "proseWrap": "preserve"
     }
   },
-  "importMap": "./import_map.json"
+  "importMap": "./import_map.json",
+  "tasks": {
+    "start": "deno run --allow-net --allow-env --allow-read --watch ./src/app.ts"
+  }
 }
