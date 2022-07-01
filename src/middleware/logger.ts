@@ -4,7 +4,7 @@ await setup({
   handlers: {
     functionFmt: new handlers.ConsoleHandler('DEBUG', {
       formatter: (logRecord) => {
-        const time = new Date().toLocaleString('en', {
+        const time = logRecord.datetime.toLocaleString('en', {
           hour12: false,
           timeZone: 'Asia/Seoul',
           timeZoneName: 'short',
