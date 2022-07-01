@@ -1,6 +1,7 @@
 import { OpineRequest, OpineResponse } from '../../deps.ts';
 import { Model, IWorkController, WorkInputData } from '../types.ts';
-import { throwError } from './../middleware/errorHandler.ts';
+import log from './../middleware/logger.ts';
+import { throwError } from './../middleware/error_handler.ts';
 
 export class WorkController implements IWorkController {
   constructor(private workRepository: Model) {
@@ -26,6 +27,7 @@ export class WorkController implements IWorkController {
       });
     }
 
+    log.debug(`${req.method} /works/${title} 200 }`);
     return res.setStatus(200).json(work);
   };
 

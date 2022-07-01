@@ -3,7 +3,7 @@ import * as workRepository from './model/work.ts';
 import { WorkController } from './controller/work.ts';
 import workRouter from './router/work.ts';
 import log from './middleware/logger.ts';
-import { errorHandler } from './middleware/errorHandler.ts';
+import { errorHandler } from './middleware/error_handler.ts';
 import config from './config.ts';
 
 const { cors } = config;
