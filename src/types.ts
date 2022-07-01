@@ -1,4 +1,4 @@
-import { Handler } from '../deps.ts';
+import { Handler, CorsOptions } from '../deps.ts';
 
 export type DatabaseOptions = {
   name: string;
@@ -6,6 +6,7 @@ export type DatabaseOptions = {
 };
 
 export type Config = {
+  cors: CorsOptions;
   database: DatabaseOptions;
 };
 

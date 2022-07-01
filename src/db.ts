@@ -1,5 +1,7 @@
 import { MongoClient } from '../deps.ts';
-import { config } from './config.ts';
+import config from './config.ts';
+
+const { database } = config;
 
 class Database {
   public client: MongoClient;
@@ -21,7 +23,7 @@ class Database {
   }
 }
 
-const db = new Database(config.database.name, config.database.host);
+const db = new Database(database.name, database.host);
 try {
   await db.connect();
 } catch (error) {
