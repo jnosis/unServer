@@ -17,6 +17,10 @@ const corsOptions = {
 app.use(json());
 app.use(opineCors(corsOptions));
 
+app.get('/', (_req, res) => {
+  res.send('Welcome to unServer');
+});
+
 app.use('/works', workRouter(new WorkController(workRepository)));
 
 app.listen({ port: 3000 });
