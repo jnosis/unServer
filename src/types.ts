@@ -10,6 +10,21 @@ export type Config = {
   database: DatabaseOptions;
 };
 
+export interface IUserController {
+  signup: Handler;
+  login: Handler;
+  logout: Handler;
+  me: Handler;
+}
+
+export type UserData = {
+  id: string;
+  username: string;
+  password: string;
+  name: string;
+  email: string;
+};
+
 export interface IWorkController {
   getAll: Handler;
   getByTitle: Handler;
@@ -49,8 +64,11 @@ export type WorkInputData = {
   thumbnail: FileData;
 };
 
-import * as model from './model/work.ts';
-export type Model = typeof model;
+import * as userModel from './model/auth.ts';
+export type UserModel = typeof userModel;
+
+import * as workModel from './model/work.ts';
+export type WorkModel = typeof workModel;
 
 export type Err = {
   status: number;

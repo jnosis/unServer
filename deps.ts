@@ -9,4 +9,4 @@ export type {
 } from 'opine';
 export { opineCors } from 'cors';
 export type { CorsOptions } from 'cors';
-export { Bson, MongoClient, type ObjectId } from 'mongo';
+export { Bson, MongoClient, ObjectId } from 'mongo';

@@ -1,11 +1,11 @@
 import { OpineRequest, OpineResponse } from '../../deps.ts';
-import { Model, IWorkController, WorkInputData } from '../types.ts';
+import { WorkModel, IWorkController, WorkInputData } from '../types.ts';
 import log from './../middleware/logger.ts';
 import { throwError } from './../middleware/error_handler.ts';
 import { convertToMessage } from './../util/message.ts';
 
 export class WorkController implements IWorkController {
-  constructor(private workRepository: Model) {
+  constructor(private workRepository: WorkModel) {
     this.workRepository = workRepository;
   }
 
