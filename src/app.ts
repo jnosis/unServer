@@ -2,6 +2,7 @@ import { opine, json, opineCors } from '../deps.ts';
 import * as workRepository from './model/work.ts';
 import { WorkController } from './controller/work.ts';
 import workRouter from './router/work.ts';
+import log from './middleware/logger.ts';
 import { errorHandler } from './middleware/errorHandler.ts';
 import config from './config.ts';
 
@@ -27,5 +28,5 @@ app.use('/works', workRouter(new WorkController(workRepository)));
 app.use(errorHandler);
 
 app.listen({ port: 3000 }, () => {
-  console.log('Server started');
+  log.info(`Server is started...`);
 });

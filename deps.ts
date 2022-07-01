@@ -1,4 +1,5 @@
 export { config as envConfig } from 'dotenv';
+export { getLogger, handlers, setup } from 'log';
 export { opine, json, Router } from 'opine';
 export type {
   Handler,
