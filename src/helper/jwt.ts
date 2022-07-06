@@ -1,5 +1,5 @@
-import { create, verify, getNumericDate } from '../../deps.ts';
-import type { Header, Payload } from '../../deps.ts';
+import { create, verify, getNumericDate } from 'djwt';
+import type { Header, Payload } from 'djwt';
 import config from '../config.ts';
 
 const { jwt } = config;

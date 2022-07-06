@@ -1,4 +1,4 @@
-import { Router } from '../../deps.ts';
+import { Router } from 'opine';
 import { IWorkController } from './../types.ts';
 
 const router = Router();

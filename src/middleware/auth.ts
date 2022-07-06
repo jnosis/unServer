@@ -1,4 +1,4 @@
-import { OpineRequest, OpineResponse, NextFunction } from '../../deps.ts';
+import type { OpineRequest, OpineResponse, NextFunction } from 'opine';
 import { verifyJwtToken } from '../helper/jwt.ts';
 import * as userRepository from '../model/auth.ts';
 import { throwError } from './../middleware/error_handler.ts';

@@ -1,4 +1,4 @@
-import { Router } from '../../deps.ts';
+import { Router } from 'opine';
 import { IUserController } from './../types.ts';
 import { isAuth } from './../middleware/auth.ts';
 

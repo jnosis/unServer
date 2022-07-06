@@ -1,4 +1,5 @@
-import { opine, json, opineCors } from '../deps.ts';
+import { opine, json } from 'opine';
+import { opineCors } from 'cors';
 import * as userRepository from './model/auth.ts';
 import * as workRepository from './model/work.ts';
 import { UserController } from './controller/auth.ts';

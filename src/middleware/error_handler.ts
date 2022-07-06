@@ -1,4 +1,4 @@
-import { ErrorRequestHandler as ErrorHandler } from '../../deps.ts';
+import { ErrorRequestHandler as ErrorHandler } from 'opine';
 import { Err } from '../types.ts';
 import log from './logger.ts';
 import { convertToMessage } from './../util/message.ts';

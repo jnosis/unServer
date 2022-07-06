@@ -1,4 +1,4 @@
-import { ObjectId } from '../../deps.ts';
+import { ObjectId } from 'mongo';
 import { UserData, UserSignupData } from './../types.ts';
 import db from '../db.ts';
 

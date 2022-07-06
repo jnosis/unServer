@@ -1,4 +1,4 @@
-import { OpineRequest, OpineResponse } from '../../deps.ts';
+import { OpineRequest, OpineResponse } from 'opine';
 import { WorkModel, IWorkController, WorkInputData } from '../types.ts';
 import log from './../middleware/logger.ts';
 import { throwError } from './../middleware/error_handler.ts';

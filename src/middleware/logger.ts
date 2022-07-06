@@ -1,4 +1,4 @@
-import { getLogger, handlers, setup } from '../../deps.ts';
+import { getLogger, handlers, setup } from 'log';
 
 await setup({
   handlers: {

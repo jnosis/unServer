@@ -1,4 +1,4 @@
-import { genSalt, hash as h, compare as cp } from '../../deps.ts';
+import { genSalt, hash as h, compare as cp } from 'bcrypt';
 import config from '../config.ts';
 
 const { bcrypt } = config;

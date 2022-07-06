@@ -1,5 +1,6 @@
 import 'dotenv/load.ts';
-import { envConfig, CorsOptions } from '../deps.ts';
+import { config as envConfig } from 'dotenv';
+import type { CorsOptions } from 'cors';
 import { Config, BcryptOptions, JwtOptions, DatabaseOptions } from './types.ts';
 
 envConfig();

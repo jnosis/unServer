@@ -1,4 +1,4 @@
-import { type ObjectId } from '../../deps.ts';
+import { ObjectId } from 'mongo';
 import { WorkData, FileData, Repo, Techs, WorkInputData } from './../types.ts';
 import db from '../db.ts';
 

@@ -1,4 +1,5 @@
-import { Handler, CorsOptions } from '../deps.ts';
+import type { Handler } from 'opine';
+import type { CorsOptions } from 'cors';
 
 export type BcryptOptions = {
   saltRound: number;

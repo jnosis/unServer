@@ -1,4 +1,4 @@
-import { OpineRequest, OpineResponse } from '../../deps.ts';
+import type { OpineRequest, OpineResponse } from 'opine';
 import { UserModel, IUserController } from '../types.ts';
 import { hash, compare } from '../helper/bcrypt.ts';
 import { createJwtToken } from '../helper/jwt.ts';
