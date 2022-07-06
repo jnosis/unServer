@@ -1,9 +1,9 @@
 import { opine, json, opineCors } from '../deps.ts';
-// import * as userRepository from './model/auth.ts';
+import * as userRepository from './model/auth.ts';
 import * as workRepository from './model/work.ts';
-// import { UserController } from './controller/auth.ts';
+import { UserController } from './controller/auth.ts';
 import { WorkController } from './controller/work.ts';
-// import userRouter from './router/auth.ts';
+import userRouter from './router/auth.ts';
 import workRouter from './router/work.ts';
 import log from './middleware/logger.ts';
 import { errorHandler } from './middleware/error_handler.ts';
@@ -26,7 +26,7 @@ app.get('/', (_req, res) => {
   res.send('Welcome to unServer');
 });
 
-// app.use('/auth', userRouter(new UserController(userRepository)));
+app.use('/auth', userRouter(new UserController(userRepository)));
 app.use('/works', workRouter(new WorkController(workRepository)));
 
 app.use(errorHandler);

@@ -1,5 +1,5 @@
 import { ObjectId } from '../../deps.ts';
-import { UserData } from './../types.ts';
+import { UserData, UserSignupData } from './../types.ts';
 import db from '../db.ts';
 
 interface UserSchema {
@@ -13,17 +13,15 @@ interface UserSchema {
 const User = db.getDatabase.collection<UserSchema>('auth');
 
 export async function findByUsername(username: string) {
-  return await User.findOne({ username });
+  return await User.findOne({ username }).then(mapOptionalData);
 }
 
 export async function findById(id: string) {
   return await User.findOne({ _id: new ObjectId(id) }).then(mapOptionalData);
 }
 
-export async function create(user: UserData) {
-  return await User.insertOne(user).then((insertedId) =>
-    mapOptionalData({ ...user, _id: insertedId })
-  );
+export async function create(user: UserSignupData) {
+  return await User.insertOne(user).then((insertedId) => insertedId.toString());
 }
 
 function mapOptionalData(data?: UserSchema): UserData | undefined {

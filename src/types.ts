@@ -1,11 +1,22 @@
 import { Handler, CorsOptions } from '../deps.ts';
 
+export type BcryptOptions = {
+  saltRound: number;
+};
+
+export type JwtOptions = {
+  secretKey: string;
+  expiresInSec: number;
+};
+
 export type DatabaseOptions = {
   name: string;
   host: string;
 };
 
 export type Config = {
+  bcrypt: BcryptOptions;
+  jwt: JwtOptions;
   cors: CorsOptions;
   database: DatabaseOptions;
 };
@@ -19,6 +30,13 @@ export interface IUserController {
 
 export type UserData = {
   id: string;
+  username: string;
+  password: string;
+  name: string;
+  email: string;
+};
+
+export type UserSignupData = {
   username: string;
   password: string;
   name: string;
@@ -74,6 +92,6 @@ export type Err = {
   status: number;
   method: string;
   baseUrl: string;
-  param: string;
+  param?: string;
   message: string;
 };
