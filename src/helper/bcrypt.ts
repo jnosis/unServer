@@ -1,13 +1,13 @@
-import { genSalt, hash as h, compare as cp } from 'bcrypt';
+import { genSaltSync, hashSync as h, compareSync as cp } from 'bcrypt';
 import config from '../config.ts';
 
 const { bcrypt } = config;
 
-export async function hash(password: string) {
-  const salt = await genSalt(bcrypt.saltRound);
-  return await h(password, salt);
+export function hash(password: string) {
+  const salt = genSaltSync(bcrypt.saltRound);
+  return h(password, salt);
 }
 
-export async function compare(password: string, hashedPassword: string) {
-  return await cp(password, hashedPassword);
+export function compare(password: string, hashedPassword: string) {
+  return cp(password, hashedPassword);
 }

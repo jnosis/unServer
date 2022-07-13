@@ -23,7 +23,7 @@ export class UserController implements IUserController {
       });
     }
 
-    const hashed = await hash(password);
+    const hashed = hash(password);
     const userId = await this.userRepository.create({
       username,
       password: hashed,
@@ -54,7 +54,7 @@ export class UserController implements IUserController {
         message: `Invalid username or password`,
       });
     }
-    const isValidPassword = await compare(password, user.password);
+    const isValidPassword = compare(password, user.password);
     if (!isValidPassword) {
       return throwError({
         method,
