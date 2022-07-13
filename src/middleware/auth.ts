@@ -1,5 +1,6 @@
 import type { OpineRequest, OpineResponse, NextFunction } from 'opine';
 import { verifyJwtToken } from '../helper/jwt.ts';
+import { getCookie } from '../helper/cookie.ts';
 import * as userRepository from '../model/auth.ts';
 import { throwError } from './../middleware/error_handler.ts';
 
@@ -13,9 +14,17 @@ export const isAuth = async (
   _res: OpineResponse,
   next: NextFunction
 ) => {
+  let token;
+
   const authHeader = req.get('Authorization');
   const { method, originalUrl } = req;
-  if (!(authHeader && authHeader.startsWith('Bearer '))) {
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  } else {
+    token = getCookie(req.headers, 'token');
+  }
+
+  if (!token) {
     return throwError({
       method,
       baseUrl: originalUrl,
@@ -23,7 +32,6 @@ export const isAuth = async (
     });
   }
 
-  const token = authHeader.split(' ')[1];
   try {
     const decoded = await verifyJwtToken(token);
     const user = await userRepository.findById(decoded.id);

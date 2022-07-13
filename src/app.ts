@@ -1,5 +1,5 @@
 import { opine, json } from 'opine';
-import { opineCors } from 'cors';
+import { opineCors, type CorsOptions } from 'cors';
 import * as userRepository from './model/auth.ts';
 import * as workRepository from './model/work.ts';
 import { UserController } from './controller/auth.ts';
@@ -14,7 +14,7 @@ const { cors } = config;
 
 const app = opine();
 
-const corsOptions = {
+const corsOptions: CorsOptions = {
   origin: cors.origin,
   optionsSuccessStatus: 200,
   credentials: true,

@@ -10,5 +10,7 @@ export const throwError = (options: Err) => {
 export const errorHandler: ErrorHandler = (err: Err, _req, res, _next) => {
   const msg = convertToMessage(err);
   log.error(msg);
-  res.setStatus(err.status || 500).send(err.message || 'Something is wrong');
+  res
+    .setStatus(err.status || 500)
+    .json({ message: err.message || 'Something is wrong' });
 };
