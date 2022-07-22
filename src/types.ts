@@ -83,11 +83,19 @@ export type WorkInputData = {
   thumbnail: FileData;
 };
 
-import * as userModel from './model/auth.ts';
-export type UserModel = typeof userModel;
+export interface UserModel {
+  findByUsername(username: string): Promise<UserData | undefined>;
+  findById(id: string): Promise<UserData | undefined>;
+  create(user: UserSignupData): Promise<string>;
+}
 
-import * as workModel from './model/work.ts';
-export type WorkModel = typeof workModel;
+export interface WorkModel {
+  getAll(): Promise<(WorkData | undefined)[]>;
+  getByTitle(title: string): Promise<WorkData | undefined>;
+  create(work: WorkInputData): Promise<WorkData | undefined>;
+  update(title: string, work: WorkInputData): Promise<WorkData | undefined>;
+  remove(title: string): Promise<number>;
+}
 
 export type Err = {
   status: number;
