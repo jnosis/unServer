@@ -1,4 +1,4 @@
-import { genSaltSync, hashSync as h, compareSync as cp } from 'bcrypt';
+import { compareSync as cp, genSaltSync, hashSync as h } from 'bcrypt';
 import config from '../config.ts';
 
 const { bcrypt } = config;

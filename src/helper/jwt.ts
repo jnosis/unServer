@@ -1,4 +1,4 @@
-import { create, verify, getNumericDate } from 'djwt';
+import { create, getNumericDate, verify } from 'djwt';
 import type { Header, Payload } from 'djwt';
 import config from '../config.ts';
 
@@ -10,7 +10,7 @@ const key = await crypto.subtle.importKey(
   new TextEncoder().encode(jwt.secretKey),
   { name: 'HMAC', hash: 'SHA-512' },
   true,
-  ['sign', 'verify']
+  ['sign', 'verify'],
 );
 
 export async function createJwtToken(id: string) {

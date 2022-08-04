@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongo';
-import { WorkData, FileData, Repo, Techs, WorkInputData } from './../types.ts';
+import { FileData, Repo, Techs, WorkData, WorkInputData } from './../types.ts';
 import db from '../db.ts';
 
 interface WorkSchema {
@@ -31,8 +31,8 @@ export async function create(work: WorkInputData) {
 }
 
 export async function update(title: string, work: WorkInputData) {
-  return await Work.updateOne({ title }, { $set: work }).then(
-    async () => await Work.findOne({ title }).then(mapOptionalData)
+  return await Work.updateOne({ title }, { $set: work }).then(async () =>
+    await Work.findOne({ title }).then(mapOptionalData)
   );
 }
 

@@ -1,4 +1,4 @@
-import type { OpineRequest, OpineResponse, NextFunction } from 'opine';
+import type { NextFunction, OpineRequest, OpineResponse } from 'opine';
 import { verifyJwtToken } from '../helper/jwt.ts';
 import { getCookie } from '../helper/cookie.ts';
 import * as userRepository from '../model/auth.ts';
@@ -12,7 +12,7 @@ const AUTH_ERROR = {
 export const isAuth = async (
   req: OpineRequest,
   _res: OpineResponse,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   let token;
 

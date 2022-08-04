@@ -1,6 +1,6 @@
-import type { OpineRequest, OpineResponse, CookieOptions } from 'opine';
-import { UserModel, IUserController } from '../types.ts';
-import { hash, compare } from '../helper/bcrypt.ts';
+import type { CookieOptions, OpineRequest, OpineResponse } from 'opine';
+import { IUserController, UserModel } from '../types.ts';
+import { compare, hash } from '../helper/bcrypt.ts';
 import { createJwtToken } from '../helper/jwt.ts';
 import log from './../middleware/logger.ts';
 import { throwError } from './../middleware/error_handler.ts';

@@ -1,5 +1,5 @@
 import { OpineRequest, OpineResponse } from 'opine';
-import { WorkModel, IWorkController, WorkInputData } from '../types.ts';
+import { IWorkController, WorkInputData, WorkModel } from '../types.ts';
 import log from './../middleware/logger.ts';
 import { throwError } from './../middleware/error_handler.ts';
 import { convertToMessage } from './../util/message.ts';
