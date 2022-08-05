@@ -68,21 +68,17 @@ export class UserController implements IUserController {
     const msg = convertToMessage({
       method,
       baseUrl: originalUrl,
-      status: 201,
+      status: 200,
     });
     log.debug(msg);
 
     setToken(res, token);
-    res.setStatus(201).json({ token, username });
+    res.setStatus(200).json({ token, username });
   };
 
   logout = (req: OpineRequest, res: OpineResponse) => {
     const { method, originalUrl } = req;
-    res.cookie('token', '', {
-      httpOnly: true,
-      sameSite: 'None',
-      secure: true,
-    });
+    res.cookie('token', '');
     const msg = convertToMessage({
       method,
       baseUrl: originalUrl,
