@@ -103,6 +103,7 @@ describe('Auth APIs', () => {
 
       assertEquals(response.status, 200);
       assertEquals(response.headers['set-cookie'], 'token=; Path=/');
+      assertEquals(response.body.message, 'User has been logged out');
     });
   });
 
