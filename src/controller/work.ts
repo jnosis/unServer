@@ -49,8 +49,17 @@ export class WorkController implements IWorkController {
 
   add = async (req: OpineRequest, res: OpineResponse) => {
     const { method, baseUrl } = req;
-    const body: WorkInputData = req.body;
-    const work = await this.workRepository.create(body);
+    const { title, description, techs, repo, projectURL, thumbnail } = req.body;
+    const workInput: WorkInputData = {
+      title,
+      description,
+      techs,
+      repo,
+      projectURL,
+      thumbnail,
+    };
+
+    const work = await this.workRepository.create(workInput);
 
     const msg = convertToMessage({
       method,
@@ -64,7 +73,15 @@ export class WorkController implements IWorkController {
   update = async (req: OpineRequest, res: OpineResponse) => {
     const { method, baseUrl } = req;
     const title = req.params.id;
-    const body: WorkInputData = req.body;
+    const { description, techs, repo, projectURL, thumbnail } = req.body;
+    const workInput: WorkInputData = {
+      title,
+      description,
+      techs,
+      repo,
+      projectURL,
+      thumbnail,
+    };
     const work = await this.workRepository.getByTitle(title);
 
     if (!work) {
@@ -76,7 +93,7 @@ export class WorkController implements IWorkController {
         message: `Work title(${title}) not found`,
       });
     }
-    if (title !== body.title) {
+    if (title !== workInput.title) {
       throwError({
         method,
         baseUrl,
@@ -86,7 +103,7 @@ export class WorkController implements IWorkController {
       });
     }
 
-    const updated = await this.workRepository.update(title, body);
+    const updated = await this.workRepository.update(title, workInput);
     const msg = convertToMessage({
       method,
       baseUrl,
