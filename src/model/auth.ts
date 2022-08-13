@@ -1,29 +1,50 @@
-import { ObjectId } from 'mongo';
-import { UserData, UserSignupData } from './../types.ts';
+import { Database, ObjectId } from 'mongo';
+import { UserData, UserModel, UserSchema, UserSignupData } from './../types.ts';
 import db from '../db.ts';
 
-interface UserSchema {
-  _id: ObjectId;
-  username: string;
-  password: string;
-  name: string;
-  email: string;
-}
+const repository = db.getDatabase;
 
-const User = db.getDatabase.collection<UserSchema>('auth');
+class UserRepository implements UserModel {
+  user;
+  constructor(db: Database) {
+    this.user = db.collection<UserSchema>('auth');
+  }
 
-export async function findByUsername(username: string) {
-  return await User.findOne({ username }).then(mapOptionalData);
-}
+  async getAll() {
+    return await this.user.find().toArray().then((users) =>
+      users.map(mapOptionalData)
+    );
+  }
 
-export async function findById(id: string) {
-  return await User.findOne({ _id: new ObjectId(id) }).then(mapOptionalData);
-}
+  async findByUsername(username: string) {
+    return await this.user.findOne({ username }).then(mapOptionalData);
+  }
 
-export async function create(user: UserSignupData) {
-  return await User.insertOne(user).then((insertedId) => insertedId.toString());
+  async findById(id: string) {
+    return await this.user.findOne({ _id: new ObjectId(id) }).then(
+      mapOptionalData,
+    );
+  }
+
+  async create(user: UserSignupData) {
+    return await this.user.insertOne(user).then((insertedId) =>
+      insertedId.toString()
+    );
+  }
+
+  async update(username: string, user: UserSignupData) {
+    return await this.user.updateOne({ username }, { $set: user }).then(
+      async () => await this.user.findOne({ username }).then(mapOptionalData),
+    );
+  }
+
+  async remove(username: string) {
+    return await this.user.deleteOne({ username });
+  }
 }
 
 function mapOptionalData(data?: UserSchema): UserData | undefined {
   return data ? { ...data, id: data._id.toString() } : data;
 }
+
+export const userRepository = new UserRepository(repository);

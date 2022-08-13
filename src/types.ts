@@ -1,5 +1,6 @@
 import type { Handler } from 'opine';
 import type { CorsOptions } from 'cors';
+import { Collection, ObjectId } from 'mongo';
 
 export type BcryptOptions = {
   saltRound: number;
@@ -83,18 +84,42 @@ export type WorkInputData = {
   thumbnail: FileData;
 };
 
-export interface UserModel {
+interface Model<Schema, Input, Data> {
+  getAll(): Promise<(Data | undefined)[]>;
+  create(input: Input): Promise<(Data | undefined) | string>;
+  update(key: string, input: Input): Promise<Data | undefined>;
+  remove(key: string): Promise<number>;
+}
+
+export interface UserSchema {
+  _id: ObjectId;
+  username: string;
+  password: string;
+  name: string;
+  email: string;
+}
+
+export interface UserModel extends Model<UserSchema, UserSignupData, UserData> {
+  user: Collection<UserSchema>;
   findByUsername(username: string): Promise<UserData | undefined>;
   findById(id: string): Promise<UserData | undefined>;
   create(user: UserSignupData): Promise<string>;
 }
 
-export interface WorkModel {
-  getAll(): Promise<(WorkData | undefined)[]>;
+export interface WorkSchema {
+  _id: ObjectId;
+  title: string;
+  description: string;
+  techs: Techs;
+  repo: Repo;
+  projectURL?: string;
+  thumbnail: FileData;
+}
+
+export interface WorkModel extends Model<WorkSchema, WorkInputData, WorkData> {
+  work: Collection<WorkSchema>;
   getByTitle(title: string): Promise<WorkData | undefined>;
   create(work: WorkInputData): Promise<WorkData | undefined>;
-  update(title: string, work: WorkInputData): Promise<WorkData | undefined>;
-  remove(title: string): Promise<number>;
 }
 
 export type Err = {

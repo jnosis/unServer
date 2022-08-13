@@ -1,7 +1,7 @@
 import { json, opine } from 'opine';
 import { type CorsOptions, opineCors } from 'cors';
-import * as userRepository from './model/auth.ts';
-import * as workRepository from './model/work.ts';
+import { userRepository } from './model/auth.ts';
+import { workRepository } from './model/work.ts';
 import { UserController } from './controller/auth.ts';
 import { WorkController } from './controller/work.ts';
 import userRouter from './router/auth.ts';

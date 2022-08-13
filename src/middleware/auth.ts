@@ -1,7 +1,7 @@
 import type { NextFunction, OpineRequest, OpineResponse } from 'opine';
 import { verifyJwtToken } from '../helper/jwt.ts';
 import { getCookie } from '../helper/cookie.ts';
-import * as userRepository from '../model/auth.ts';
+import { userRepository } from '../model/auth.ts';
 import { throwError } from './../middleware/error_handler.ts';
 
 const AUTH_ERROR = {

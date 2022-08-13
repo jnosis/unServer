@@ -1,45 +1,44 @@
-import { ObjectId } from 'mongo';
-import { FileData, Repo, Techs, WorkData, WorkInputData } from './../types.ts';
+import { Database } from 'mongo';
+import { WorkData, WorkInputData, WorkModel, WorkSchema } from './../types.ts';
 import db from '../db.ts';
 
-interface WorkSchema {
-  _id: ObjectId;
-  title: string;
-  description: string;
-  techs: Techs;
-  repo: Repo;
-  projectURL?: string;
-  thumbnail: FileData;
-}
+const Work = db.getDatabase;
 
-const Work = db.getDatabase.collection<WorkSchema>('works');
+class WorkRepository implements WorkModel {
+  work;
+  constructor(db: Database) {
+    this.work = db.collection<WorkSchema>('works');
+  }
 
-export async function getAll() {
-  return await Work.find()
-    .toArray()
-    .then((works) => works.map(mapOptionalData));
-}
+  async getAll() {
+    return await this.work.find()
+      .toArray()
+      .then((works) => works.map(mapOptionalData));
+  }
 
-export async function getByTitle(title: string) {
-  return await Work.findOne({ title }).then(mapOptionalData);
-}
+  async getByTitle(title: string) {
+    return await this.work.findOne({ title }).then(mapOptionalData);
+  }
 
-export async function create(work: WorkInputData) {
-  return await Work.insertOne(work).then((insertedId) =>
-    mapOptionalData({ ...work, _id: insertedId })
-  );
-}
+  async create(work: WorkInputData) {
+    return await this.work.insertOne(work).then((insertedId) =>
+      mapOptionalData({ ...work, _id: insertedId })
+    );
+  }
 
-export async function update(title: string, work: WorkInputData) {
-  return await Work.updateOne({ title }, { $set: work }).then(async () =>
-    await Work.findOne({ title }).then(mapOptionalData)
-  );
-}
+  async update(title: string, work: WorkInputData) {
+    return await this.work.updateOne({ title }, { $set: work }).then(async () =>
+      await this.work.findOne({ title }).then(mapOptionalData)
+    );
+  }
 
-export async function remove(title: string) {
-  return await Work.deleteOne({ title });
+  async remove(title: string) {
+    return await this.work.deleteOne({ title });
+  }
 }
 
 function mapOptionalData(data?: WorkSchema): WorkData | undefined {
   return data ? { ...data, id: data._id.toString() } : data;
 }
+
+export const workRepository = new WorkRepository(Work);

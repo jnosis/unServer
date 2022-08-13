@@ -4,7 +4,7 @@ import { afterAll, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
 import { type SuperDeno, superdeno } from 'superdeno';
 import { json, type Opine, opine } from 'opine';
 import { UserSignupData } from '../types.ts';
-import * as userRepository from '../model/auth.ts';
+import { userRepository } from '../model/auth.ts';
 import { UserController } from '../controller/auth.ts';
 import userRouter from '../router/auth.ts';
 import { errorHandler } from '../middleware/error_handler.ts';
