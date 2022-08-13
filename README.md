@@ -2,4 +2,6 @@
 
 ### TODO
 
-- Add testing
+- Add README
+- Refactoring
+- Add validation
