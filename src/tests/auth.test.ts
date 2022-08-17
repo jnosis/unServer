@@ -53,6 +53,50 @@ describe('Auth APIs', () => {
       assertEquals(response.status, 409);
       assertEquals(response.body.message, `${user.username} already exists`);
     });
+
+    it('returns 400 when username field is invalid', async () => {
+      const user: UserSignupData = makeUserDetails();
+      const response = await request.post('/auth/signup').send({
+        ...user,
+        username: '',
+      });
+
+      assertEquals(response.status, 400);
+      assertEquals(response.body.message, 'username should be not empty');
+    });
+
+    it('returns 400 when password field is invalid', async () => {
+      const user: UserSignupData = makeUserDetails();
+      const response = await request.post('/auth/signup').send({
+        ...user,
+        password: '',
+      });
+
+      assertEquals(response.status, 400);
+      assertEquals(response.body.message, 'password should be not empty');
+    });
+
+    it('returns 400 when name field is invalid', async () => {
+      const user: UserSignupData = makeUserDetails();
+      const response = await request.post('/auth/signup').send({
+        ...user,
+        name: '',
+      });
+
+      assertEquals(response.status, 400);
+      assertEquals(response.body.message, 'name should be not empty');
+    });
+
+    it('returns 400 when email field is invalid', async () => {
+      const user: UserSignupData = makeUserDetails();
+      const response = await request.post('/auth/signup').send({
+        ...user,
+        email: faker.random.alpha(13),
+      });
+
+      assertEquals(response.status, 400);
+      assertEquals(response.body.message, 'not email');
+    });
   });
 
   describe('POST to /auth/login', () => {
