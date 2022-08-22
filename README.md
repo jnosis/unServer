@@ -4,4 +4,3 @@
 
 - Add README
 - Refactoring
-- Add validation
