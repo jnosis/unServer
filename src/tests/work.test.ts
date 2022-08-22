@@ -59,6 +59,7 @@ describe('Works APIs', () => {
         description,
         techs,
         repo,
+        projectURL,
         thumbnail,
       } = response.body;
       const created = {
@@ -66,11 +67,51 @@ describe('Works APIs', () => {
         description,
         techs,
         repo,
+        projectURL,
         thumbnail,
       };
 
       assertEquals(response.status, 201);
       assertEquals({ ...created }, { ...work });
+    });
+
+    it('returns 400 when title field is invalid', async () => {
+      const { username, token } = await createNewUser(request);
+      const work = makeWorkDetails(username);
+      work.title = '';
+
+      const response = await request.post('/works').set({
+        Authorization: `Bearer ${token}`,
+      }).send(work);
+
+      assertEquals(response.status, 400);
+      assertEquals(response.body.message, 'Title should be not empty');
+    });
+
+    it('returns 400 when repository url field is invalid', async () => {
+      const { username, token } = await createNewUser(request);
+      const work = makeWorkDetails(username);
+      work.repo.url = faker.random.alpha(20);
+
+      const response = await request.post('/works').set({
+        Authorization: `Bearer ${token}`,
+      }).send(work);
+
+      assertEquals(response.status, 400);
+      assertEquals(response.body.message, 'Invalid repository url');
+    });
+
+    it('returns 400 when project url field is invalid', async () => {
+      const { username, token } = await createNewUser(request);
+      const work = makeWorkDetails(username);
+      work.projectURL = faker.random.alpha(20);
+
+      const response = await request.post('/works').set({
+        Authorization: `Bearer ${token}`,
+      }).send(work);
+
+      assertEquals(response.status, 400);
+      assertEquals(response.body.message, 'Invalid project url');
     });
   });
 
@@ -89,7 +130,7 @@ describe('Works APIs', () => {
 
   describe('GET to /works/:id', () => {
     it('returns 404 when work does not exist', async () => {
-      const title = faker.commerce.productName();
+      const title = faker.commerce.product();
 
       const response = await request.get(`/works/${title}`);
 
@@ -139,6 +180,7 @@ describe('Works APIs', () => {
         description,
         techs,
         repo,
+        projectURL,
         thumbnail,
       } = response.body;
       const updated = {
@@ -148,6 +190,7 @@ describe('Works APIs', () => {
         description,
         techs,
         repo,
+        projectURL,
         thumbnail,
       };
 

@@ -9,7 +9,7 @@ export async function clearCollection() {
 }
 
 export function makeWorkDetails(username: string): WorkInputData {
-  const title = faker.commerce.productName();
+  const title = faker.commerce.product();
   return {
     title,
     description: faker.commerce.productDescription(),
@@ -18,6 +18,7 @@ export function makeWorkDetails(username: string): WorkInputData {
       url: `https://github.com/${username}/${title}`,
       branch: faker.git.branch(),
     },
+    projectURL: faker.internet.url(),
     thumbnail: {
       fileName: faker.random.words(10),
       fileURL: faker.image.imageUrl(),
