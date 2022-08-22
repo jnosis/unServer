@@ -7,15 +7,15 @@ import { validate } from './../middleware/validator.ts';
 const router = Router();
 
 const validateCredential = validate({
-  username: z.string().min(1, { message: 'username should be not empty' }),
-  password: z.string().min(1, { message: 'password should be not empty' }),
+  username: z.string().min(1, { message: 'Username should be not empty' }),
+  password: z.string().min(1, { message: 'Password should be not empty' }),
 });
 
 const validateSignup = [
   ...validateCredential,
   ...validate({
-    name: z.string().min(1, { message: 'name should be not empty' }),
-    email: z.string().email('not email'),
+    name: z.string().min(1, { message: 'Name should be not empty' }),
+    email: z.string().email('Invalid email'),
   }),
 ];
 

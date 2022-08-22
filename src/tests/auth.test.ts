@@ -62,7 +62,7 @@ describe('Auth APIs', () => {
       });
 
       assertEquals(response.status, 400);
-      assertEquals(response.body.message, 'username should be not empty');
+      assertEquals(response.body.message, 'Username should be not empty');
     });
 
     it('returns 400 when password field is invalid', async () => {
@@ -73,7 +73,7 @@ describe('Auth APIs', () => {
       });
 
       assertEquals(response.status, 400);
-      assertEquals(response.body.message, 'password should be not empty');
+      assertEquals(response.body.message, 'Password should be not empty');
     });
 
     it('returns 400 when name field is invalid', async () => {
@@ -84,7 +84,7 @@ describe('Auth APIs', () => {
       });
 
       assertEquals(response.status, 400);
-      assertEquals(response.body.message, 'name should be not empty');
+      assertEquals(response.body.message, 'Name should be not empty');
     });
 
     it('returns 400 when email field is invalid', async () => {
@@ -95,7 +95,7 @@ describe('Auth APIs', () => {
       });
 
       assertEquals(response.status, 400);
-      assertEquals(response.body.message, 'not email');
+      assertEquals(response.body.message, 'Invalid email');
     });
   });
 
