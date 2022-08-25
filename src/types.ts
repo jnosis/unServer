@@ -85,7 +85,7 @@ export type WorkInputData = {
 };
 
 interface Model<Schema, Input, Data> {
-  getAll(): Promise<(Data | undefined)[]>;
+  getAll(): Promise<Data[]>;
   create(input: Input): Promise<(Data | undefined) | string>;
   update(key: string, input: Input): Promise<Data | undefined>;
   remove(key: string): Promise<number>;

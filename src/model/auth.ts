@@ -12,7 +12,7 @@ class UserRepository implements UserModel {
 
   async getAll() {
     return await this.user.find().toArray().then((users) =>
-      users.map(mapOptionalData)
+      users.map(mapOptionalData).filter((user): user is UserData => !!user)
     );
   }
 
