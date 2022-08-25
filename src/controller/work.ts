@@ -1,5 +1,10 @@
 import { OpineRequest, OpineResponse } from 'opine';
-import { IWorkController, WorkInputData, WorkModel } from '../types.ts';
+import {
+  IWorkController,
+  WorkData,
+  WorkInputData,
+  WorkModel,
+} from '../types.ts';
 import log from './../middleware/logger.ts';
 import { throwError } from './../middleware/error_handler.ts';
 import { convertToMessage } from './../util/message.ts';
@@ -9,7 +14,7 @@ export class WorkController implements IWorkController {
     this.workRepository = workRepository;
   }
 
-  getAll = async (req: OpineRequest, res: OpineResponse) => {
+  getAll = async (req: OpineRequest, res: OpineResponse<WorkData[]>) => {
     const { method, baseUrl } = req;
     const works = await this.workRepository.getAll();
 
@@ -22,7 +27,7 @@ export class WorkController implements IWorkController {
     res.setStatus(200).json(works);
   };
 
-  getByTitle = async (req: OpineRequest, res: OpineResponse) => {
+  getByTitle = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
     const { method, baseUrl } = req;
     const title = req.params.id;
     const work = await this.workRepository.getByTitle(title);
@@ -47,7 +52,7 @@ export class WorkController implements IWorkController {
     return res.setStatus(200).json(work);
   };
 
-  add = async (req: OpineRequest, res: OpineResponse) => {
+  add = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
     const { method, baseUrl } = req;
     const { title, description, techs, repo, projectURL, thumbnail } = req.body;
     const workInput: WorkInputData = {
@@ -70,7 +75,7 @@ export class WorkController implements IWorkController {
     res.setStatus(201).json(work);
   };
 
-  update = async (req: OpineRequest, res: OpineResponse) => {
+  update = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
     const { method, baseUrl } = req;
     const title = req.params.id;
     const { description, techs, repo, projectURL, thumbnail } = req.body;

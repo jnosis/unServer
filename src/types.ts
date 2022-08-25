@@ -1,4 +1,4 @@
-import type { Handler } from 'opine';
+import type { ParamsDictionary, RequestHandler } from 'opine';
 import type { CorsOptions } from 'cors';
 import { Collection, ObjectId } from 'mongo';
 
@@ -24,10 +24,10 @@ export type Config = {
 };
 
 export interface IUserController {
-  signup: Handler;
-  login: Handler;
-  logout: Handler;
-  me: Handler;
+  signup: RequestHandler<ParamsDictionary, AuthToken>;
+  login: RequestHandler<ParamsDictionary, AuthToken>;
+  logout: RequestHandler;
+  me: RequestHandler<ParamsDictionary, AuthToken>;
 }
 
 export type UserData = {
@@ -45,12 +45,17 @@ export type UserSignupData = {
   email: string;
 };
 
+export type AuthToken = {
+  token: string;
+  username: string;
+};
+
 export interface IWorkController {
-  getAll: Handler;
-  getByTitle: Handler;
-  add: Handler;
-  update: Handler;
-  delete: Handler;
+  getAll: RequestHandler<ParamsDictionary, WorkData[]>;
+  getByTitle: RequestHandler<ParamsDictionary, WorkData>;
+  add: RequestHandler<ParamsDictionary, WorkData>;
+  update: RequestHandler<ParamsDictionary, WorkData>;
+  delete: RequestHandler;
 }
 
 export type Repo = {

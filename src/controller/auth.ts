@@ -1,5 +1,5 @@
 import type { CookieOptions, OpineRequest, OpineResponse } from 'opine';
-import { IUserController, UserModel } from '../types.ts';
+import { AuthToken, IUserController, UserModel } from '../types.ts';
 import { compare, hash } from '../helper/bcrypt.ts';
 import { createJwtToken } from '../helper/jwt.ts';
 import log from './../middleware/logger.ts';
@@ -10,7 +10,7 @@ import config from '../config.ts';
 export class UserController implements IUserController {
   constructor(private userRepository: UserModel) {}
 
-  signup = async (req: OpineRequest, res: OpineResponse) => {
+  signup = async (req: OpineRequest, res: OpineResponse<AuthToken>) => {
     const { username, password, name, email } = req.body;
     const { method, originalUrl } = req;
     const found = await this.userRepository.findByUsername(username);
@@ -42,7 +42,7 @@ export class UserController implements IUserController {
     res.setStatus(201).json({ token, username });
   };
 
-  login = async (req: OpineRequest, res: OpineResponse) => {
+  login = async (req: OpineRequest, res: OpineResponse<AuthToken>) => {
     const { method, originalUrl } = req;
     const { username, password } = req.body;
     const user = await this.userRepository.findByUsername(username);
@@ -89,7 +89,7 @@ export class UserController implements IUserController {
     res.setStatus(200).json({ message: 'User has been logged out' });
   };
 
-  me = async (req: OpineRequest, res: OpineResponse) => {
+  me = async (req: OpineRequest, res: OpineResponse<AuthToken>) => {
     const { method, originalUrl } = req;
     const user = await this.userRepository.findById(req.body.userId);
     if (!user) {
