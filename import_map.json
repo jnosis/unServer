@@ -8,7 +8,7 @@
     "opine": "https://deno.land/x/opine@2.2.0/mod.ts",
     "cookie": "https://deno.land/std@0.145.0/http/cookie.ts",
     "cors": "https://deno.land/x/cors@v1.2.2/mod.ts",
-    "elmedeno": "https://deno.land/x/elmedeno@1.0.1/mod.ts",
+    "elmedeno/": "https://deno.land/x/elmedeno@1.0.1/",
     "mongo": "https://deno.land/x/mongo@v0.30.1/mod.ts",
     "testing/": "https://deno.land/std@0.145.0/testing/",
     "superdeno": "https://deno.land/x/superdeno@4.8.0/mod.ts",
