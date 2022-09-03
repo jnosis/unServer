@@ -6,6 +6,7 @@ import { UserController } from './controller/auth.ts';
 import { WorkController } from './controller/work.ts';
 import userRouter from './router/auth.ts';
 import workRouter from './router/work.ts';
+import { elmedenoMiddleware } from './middleware/elmedeno.ts';
 import log from './middleware/logger.ts';
 import { errorHandler } from './middleware/error_handler.ts';
 import config from './config.ts';
@@ -21,6 +22,7 @@ const corsOptions: CorsOptions = {
 };
 
 app.use(json());
+app.use(elmedenoMiddleware);
 app.use(opineCors(corsOptions));
 
 app.get('/', (_req, res) => {
