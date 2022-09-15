@@ -1,3 +1,7 @@
+/**
+ * Whole code from https://deno.land/x/elmedeno@1.0.1/mod.ts
+ * without Dynamic import for Deno Deploy
+ */
 // deno-lint-ignore-file
 import crossDomain from 'elmedeno/deps/crossdomain/index.ts';
 import csp from 'elmedeno/deps/csp/index.ts';
@@ -18,19 +22,19 @@ export * from 'elmedeno/lib/Options.ts';
 
 export class Elmedeno {
   private _options: Options;
-  private _fameworkLib: any;
+  private _frameworkLib: any;
 
   constructor(options: Options = {}) {
     this._options = options;
   }
 
   private async init() {
-    this._fameworkLib = lib;
+    this._frameworkLib = lib;
   }
 
   public async protect(request: any, response: any): Promise<any> {
     await this.init();
-    const requestResponse: any = new this._fameworkLib(request, response);
+    const requestResponse: any = new this._frameworkLib(request, response);
 
     if (this._options.crossDomain !== null) {
       crossDomain(requestResponse, this._options.crossDomain);
