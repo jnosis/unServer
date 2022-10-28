@@ -4,6 +4,7 @@ import { userRepository } from './model/auth.ts';
 import { workRepository } from './model/work.ts';
 import { UserController } from './controller/auth.ts';
 import { WorkController } from './controller/work.ts';
+import apiRouter from './router/api.ts';
 import userRouter from './router/auth.ts';
 import workRouter from './router/work.ts';
 import { elmedenoMiddleware } from './middleware/elmedeno.ts';
@@ -29,6 +30,16 @@ app.get('/', (_req, res) => {
   res.send('Welcome to unServer');
 });
 
+app.use(
+  '/api',
+  apiRouter([{
+    path: '/auth',
+    router: userRouter(new UserController(userRepository)),
+  }, {
+    path: '/works',
+    router: workRouter(new WorkController(workRepository)),
+  }]),
+);
 app.use('/auth', userRouter(new UserController(userRepository)));
 app.use('/works', workRouter(new WorkController(workRepository)));
 
