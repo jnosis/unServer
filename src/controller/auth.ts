@@ -78,7 +78,7 @@ export class UserController implements IUserController {
 
   logout = (req: OpineRequest, res: OpineResponse) => {
     const { method, originalUrl } = req;
-    res.cookie('token', '');
+    res.cookie('token', '', { httpOnly: true, sameSite: 'None', secure: true });
     const msg = convertToMessage({
       method,
       baseUrl: originalUrl,
