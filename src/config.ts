@@ -25,7 +25,7 @@ const jwt: JwtOptions = {
 };
 
 const cors: CorsOptions = {
-  origin: required('CORS_ALLOW_ORIGIN'),
+  origin: new RegExp(required('CORS_ALLOW_ORIGIN')),
 };
 
 const database: DatabaseOptions = {
