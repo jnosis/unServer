@@ -146,7 +146,10 @@ describe('Auth APIs', () => {
       const response = await request.post('/auth/logout');
 
       assertEquals(response.status, 200);
-      assertEquals(response.headers['set-cookie'], 'token=; Path=/');
+      assertEquals(
+        response.headers['set-cookie'],
+        'token=; Secure; HttpOnly; SameSite=None; Path=/',
+      );
       assertEquals(response.body.message, 'User has been logged out');
     });
   });
