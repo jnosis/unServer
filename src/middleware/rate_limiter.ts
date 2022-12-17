@@ -1,4 +1,4 @@
-import rateLimit from 'https://esm.sh/express-rate-limit@6.7.0';
+import rateLimit from 'express-rate-limit';
 import {
   NextFunction,
   OpineRequest,
