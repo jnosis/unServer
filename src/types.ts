@@ -16,11 +16,17 @@ export type DatabaseOptions = {
   host: string;
 };
 
+export type RateLimitOptions = {
+  windowMs: number;
+  maxRequest: number;
+};
+
 export type Config = {
   bcrypt: BcryptOptions;
   jwt: JwtOptions;
   cors: CorsOptions;
   database: DatabaseOptions;
+  rateLimit: RateLimitOptions;
 };
 
 export interface IUserController {

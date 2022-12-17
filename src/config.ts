@@ -1,7 +1,13 @@
 import 'dotenv/load.ts';
 import { config as envConfig } from 'dotenv';
 import type { CorsOptions } from 'cors';
-import { BcryptOptions, Config, DatabaseOptions, JwtOptions } from './types.ts';
+import {
+  BcryptOptions,
+  Config,
+  DatabaseOptions,
+  JwtOptions,
+  RateLimitOptions,
+} from './types.ts';
 
 const isTest = Deno.args.includes('test');
 
@@ -33,11 +39,17 @@ const database: DatabaseOptions = {
   host: required('DATABASE_HOST')!,
 };
 
+const rateLimit: RateLimitOptions = {
+  windowMs: parseInt(required('RATE_LIMIT_WINDOW_MS', '60000')),
+  maxRequest: parseInt(required('RATE_LIMIT_MAX_REQUEST', '100')),
+};
+
 const config: Config = {
   bcrypt,
   jwt,
   cors,
   database,
+  rateLimit,
 };
 
 export default config;
