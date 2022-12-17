@@ -165,6 +165,20 @@ describe('Works APIs', () => {
       );
     });
 
+    it('returns 404 when work title does not matched', async () => {
+      const { token, works } = await createNewWorks(request);
+      const work = works[0];
+
+      const updated = { ...work, title: faker.commerce.product() };
+
+      const response = await request.put(`/works/${work.title}`).set({
+        Authorization: `Bearer ${token}`,
+      }).send(updated);
+
+      assertEquals(response.status, 404);
+      assertEquals(response.body.message, 'Update access forbidden');
+    });
+
     it('returns 200 and the work object when work exists', async () => {
       const { token, works } = await createNewWorks(request);
       const work = works[0];

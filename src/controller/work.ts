@@ -78,9 +78,16 @@ export class WorkController implements IWorkController {
   update = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
     const { method, baseUrl } = req;
     const title = req.params.id;
-    const { description, techs, repo, projectURL, thumbnail } = req.body;
+    const {
+      title: updatedTitle,
+      description,
+      techs,
+      repo,
+      projectURL,
+      thumbnail,
+    } = req.body;
     const workInput: WorkInputData = {
-      title,
+      title: updatedTitle,
       description,
       techs,
       repo,
