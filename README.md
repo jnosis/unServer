@@ -4,4 +4,4 @@
 
 - Add README
 - Refactoring
-- Fix a bug where work title could not be changed
+- Fix a issue where work title could not be changed
