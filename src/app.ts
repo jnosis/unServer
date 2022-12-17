@@ -8,6 +8,7 @@ import apiRouter from './router/api.ts';
 import userRouter from './router/auth.ts';
 import workRouter from './router/work.ts';
 import { elmedenoMiddleware } from './middleware/elmedeno.ts';
+import rateLimit from './middleware/rate_limiter.ts';
 import log from './middleware/logger.ts';
 import { errorHandler } from './middleware/error_handler.ts';
 import config from './config.ts';
@@ -25,6 +26,7 @@ const corsOptions: CorsOptions = {
 app.use(json());
 app.use(elmedenoMiddleware);
 app.use(opineCors(corsOptions));
+app.use(rateLimit);
 
 app.get('/', (_req, res) => {
   res.send('Welcome to unServer');
