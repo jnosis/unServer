@@ -11,11 +11,9 @@ class WorkRepository implements WorkModel {
   }
 
   async getAll() {
-    return await this.work.find()
-      .toArray()
-      .then((works) =>
-        works.map(mapOptionalData).filter((work): work is WorkData => !!work)
-      );
+    return await this.work.find().toArray().then((works) =>
+      works.map(mapOptionalData).filter((work): work is WorkData => !!work)
+    );
   }
 
   async getByTitle(title: string) {
