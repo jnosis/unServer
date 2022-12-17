@@ -11,6 +11,7 @@ import { errorHandler } from '../middleware/error_handler.ts';
 import {
   clearCollection,
   createNewUser,
+  createToken,
   makeUserDetails,
 } from './auth_utils.ts';
 
@@ -178,6 +179,32 @@ describe('Auth APIs', () => {
 
       assertEquals(response.status, 200);
       assertEquals(response.body, { username, token });
+    });
+
+    it('returns 401 when token is not found', async () => {
+      const response = await request.get('/auth/me');
+
+      assertEquals(response.status, 401);
+      assertEquals(response.body.message, 'Authorization Error');
+    });
+
+    it('returns 401 when token is invalid', async () => {
+      const response = await request.get('/auth/me').set({
+        Authorization: `Bearer ${faker.datatype.string()}`,
+      });
+
+      assertEquals(response.status, 401);
+      assertEquals(response.body.message, 'Authorization Error');
+    });
+
+    it('returns 401 when user does not exist', async () => {
+      const token = await createToken();
+      const response = await request.get('/auth/me').set({
+        Authorization: `Bearer ${token}`,
+      });
+
+      assertEquals(response.status, 401);
+      assertEquals(response.body.message, 'Authorization Error');
     });
   });
 });
