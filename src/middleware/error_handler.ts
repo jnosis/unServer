@@ -1,7 +1,14 @@
 import { ErrorRequestHandler as ErrorHandler } from 'opine';
-import { Err } from '../types.ts';
 import log from './logger.ts';
 import { convertToMessage } from './../util/message.ts';
+
+type Err = {
+  status: number;
+  method: string;
+  baseUrl: string;
+  param?: string;
+  message: string;
+};
 
 export const throwError = (options: Err) => {
   throw options;

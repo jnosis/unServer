@@ -132,11 +132,3 @@ export interface WorkModel extends Model<WorkSchema, WorkInputData, WorkData> {
   getByTitle(title: string): Promise<WorkData | undefined>;
   create(work: WorkInputData): Promise<WorkData | undefined>;
 }
-
-export type Err = {
-  status: number;
-  method: string;
-  baseUrl: string;
-  param?: string;
-  message: string;
-};

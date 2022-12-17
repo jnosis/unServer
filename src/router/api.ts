@@ -1,5 +1,7 @@
 import { Router } from 'opine';
+import log from '../middleware/logger.ts';
 import { getEndPoints } from '../util/endpoints.ts';
+import { convertToMessage } from '../util/message.ts';
 
 const router = Router();
 
@@ -13,7 +15,11 @@ export default function apiRouter(apis: API[]) {
     router.use(api.path, api.router);
   });
 
-  router.get('/', (_req, res) => {
+  router.get('/', (req, res) => {
+    const { method, originalUrl } = req;
+
+    const msg = convertToMessage({ method, baseUrl: originalUrl, status: 200 });
+    log.debug(msg);
     res.send(endPoints);
   });
 
