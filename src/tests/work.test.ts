@@ -1,25 +1,24 @@
 import { faker } from 'faker';
+import { json, Opine, opine } from 'opine';
+import { SuperDeno, superdeno } from 'superdeno';
 import { assertEquals } from 'testing/asserts.ts';
 import { afterAll, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
-import { type SuperDeno, superdeno } from 'superdeno';
-import { json, type Opine, opine } from 'opine';
-import {} from '../types.ts';
-import { userRepository } from '../model/auth.ts';
-import { workRepository } from '../model/work.ts';
-import { UserController } from '../controller/auth.ts';
-import { WorkController } from '../controller/work.ts';
-import userRouter from '../router/auth.ts';
-import workRouter from '../router/work.ts';
-import { errorHandler } from '../middleware/error_handler.ts';
+import { UserController } from '~/controller/auth.ts';
+import { WorkController } from '~/controller/work.ts';
+import { errorHandler } from '~/middleware/error_handler.ts';
+import { userRepository } from '~/model/auth.ts';
+import { workRepository } from '~/model/work.ts';
+import userRouter from '~/router/auth.ts';
+import workRouter from '~/router/work.ts';
+import {
+  clearCollection as clearAuthCollection,
+  createNewUser,
+} from '~/tests/auth_utils.ts';
 import {
   clearCollection as clearWorkCollection,
   createNewWorks,
   makeWorkDetails,
-} from './work_utils.ts';
-import {
-  clearCollection as clearAuthCollection,
-  createNewUser,
-} from './auth_utils.ts';
+} from '~/tests/work_utils.ts';
 
 describe('Works APIs', () => {
   let app: Opine;

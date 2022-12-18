@@ -1,6 +1,6 @@
 import { ErrorRequestHandler as ErrorHandler } from 'opine';
-import log from './logger.ts';
-import { convertToMessage } from './../util/message.ts';
+import log from '~/middleware/logger.ts';
+import { convertToMessage } from '~/util/message.ts';
 
 type Err = {
   status: number;

@@ -1,6 +1,6 @@
-import type { NextFunction, OpineRequest, OpineResponse } from 'opine';
-import { z, type ZodRawShape } from 'zod';
-import { throwError } from './error_handler.ts';
+import { NextFunction, OpineRequest, OpineResponse } from 'opine';
+import { z, ZodRawShape } from 'zod';
+import { throwError } from '~/middleware/error_handler.ts';
 
 export const validate = (schema: ZodRawShape) => [async (
   req: OpineRequest,

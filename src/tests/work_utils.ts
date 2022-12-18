@@ -1,8 +1,8 @@
 import { faker } from 'faker';
-import type { SuperDeno } from 'superdeno';
-import { WorkData, WorkInputData } from '../types.ts';
-import db from '../db.ts';
-import { createNewUser } from './auth_utils.ts';
+import { SuperDeno } from 'superdeno';
+import { WorkData, WorkInputData } from '~/types.ts';
+import { createNewUser } from '~/tests/auth_utils.ts';
+import db from '~/db.ts';
 
 export async function clearCollection() {
   return await db.getDatabase.collection('works').deleteMany({});

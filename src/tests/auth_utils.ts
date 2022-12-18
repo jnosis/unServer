@@ -1,8 +1,8 @@
 import { faker } from 'faker';
-import type { SuperDeno } from 'superdeno';
-import { UserSignupData } from '../types.ts';
-import db from '../db.ts';
-import { createJwtToken } from '../helper/jwt.ts';
+import { SuperDeno } from 'superdeno';
+import { UserSignupData } from '~/types.ts';
+import { createJwtToken } from '~/helper/jwt.ts';
+import db from '~/db.ts';
 
 export async function clearCollection() {
   return await db.getDatabase.collection('auth').deleteMany({});
@@ -28,5 +28,5 @@ export async function createNewUser(request: SuperDeno) {
 }
 
 export async function createToken() {
-  return await createJwtToken(faker.database.mongodbObjectId())
+  return await createJwtToken(faker.database.mongodbObjectId());
 }

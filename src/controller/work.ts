@@ -4,10 +4,10 @@ import {
   WorkData,
   WorkInputData,
   WorkModel,
-} from '../types.ts';
-import log from './../middleware/logger.ts';
-import { throwError } from './../middleware/error_handler.ts';
-import { convertToMessage } from './../util/message.ts';
+} from '~/types.ts';
+import { throwError } from '~/middleware/error_handler.ts';
+import log from '~/middleware/logger.ts';
+import { convertToMessage } from '~/util/message.ts';
 
 export class WorkController implements IWorkController {
   constructor(private workRepository: WorkModel) {

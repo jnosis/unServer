@@ -1,9 +1,9 @@
+import { json, opine } from 'opine';
+import { superdeno } from 'superdeno';
 import { assertEquals } from 'testing/asserts.ts';
 import { describe, it } from 'testing/bdd.ts';
-import { superdeno } from 'superdeno';
-import { json, opine } from 'opine';
-import apiRouter from '../router/api.ts';
-import { createRouter } from './api_utils.ts';
+import apiRouter from '~/router/api.ts';
+import { createRouter } from '~/tests/api_utils.ts';
 
 describe('Api Router', () => {
   it('gets end points', async () => {

@@ -1,7 +1,7 @@
 import { Router } from 'opine';
-import log from '../middleware/logger.ts';
-import { getEndPoints } from '../util/endpoints.ts';
-import { convertToMessage } from '../util/message.ts';
+import log from '~/middleware/logger.ts';
+import { getEndPoints } from '~/util/endpoints.ts';
+import { convertToMessage } from '~/util/message.ts';
 
 const router = Router();
 

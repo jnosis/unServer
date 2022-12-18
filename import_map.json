@@ -1,6 +1,6 @@
 {
   "imports": {
-    "dotenv": "https://deno.land/std@0.145.0/dotenv/mod.ts",
+    "~/":"./src/",
     "dotenv/": "https://deno.land/std@0.145.0/dotenv/",
     "log": "https://deno.land/std@0.145.0/log/mod.ts",
     "bcrypt": "https://deno.land/x/bcrypt@v0.4.0/mod.ts",

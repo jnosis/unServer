@@ -1,17 +1,17 @@
+import { CorsOptions, opineCors } from 'cors';
 import { json, opine } from 'opine';
-import { type CorsOptions, opineCors } from 'cors';
-import { userRepository } from './model/auth.ts';
-import { workRepository } from './model/work.ts';
-import { UserController } from './controller/auth.ts';
-import { WorkController } from './controller/work.ts';
-import apiRouter from './router/api.ts';
-import userRouter from './router/auth.ts';
-import workRouter from './router/work.ts';
-import { elmedenoMiddleware } from './middleware/elmedeno.ts';
-import rateLimit from './middleware/rate_limiter.ts';
-import log from './middleware/logger.ts';
-import { errorHandler } from './middleware/error_handler.ts';
-import config from './config.ts';
+import { UserController } from '~/controller/auth.ts';
+import { WorkController } from '~/controller/work.ts';
+import { elmedenoMiddleware } from '~/middleware/elmedeno.ts';
+import { errorHandler } from '~/middleware/error_handler.ts';
+import log from '~/middleware/logger.ts';
+import rateLimit from '~/middleware/rate_limiter.ts';
+import { userRepository } from '~/model/auth.ts';
+import { workRepository } from '~/model/work.ts';
+import apiRouter from '~/router/api.ts';
+import userRouter from '~/router/auth.ts';
+import workRouter from '~/router/work.ts';
+import config from '~/config.ts';
 
 const { cors } = config;
 

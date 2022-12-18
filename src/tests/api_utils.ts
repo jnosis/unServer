@@ -1,5 +1,5 @@
-import { Router } from 'opine';
 import { faker } from 'faker';
+import { Router } from 'opine';
 
 export function createRouter() {
   const router = Router();

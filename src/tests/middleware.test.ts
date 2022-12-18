@@ -1,10 +1,10 @@
+import { json, opine } from 'opine';
+import { superdeno } from 'superdeno';
 import { assertEquals } from 'testing/asserts.ts';
 import { describe, it } from 'testing/bdd.ts';
-import { superdeno } from 'superdeno';
-import { json, opine } from 'opine';
-import rateLimit from '../middleware/rate_limiter.ts';
-import { createRouter } from './api_utils.ts';
-import config from '../config.ts';
+import rateLimit from '~/middleware/rate_limiter.ts';
+import { createRouter } from '~/tests/api_utils.ts';
+import config from '~/config.ts';
 
 const windowMs = config.rateLimit.windowMs;
 const maxRequest = config.rateLimit.maxRequest;

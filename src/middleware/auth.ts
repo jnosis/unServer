@@ -1,8 +1,8 @@
-import type { NextFunction, OpineRequest, OpineResponse } from 'opine';
-import { verifyJwtToken } from '../helper/jwt.ts';
-import { getCookie } from '../helper/cookie.ts';
-import { userRepository } from '../model/auth.ts';
-import { throwError } from './../middleware/error_handler.ts';
+import { NextFunction, OpineRequest, OpineResponse } from 'opine';
+import { getCookie } from '~/helper/cookie.ts';
+import { verifyJwtToken } from '~/helper/jwt.ts';
+import { userRepository } from '~/model/auth.ts';
+import { throwError } from '~/middleware/error_handler.ts';
 
 const AUTH_ERROR = {
   status: 401,

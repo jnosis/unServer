@@ -5,8 +5,8 @@ import {
   OpineResponse,
   RequestHandler,
 } from 'opine';
-import config from '../config.ts';
-import { errorHandler } from './error_handler.ts';
+import { errorHandler } from '~/middleware/error_handler.ts';
+import config from '~/config.ts';
 
 const windowMs = config.rateLimit.windowMs;
 const max = config.rateLimit.maxRequest;

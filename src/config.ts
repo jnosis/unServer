@@ -1,17 +1,14 @@
 import 'dotenv/load.ts';
-import { config as envConfig } from 'dotenv';
-import type { CorsOptions } from 'cors';
+import { CorsOptions } from 'cors';
 import {
   BcryptOptions,
   Config,
   DatabaseOptions,
   JwtOptions,
   RateLimitOptions,
-} from './types.ts';
+} from '~/types.ts';
 
 const isTest = Deno.args.includes('test');
-
-envConfig();
 
 function required(key: string, defaultValue?: string): string {
   const value = Deno.env.get(`${key}${isTest ? '_TEST' : ''}`) || defaultValue;

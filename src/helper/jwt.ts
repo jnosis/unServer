@@ -1,6 +1,5 @@
-import { create, getNumericDate, verify } from 'djwt';
-import type { Header, Payload } from 'djwt';
-import config from '../config.ts';
+import { create, getNumericDate, Header, Payload, verify } from 'djwt';
+import config from '~/config.ts';
 
 const { jwt } = config;
 

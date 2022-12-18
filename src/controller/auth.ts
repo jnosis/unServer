@@ -1,11 +1,11 @@
-import type { CookieOptions, OpineRequest, OpineResponse } from 'opine';
-import { AuthToken, IUserController, UserModel } from '../types.ts';
-import { compare, hash } from '../helper/bcrypt.ts';
-import { createJwtToken } from '../helper/jwt.ts';
-import log from './../middleware/logger.ts';
-import { throwError } from './../middleware/error_handler.ts';
-import { convertToMessage } from './../util/message.ts';
-import config from '../config.ts';
+import { CookieOptions, OpineRequest, OpineResponse } from 'opine';
+import { AuthToken, IUserController, UserModel } from '~/types.ts';
+import { compare, hash } from '~/helper/bcrypt.ts';
+import { createJwtToken } from '~/helper/jwt.ts';
+import { throwError } from '~/middleware/error_handler.ts';
+import log from '~/middleware/logger.ts';
+import { convertToMessage } from '~/util/message.ts';
+import config from '~/config.ts';
 
 export class UserController implements IUserController {
   constructor(private userRepository: UserModel) {}

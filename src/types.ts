@@ -1,5 +1,5 @@
-import type { ParamsDictionary, RequestHandler } from 'opine';
-import type { CorsOptions } from 'cors';
+import { ParamsDictionary, RequestHandler } from 'opine';
+import { CorsOptions } from 'cors';
 import { Collection, ObjectId } from 'mongo';
 
 export type BcryptOptions = {

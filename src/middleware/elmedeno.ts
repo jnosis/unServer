@@ -1,5 +1,5 @@
 import { NextFunction, OpineRequest, OpineResponse } from 'opine';
-import { Elmedeno } from '../util/elmedeno.ts';
+import { Elmedeno } from '~/util/elmedeno.ts';
 
 const elmedeno = new Elmedeno();
 

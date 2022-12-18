@@ -1,8 +1,8 @@
 import { Router } from 'opine';
 import { z } from 'zod';
-import { IWorkController } from './../types.ts';
-import { isAuth } from './../middleware/auth.ts';
-import { validate } from './../middleware/validator.ts';
+import { IWorkController } from '~/types.ts';
+import { isAuth } from '~/middleware/auth.ts';
+import { validate } from '~/middleware/validator.ts';
 
 const router = Router();
 

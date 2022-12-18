@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongo';
-import config from './config.ts';
+import config from '~/config.ts';
 
 const { database } = config;
 

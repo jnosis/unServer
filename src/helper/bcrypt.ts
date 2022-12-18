@@ -1,5 +1,5 @@
 import { compareSync as cp, genSaltSync, hashSync as h } from 'bcrypt';
-import config from '../config.ts';
+import config from '~/config.ts';
 
 const { bcrypt } = config;
 

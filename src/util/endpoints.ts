@@ -1,5 +1,5 @@
-import { IRouter } from 'opine';
 import listEndPoints from 'express-list-endpoints';
+import { IRouter } from 'opine';
 
 export function getEndPoints(root: string, router: IRouter) {
   const endPoints = listEndPoints(router).map(({ path, methods }) =>

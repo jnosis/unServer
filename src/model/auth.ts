@@ -1,6 +1,6 @@
 import { Database, ObjectId } from 'mongo';
-import { UserData, UserModel, UserSchema, UserSignupData } from './../types.ts';
-import db from '../db.ts';
+import { UserData, UserModel, UserSchema, UserSignupData } from '~/types.ts';
+import db from '~/db.ts';
 
 const repository = db.getDatabase;
 

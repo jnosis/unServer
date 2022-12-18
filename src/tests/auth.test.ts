@@ -1,19 +1,18 @@
 import { faker } from 'faker';
+import { json, Opine, opine } from 'opine';
+import { SuperDeno, superdeno } from 'superdeno';
 import { assertEquals, assertExists } from 'testing/asserts.ts';
 import { afterAll, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
-import { type SuperDeno, superdeno } from 'superdeno';
-import { json, type Opine, opine } from 'opine';
-import { UserSignupData } from '../types.ts';
-import { userRepository } from '../model/auth.ts';
-import { UserController } from '../controller/auth.ts';
-import userRouter from '../router/auth.ts';
-import { errorHandler } from '../middleware/error_handler.ts';
+import { UserController } from '~/controller/auth.ts';
+import { errorHandler } from '~/middleware/error_handler.ts';
+import { userRepository } from '~/model/auth.ts';
+import userRouter from '~/router/auth.ts';
 import {
   clearCollection,
   createNewUser,
   createToken,
   makeUserDetails,
-} from './auth_utils.ts';
+} from '~/tests/auth_utils.ts';
 
 describe('Auth APIs', () => {
   let app: Opine;
@@ -38,14 +37,14 @@ describe('Auth APIs', () => {
 
   describe('POST to /auth/signup', () => {
     it('returns 201 and authorization token', async () => {
-      const user: UserSignupData = makeUserDetails();
+      const user = makeUserDetails();
       const response = await request.post('/auth/signup').send(user);
 
       assertEquals(response.status, 201);
     });
 
     it('returns 409 when username has already been taken', async () => {
-      const user: UserSignupData = makeUserDetails();
+      const user = makeUserDetails();
       const firstSignup = await request.post('/auth/signup').send(user);
       assertEquals(firstSignup.status, 201);
 
@@ -56,7 +55,7 @@ describe('Auth APIs', () => {
     });
 
     it('returns 400 when username field is invalid', async () => {
-      const user: UserSignupData = makeUserDetails();
+      const user = makeUserDetails();
       const response = await request.post('/auth/signup').send({
         ...user,
         username: '',
@@ -67,7 +66,7 @@ describe('Auth APIs', () => {
     });
 
     it('returns 400 when password field is invalid', async () => {
-      const user: UserSignupData = makeUserDetails();
+      const user = makeUserDetails();
       const response = await request.post('/auth/signup').send({
         ...user,
         password: '',
@@ -78,7 +77,7 @@ describe('Auth APIs', () => {
     });
 
     it('returns 400 when name field is invalid', async () => {
-      const user: UserSignupData = makeUserDetails();
+      const user = makeUserDetails();
       const response = await request.post('/auth/signup').send({
         ...user,
         name: '',
@@ -89,7 +88,7 @@ describe('Auth APIs', () => {
     });
 
     it('returns 400 when email field is invalid', async () => {
-      const user: UserSignupData = makeUserDetails();
+      const user = makeUserDetails();
       const response = await request.post('/auth/signup').send({
         ...user,
         email: faker.random.alpha(13),
