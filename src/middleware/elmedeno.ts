@@ -1,7 +1,7 @@
 import { NextFunction, OpineRequest, OpineResponse } from 'opine';
 import { Elmedeno } from '~/util/elmedeno.ts';
 
-const elmedeno = new Elmedeno();
+const elmedeno = new Elmedeno({ expectCt: null });
 
 export const elmedenoMiddleware = async (
   req: OpineRequest,
