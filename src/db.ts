@@ -4,22 +4,24 @@ import config from '~/config.ts';
 const { database } = config;
 
 class Database {
-  public client: MongoClient;
+  #client: MongoClient;
+  #name: string;
+  #url: string;
 
-  constructor(public name: string, public url: string) {
-    this.name = name;
-    this.url = url;
-    this.client = {} as MongoClient;
+  constructor(name: string, url: string) {
+    this.#name = name;
+    this.#url = url;
+    this.#client = {} as MongoClient;
   }
 
   async connect() {
-    const client: MongoClient = new MongoClient();
-    await client.connect(this.url);
-    this.client = client;
+    const client = new MongoClient();
+    await client.connect(this.#url);
+    this.#client = client;
   }
 
   get getDatabase() {
-    return this.client.database(this.name);
+    return this.#client.database(this.#name);
   }
 }
 
