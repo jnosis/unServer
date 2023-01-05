@@ -1,6 +1,6 @@
 import { getLogger, handlers, setup } from '$std/log/mod.ts';
 
-await setup({
+setup({
   handlers: {
     functionFmt: new handlers.ConsoleHandler('DEBUG', {
       formatter: (logRecord) => {
