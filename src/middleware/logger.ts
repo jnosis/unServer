@@ -1,4 +1,4 @@
-import { getLogger, handlers, setup } from 'log';
+import { getLogger, handlers, setup } from '$std/log/mod.ts';
 
 await setup({
   handlers: {
