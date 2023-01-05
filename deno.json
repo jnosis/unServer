@@ -5,12 +5,12 @@
   },
   "lint": {
     "files": {
-      "include": ["src/"]
+      "include": ["src/", "cli/"]
     }
   },
   "fmt": {
     "files": {
-      "include": ["src/"]
+      "include": ["src/", "cli/"]
     },
     "options": {
       "singleQuote": true,
