@@ -44,12 +44,7 @@ export type UserData = {
   email: string;
 };
 
-export type UserSignupData = {
-  username: string;
-  password: string;
-  name: string;
-  email: string;
-};
+export type UserSignupData = Omit<UserData, 'id'>;
 
 export type AuthToken = {
   token: string;
@@ -69,7 +64,7 @@ export type Repo = {
   branch: string;
 };
 
-export type Techs = { [index: string]: string };
+export type Techs = Record<string, string>;
 
 export type FileData = {
   fileName: string;
@@ -86,14 +81,7 @@ export type WorkData = {
   thumbnail: FileData;
 };
 
-export type WorkInputData = {
-  title: string;
-  description: string;
-  techs: Techs;
-  repo: Repo;
-  projectURL?: string;
-  thumbnail: FileData;
-};
+export type WorkInputData = Omit<WorkData, 'id'>;
 
 interface Model<Schema, Input, Data> {
   getAll(): Promise<Data[]>;
