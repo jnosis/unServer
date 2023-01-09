@@ -42,8 +42,6 @@ app.use(
     router: workRouter(new WorkController(workRepository)),
   }]),
 );
-app.use('/auth', userRouter(new UserController(userRepository)));
-app.use('/works', workRouter(new WorkController(workRepository)));
 
 app.use(errorHandler);
 
