@@ -68,7 +68,7 @@ export type Techs = Record<string, string>;
 
 export type FileData = {
   fileName: string;
-  fileURL: string;
+  fileUrl: string;
 };
 
 export type WorkData = {
@@ -77,7 +77,7 @@ export type WorkData = {
   description: string;
   techs: Techs;
   repo: Repo;
-  projectURL?: string;
+  projectUrl?: string;
   thumbnail: FileData;
 };
 
@@ -111,7 +111,7 @@ export interface WorkSchema {
   description: string;
   techs: Techs;
   repo: Repo;
-  projectURL?: string;
+  projectUrl?: string;
   thumbnail: FileData;
 }
 

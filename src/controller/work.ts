@@ -54,13 +54,13 @@ export class WorkController implements IWorkController {
 
   add = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
     const { method, baseUrl } = req;
-    const { title, description, techs, repo, projectURL, thumbnail } = req.body;
+    const { title, description, techs, repo, projectUrl, thumbnail } = req.body;
     const workInput: WorkInputData = {
       title,
       description,
       techs,
       repo,
-      projectURL,
+      projectUrl,
       thumbnail,
     };
 
@@ -83,7 +83,7 @@ export class WorkController implements IWorkController {
       description,
       techs,
       repo,
-      projectURL,
+      projectUrl,
       thumbnail,
     } = req.body;
     const workInput: WorkInputData = {
@@ -91,7 +91,7 @@ export class WorkController implements IWorkController {
       description,
       techs,
       repo,
-      projectURL,
+      projectUrl,
       thumbnail,
     };
     const work = await this.workRepository.getByTitle(title);
