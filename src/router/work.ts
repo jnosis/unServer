@@ -16,7 +16,7 @@ const validateWork = validate({
     ),
     branch: z.string(),
   }),
-  projectURL: z.union([
+  projectUrl: z.union([
     z.literal(''),
     z.string().url({ message: 'Invalid project url' }),
   ]),

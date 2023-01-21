@@ -58,7 +58,7 @@ describe('Works APIs', () => {
         description,
         techs,
         repo,
-        projectURL,
+        projectUrl,
         thumbnail,
       } = response.body;
       const created = {
@@ -66,7 +66,7 @@ describe('Works APIs', () => {
         description,
         techs,
         repo,
-        projectURL,
+        projectUrl,
         thumbnail,
       };
 
@@ -103,7 +103,7 @@ describe('Works APIs', () => {
     it('returns 400 when project url field is invalid', async () => {
       const { username, token } = await createNewUser(request);
       const work = makeWorkDetails(username);
-      work.projectURL = faker.random.alpha(20);
+      work.projectUrl = faker.random.alpha(20);
 
       const response = await request.post('/works').set({
         Authorization: `Bearer ${token}`,
@@ -193,7 +193,7 @@ describe('Works APIs', () => {
         description,
         techs,
         repo,
-        projectURL,
+        projectUrl,
         thumbnail,
       } = response.body;
       const updated = {
@@ -203,7 +203,7 @@ describe('Works APIs', () => {
         description,
         techs,
         repo,
-        projectURL,
+        projectUrl,
         thumbnail,
       };
 

@@ -18,10 +18,10 @@ export function makeWorkDetails(username: string): WorkInputData {
       url: `https://github.com/${username}/${title}`,
       branch: faker.git.branch(),
     },
-    projectURL: faker.internet.url(),
+    projectUrl: faker.internet.url(),
     thumbnail: {
       fileName: faker.random.words(10),
-      fileURL: faker.image.imageUrl(),
+      fileUrl: faker.image.imageUrl(),
     },
   };
 }
