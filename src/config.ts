@@ -3,9 +3,10 @@ import { CorsOptions } from 'cors';
 import {
   BcryptOptions,
   Config,
-  DatabaseOptions,
   JwtOptions,
+  MongodbOptions,
   RateLimitOptions,
+  SupabaseOptions,
 } from '~/types.ts';
 
 const isTest = Deno.args.includes('test');
@@ -31,9 +32,14 @@ const cors: CorsOptions = {
   origin: new RegExp(required('CORS_ALLOW_ORIGIN')),
 };
 
-const database: DatabaseOptions = {
+const mongodb: MongodbOptions = {
   name: required('DATABASE_NAME')!,
   host: required('DATABASE_HOST')!,
+};
+
+const supabase: SupabaseOptions = {
+  url: required('SUPABASE_URL')!,
+  key: required('SUPABASE_KEY')!,
 };
 
 const rateLimit: RateLimitOptions = {
@@ -45,7 +51,8 @@ const config: Config = {
   bcrypt,
   jwt,
   cors,
-  database,
+  mongodb,
+  supabase,
   rateLimit,
 };
 

@@ -1,6 +1,6 @@
 import { Database } from 'mongo';
 import { WorkData, WorkInputData, WorkModel, WorkSchema } from '~/types.ts';
-import db from '~/db.ts';
+import db from '~/mongodb.ts';
 
 const Work = db.getDatabase;
 

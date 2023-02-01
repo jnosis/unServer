@@ -10,6 +10,7 @@
     "express-list-endpoints": "https://esm.sh/express-list-endpoints@6.0.0",
     "express-rate-limit": "https://esm.sh/express-rate-limit@6.7.0",
     "mongo": "https://deno.land/x/mongo@v0.30.1/mod.ts",
+    "supabase":"https://esm.sh/@supabase/supabase-js@2.5.0",
     "faker": "https://cdn.skypack.dev/@faker-js/faker@v7.3.0",
     "superdeno": "https://deno.land/x/superdeno@4.8.0/mod.ts",
     "testing/": "https://deno.land/std@0.170.0/testing/",

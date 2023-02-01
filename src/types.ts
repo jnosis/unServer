@@ -11,9 +11,14 @@ export type JwtOptions = {
   expiresInSec: number;
 };
 
-export type DatabaseOptions = {
+export type MongodbOptions = {
   name: string;
   host: string;
+};
+
+export type SupabaseOptions = {
+  url: string;
+  key: string;
 };
 
 export type RateLimitOptions = {
@@ -25,7 +30,8 @@ export type Config = {
   bcrypt: BcryptOptions;
   jwt: JwtOptions;
   cors: CorsOptions;
-  database: DatabaseOptions;
+  mongodb: MongodbOptions;
+  supabase: SupabaseOptions;
   rateLimit: RateLimitOptions;
 };
 
@@ -64,7 +70,7 @@ export type Repo = {
   branch: string;
 };
 
-export type Techs = Record<string, string>;
+export type Techs = string[];
 
 export type FileData = {
   fileName: string;

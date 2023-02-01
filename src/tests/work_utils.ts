@@ -2,7 +2,7 @@ import { faker } from 'faker';
 import { SuperDeno } from 'superdeno';
 import { WorkData, WorkInputData } from '~/types.ts';
 import { createNewUser } from '~/tests/auth_utils.ts';
-import db from '~/db.ts';
+import db from '~/mongodb.ts';
 
 export async function clearCollection() {
   return await db.getDatabase.collection('works').deleteMany({});
