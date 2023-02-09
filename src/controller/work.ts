@@ -1,5 +1,5 @@
-import { OpineRequest, OpineResponse } from 'opine';
-import {
+import type { OpineRequest, OpineResponse } from 'opine';
+import type {
   IWorkController,
   WorkData,
   WorkInputData,
@@ -10,13 +10,14 @@ import log from '~/middleware/logger.ts';
 import { convertToMessage } from '~/util/message.ts';
 
 export class WorkController implements IWorkController {
-  constructor(private workRepository: WorkModel) {
-    this.workRepository = workRepository;
+  #workRepository: WorkModel;
+  constructor(workRepository: WorkModel) {
+    this.#workRepository = workRepository;
   }
 
   getAll = async (req: OpineRequest, res: OpineResponse<WorkData[]>) => {
     const { method, baseUrl } = req;
-    const works = await this.workRepository.getAll();
+    const works = await this.#workRepository.getAll();
 
     const msg = convertToMessage({
       method,
@@ -30,7 +31,7 @@ export class WorkController implements IWorkController {
   getByTitle = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
     const { method, baseUrl } = req;
     const title = req.params.id;
-    const work = await this.workRepository.getByTitle(title);
+    const work = await this.#workRepository.getByTitle(title);
 
     if (!work) {
       throwError({
@@ -64,7 +65,7 @@ export class WorkController implements IWorkController {
       thumbnail,
     };
 
-    const work = await this.workRepository.create(workInput);
+    const work = await this.#workRepository.create(workInput);
 
     const msg = convertToMessage({
       method,
@@ -94,7 +95,7 @@ export class WorkController implements IWorkController {
       projectUrl,
       thumbnail,
     };
-    const work = await this.workRepository.getByTitle(title);
+    const work = await this.#workRepository.getByTitle(title);
 
     if (!work) {
       throwError({
@@ -115,7 +116,7 @@ export class WorkController implements IWorkController {
       });
     }
 
-    const updated = await this.workRepository.update(title, workInput);
+    const updated = await this.#workRepository.update(title, workInput);
     const msg = convertToMessage({
       method,
       baseUrl,
@@ -129,7 +130,7 @@ export class WorkController implements IWorkController {
   delete = async (req: OpineRequest, res: OpineResponse) => {
     const { method, baseUrl } = req;
     const title = req.params.id;
-    const work = await this.workRepository.getByTitle(title);
+    const work = await this.#workRepository.getByTitle(title);
 
     if (!work) {
       throwError({
@@ -141,7 +142,7 @@ export class WorkController implements IWorkController {
       });
     }
 
-    await this.workRepository.remove(title);
+    await this.#workRepository.remove(title);
     const msg = convertToMessage({
       method,
       baseUrl,
@@ -150,5 +151,15 @@ export class WorkController implements IWorkController {
     });
     log.debug(msg);
     return res.sendStatus(204);
+  };
+
+  migrate = async (req: OpineRequest, res: OpineResponse) => {
+    const { method, baseUrl } = req;
+    const isAuth = !!req.body.userId;
+    const works = await this.#workRepository.migrate(isAuth);
+
+    const msg = convertToMessage({ method, baseUrl, status: 200 });
+    log.debug(msg);
+    res.setStatus(200).json(works);
   };
 }

@@ -40,6 +40,7 @@ const mongodb: MongodbOptions = {
 const supabase: SupabaseOptions = {
   url: required('SUPABASE_URL')!,
   key: required('SUPABASE_KEY')!,
+  serviceRole: required('SUPABASE_SERVICE_ROLE')!,
 };
 
 const rateLimit: RateLimitOptions = {

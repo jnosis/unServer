@@ -1,11 +1,17 @@
-import { Database, ObjectId } from 'mongo';
-import { UserData, UserModel, UserSchema, UserSignupData } from '~/types.ts';
-import db from '~/mongodb.ts';
+import type { Collection, Database } from 'mongo';
+import { ObjectId } from 'mongo';
+import type {
+  UserData,
+  UserModel,
+  UserSchema,
+  UserSignupData,
+} from '~/types.ts';
+import mongodb from '~/mongodb.ts';
 
-const repository = db.getDatabase;
+const repository = mongodb.getDatabase;
 
 class UserRepository implements UserModel {
-  user;
+  user: Collection<UserSchema>;
   constructor(db: Database) {
     this.user = db.collection<UserSchema>('auth');
   }

@@ -1,6 +1,7 @@
-import { ParamsDictionary, RequestHandler } from 'opine';
-import { CorsOptions } from 'cors';
-import { Collection, ObjectId } from 'mongo';
+import type { ParamsDictionary, RequestHandler } from 'opine';
+import type { CorsOptions } from 'cors';
+import type { ObjectId } from 'mongo';
+import type { Supabase } from '~/supabase.ts';
 
 export type BcryptOptions = {
   saltRound: number;
@@ -19,6 +20,7 @@ export type MongodbOptions = {
 export type SupabaseOptions = {
   url: string;
   key: string;
+  serviceRole: string;
 };
 
 export type RateLimitOptions = {
@@ -63,6 +65,7 @@ export interface IWorkController {
   add: RequestHandler<ParamsDictionary, WorkData>;
   update: RequestHandler<ParamsDictionary, WorkData>;
   delete: RequestHandler;
+  migrate: RequestHandler<ParamsDictionary, WorkData[]>;
 }
 
 export type Repo = {
@@ -105,7 +108,6 @@ export interface UserSchema {
 }
 
 export interface UserModel extends Model<UserSchema, UserSignupData, UserData> {
-  user: Collection<UserSchema>;
   findByUsername(username: string): Promise<UserData | undefined>;
   findById(id: string): Promise<UserData | undefined>;
   create(user: UserSignupData): Promise<string>;
@@ -122,7 +124,71 @@ export interface WorkSchema {
 }
 
 export interface WorkModel extends Model<WorkSchema, WorkInputData, WorkData> {
-  work: Collection<WorkSchema>;
   getByTitle(title: string): Promise<WorkData | undefined>;
   create(work: WorkInputData): Promise<WorkData | undefined>;
+  migrate(isAuth?: boolean): Promise<WorkData[]>;
+}
+
+export type SupabaseWithAuth = {
+  withAuth: Supabase;
+  withoutAuth: Supabase;
+};
+
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json }
+  | Json[];
+
+export interface Database {
+  public: {
+    Tables: {
+      works: {
+        Row: {
+          created_at: string | null;
+          description: string;
+          id: string;
+          projectUrl: string | null;
+          repo: Json;
+          techs: string[];
+          thumbnail: Json;
+          title: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          description?: string;
+          id: string;
+          projectUrl?: string | null;
+          repo: Json;
+          techs: string[];
+          thumbnail: Json;
+          title?: string;
+        };
+        Update: {
+          created_at?: string | null;
+          description?: string;
+          id?: string;
+          projectUrl?: string | null;
+          repo?: Json;
+          techs?: string[];
+          thumbnail?: Json;
+          title?: string;
+        };
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      install_available_extensions_and_test: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+  };
 }
