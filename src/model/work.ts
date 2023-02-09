@@ -12,37 +12,37 @@ import { supabase, supabaseWithAuth } from '~/supabase.ts';
 const Work = mongodb.getDatabase;
 
 class WorkRepository implements WorkModel {
-  work;
-  supabase: SupabaseWithAuth;
+  #work;
+  #supabase: SupabaseWithAuth;
   constructor(mongodb: MongoDatabase, supabase: SupabaseWithAuth) {
-    this.work = mongodb.collection<WorkSchema>('works');
-    this.supabase = { ...supabase };
+    this.#work = mongodb.collection<WorkSchema>('works');
+    this.#supabase = { ...supabase };
   }
 
   async getAll() {
-    return await this.work.find().toArray().then((works) =>
+    return await this.#work.find().toArray().then((works) =>
       works.map(mapOptionalData).filter((work): work is WorkData => !!work)
     );
   }
 
   async getByTitle(title: string) {
-    return await this.work.findOne({ title }).then(mapOptionalData);
+    return await this.#work.findOne({ title }).then(mapOptionalData);
   }
 
   async create(work: WorkInputData) {
-    return await this.work.insertOne(work).then((insertedId) =>
+    return await this.#work.insertOne(work).then((insertedId) =>
       mapOptionalData({ ...work, _id: insertedId })
     );
   }
 
   async update(title: string, work: WorkInputData) {
-    return await this.work.updateOne({ title }, { $set: work }).then(
-      async () => await this.work.findOne({ title }).then(mapOptionalData),
+    return await this.#work.updateOne({ title }, { $set: work }).then(
+      async () => await this.#work.findOne({ title }).then(mapOptionalData),
     );
   }
 
   async remove(title: string) {
-    return await this.work.deleteOne({ title });
+    return await this.#work.deleteOne({ title });
   }
 
   async migrate(isAuth?: boolean) {
@@ -65,7 +65,7 @@ class WorkRepository implements WorkModel {
   }
 
   #getSupabase(isAuth?: boolean) {
-    return this.supabase[isAuth ? 'withAuth' : 'withoutAuth'];
+    return this.#supabase[isAuth ? 'withAuth' : 'withoutAuth'];
   }
 }
 

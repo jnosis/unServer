@@ -8,12 +8,15 @@ import { convertToMessage } from '~/util/message.ts';
 import config from '~/config.ts';
 
 export class UserController implements IUserController {
-  constructor(private userRepository: UserModel) {}
+  #userRepository: UserModel;
+  constructor(userRepository: UserModel) {
+    this.#userRepository = userRepository;
+  }
 
   signup = async (req: OpineRequest, res: OpineResponse<AuthToken>) => {
     const { username, password, name, email } = req.body;
     const { method, originalUrl } = req;
-    const found = await this.userRepository.findByUsername(username);
+    const found = await this.#userRepository.findByUsername(username);
     if (found) {
       return throwError({
         method,
@@ -24,7 +27,7 @@ export class UserController implements IUserController {
     }
 
     const hashed = hash(password);
-    const userId = await this.userRepository.create({
+    const userId = await this.#userRepository.create({
       username,
       password: hashed,
       name,
@@ -45,7 +48,7 @@ export class UserController implements IUserController {
   login = async (req: OpineRequest, res: OpineResponse<AuthToken>) => {
     const { method, originalUrl } = req;
     const { username, password } = req.body;
-    const user = await this.userRepository.findByUsername(username);
+    const user = await this.#userRepository.findByUsername(username);
     if (!user) {
       return throwError({
         method,
@@ -91,7 +94,7 @@ export class UserController implements IUserController {
 
   me = async (req: OpineRequest, res: OpineResponse<AuthToken>) => {
     const { method, originalUrl } = req;
-    const user = await this.userRepository.findById(req.body.userId);
+    const user = await this.#userRepository.findById(req.body.userId);
     if (!user) {
       return throwError({
         method,
