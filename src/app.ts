@@ -1,8 +1,7 @@
 import { CorsOptions, opineCors } from 'cors';
-import { json, opine, Router } from 'opine';
+import { json, opine } from 'opine';
 import { UserController } from '~/controller/auth.ts';
 import { WorkController } from '~/controller/work.ts';
-import { isAuth } from '~/middleware/auth.ts';
 import { elmedenoMiddleware } from '~/middleware/elmedeno.ts';
 import { errorHandler } from '~/middleware/error_handler.ts';
 import log from '~/middleware/logger.ts';
@@ -41,13 +40,6 @@ app.use(
   }, {
     path: '/works',
     router: workRouter(new WorkController(workRepository)),
-  }, {
-    path: '/migrate',
-    router: Router().get(
-      '/',
-      isAuth,
-      (new WorkController(workRepository)).migrate,
-    ),
   }]),
 );
 

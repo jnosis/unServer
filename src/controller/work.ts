@@ -55,7 +55,9 @@ export class WorkController implements IWorkController {
 
   add = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
     const { method, baseUrl } = req;
-    const { title, description, techs, repo, projectUrl, thumbnail } = req.body;
+    const { title, description, techs, repo, projectUrl, thumbnail, userId } =
+      req.body;
+    const isAuth = !!userId;
     const workInput: WorkInputData = {
       title,
       description,
@@ -65,7 +67,7 @@ export class WorkController implements IWorkController {
       thumbnail,
     };
 
-    const work = await this.#workRepository.create(workInput);
+    const work = await this.#workRepository.create(workInput, isAuth);
 
     const msg = convertToMessage({
       method,
@@ -86,7 +88,9 @@ export class WorkController implements IWorkController {
       repo,
       projectUrl,
       thumbnail,
+      userId,
     } = req.body;
+    const isAuth = !!userId;
     const workInput: WorkInputData = {
       title: updatedTitle,
       description,
@@ -116,7 +120,7 @@ export class WorkController implements IWorkController {
       });
     }
 
-    const updated = await this.#workRepository.update(title, workInput);
+    const updated = await this.#workRepository.update(title, workInput, isAuth);
     const msg = convertToMessage({
       method,
       baseUrl,
@@ -129,6 +133,8 @@ export class WorkController implements IWorkController {
 
   delete = async (req: OpineRequest, res: OpineResponse) => {
     const { method, baseUrl } = req;
+    const { userId } = req.body;
+    const isAuth = !!userId;
     const title = req.params.id;
     const work = await this.#workRepository.getByTitle(title);
 
@@ -142,7 +148,7 @@ export class WorkController implements IWorkController {
       });
     }
 
-    await this.#workRepository.remove(title);
+    await this.#workRepository.remove(title, isAuth);
     const msg = convertToMessage({
       method,
       baseUrl,
@@ -151,15 +157,5 @@ export class WorkController implements IWorkController {
     });
     log.debug(msg);
     return res.sendStatus(204);
-  };
-
-  migrate = async (req: OpineRequest, res: OpineResponse) => {
-    const { method, baseUrl } = req;
-    const isAuth = !!req.body.userId;
-    const works = await this.#workRepository.migrate(isAuth);
-
-    const msg = convertToMessage({ method, baseUrl, status: 200 });
-    log.debug(msg);
-    res.setStatus(200).json(works);
   };
 }

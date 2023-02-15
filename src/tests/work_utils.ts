@@ -2,10 +2,10 @@ import { faker } from 'faker';
 import { SuperDeno } from 'superdeno';
 import { WorkData, WorkInputData } from '~/types.ts';
 import { createNewUser } from '~/tests/auth_utils.ts';
-import db from '~/mongodb.ts';
+import { supabaseWithAuth } from '~/supabase.ts';
 
-export async function clearCollection() {
-  return await db.getDatabase.collection('works').deleteMany({});
+export async function clearTable() {
+  return await supabaseWithAuth.from('works').delete().neq('title', '');
 }
 
 export function makeWorkDetails(username: string): WorkInputData {
@@ -13,7 +13,7 @@ export function makeWorkDetails(username: string): WorkInputData {
   return {
     title,
     description: faker.commerce.productDescription(),
-    techs: {},
+    techs: [],
     repo: {
       url: `https://github.com/${username}/${title}`,
       branch: faker.git.branch(),
@@ -28,7 +28,7 @@ export function makeWorkDetails(username: string): WorkInputData {
 
 export async function createNewWorks(request: SuperDeno, n = 1) {
   const { username, token } = await createNewUser(request);
-  let works: (WorkData & { _id: string })[] = [];
+  let works: WorkData[] = [];
   let cnt = 0;
 
   while (cnt++ < n) {
@@ -36,8 +36,8 @@ export async function createNewWorks(request: SuperDeno, n = 1) {
     const response = await request.post('/works').set({
       Authorization: `Bearer ${token}`,
     }).send(work);
-    const { _id, id } = response.body;
-    works = [...works, { ...work, _id, id }];
+    const { created_at, id } = response.body;
+    works = [...works, { ...work, created_at, id }];
   }
   return {
     works,

@@ -1,5 +1,5 @@
-import type { Database } from '~/types.ts';
 import { createClient } from 'supabase';
+import type { Database } from '~/types.ts';
 import config from '~/config.ts';
 
 export const supabase = createClient<Database>(
@@ -12,6 +12,6 @@ export const supabaseWithAuth = createClient<Database>(
   config.supabase.serviceRole,
 );
 
-const db = supabase.from('*');
+const db = supabase;
 
 export type Supabase = typeof db;

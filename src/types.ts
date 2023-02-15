@@ -65,7 +65,6 @@ export interface IWorkController {
   add: RequestHandler<ParamsDictionary, WorkData>;
   update: RequestHandler<ParamsDictionary, WorkData>;
   delete: RequestHandler;
-  migrate: RequestHandler<ParamsDictionary, WorkData[]>;
 }
 
 export type Repo = {
@@ -88,6 +87,7 @@ export type WorkData = {
   repo: Repo;
   projectUrl?: string;
   thumbnail: FileData;
+  created_at?: string;
 };
 
 export type WorkInputData = Omit<WorkData, 'id'>;
@@ -95,8 +95,12 @@ export type WorkInputData = Omit<WorkData, 'id'>;
 interface Model<Schema, Input, Data> {
   getAll(): Promise<Data[]>;
   create(input: Input): Promise<(Data | undefined) | string>;
-  update(key: string, input: Input): Promise<Data | undefined>;
-  remove(key: string): Promise<number>;
+  update(
+    key: string,
+    input: Input,
+    isAuth?: boolean,
+  ): Promise<Data | undefined>;
+  remove(key: string, isAuth?: boolean): Promise<number>;
 }
 
 export interface UserSchema {
@@ -125,8 +129,7 @@ export interface WorkSchema {
 
 export interface WorkModel extends Model<WorkSchema, WorkInputData, WorkData> {
   getByTitle(title: string): Promise<WorkData | undefined>;
-  create(work: WorkInputData): Promise<WorkData | undefined>;
-  migrate(isAuth?: boolean): Promise<WorkData[]>;
+  create(work: WorkInputData, isAuth?: boolean): Promise<WorkData | undefined>;
 }
 
 export type SupabaseWithAuth = {
