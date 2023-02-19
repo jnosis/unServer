@@ -1,6 +1,7 @@
-import { ParamsDictionary, RequestHandler } from 'opine';
-import { CorsOptions } from 'cors';
-import { Collection, ObjectId } from 'mongo';
+import type { ParamsDictionary, RequestHandler } from 'opine';
+import type { CorsOptions } from 'cors';
+import type { ObjectId } from 'mongo';
+import type { Supabase } from '~/supabase.ts';
 
 export type BcryptOptions = {
   saltRound: number;
@@ -11,9 +12,15 @@ export type JwtOptions = {
   expiresInSec: number;
 };
 
-export type DatabaseOptions = {
+export type MongodbOptions = {
   name: string;
   host: string;
+};
+
+export type SupabaseOptions = {
+  url: string;
+  key: string;
+  serviceRole: string;
 };
 
 export type RateLimitOptions = {
@@ -25,7 +32,8 @@ export type Config = {
   bcrypt: BcryptOptions;
   jwt: JwtOptions;
   cors: CorsOptions;
-  database: DatabaseOptions;
+  mongodb: MongodbOptions;
+  supabase: SupabaseOptions;
   rateLimit: RateLimitOptions;
 };
 
@@ -64,7 +72,7 @@ export type Repo = {
   branch: string;
 };
 
-export type Techs = Record<string, string>;
+export type Techs = string[];
 
 export type FileData = {
   fileName: string;
@@ -79,6 +87,7 @@ export type WorkData = {
   repo: Repo;
   projectUrl?: string;
   thumbnail: FileData;
+  created_at?: string;
 };
 
 export type WorkInputData = Omit<WorkData, 'id'>;
@@ -86,8 +95,12 @@ export type WorkInputData = Omit<WorkData, 'id'>;
 interface Model<Schema, Input, Data> {
   getAll(): Promise<Data[]>;
   create(input: Input): Promise<(Data | undefined) | string>;
-  update(key: string, input: Input): Promise<Data | undefined>;
-  remove(key: string): Promise<number>;
+  update(
+    key: string,
+    input: Input,
+    isAuth?: boolean,
+  ): Promise<Data | undefined>;
+  remove(key: string, isAuth?: boolean): Promise<number>;
 }
 
 export interface UserSchema {
@@ -99,7 +112,6 @@ export interface UserSchema {
 }
 
 export interface UserModel extends Model<UserSchema, UserSignupData, UserData> {
-  user: Collection<UserSchema>;
   findByUsername(username: string): Promise<UserData | undefined>;
   findById(id: string): Promise<UserData | undefined>;
   create(user: UserSignupData): Promise<string>;
@@ -116,7 +128,70 @@ export interface WorkSchema {
 }
 
 export interface WorkModel extends Model<WorkSchema, WorkInputData, WorkData> {
-  work: Collection<WorkSchema>;
   getByTitle(title: string): Promise<WorkData | undefined>;
-  create(work: WorkInputData): Promise<WorkData | undefined>;
+  create(work: WorkInputData, isAuth?: boolean): Promise<WorkData | undefined>;
+}
+
+export type SupabaseWithAuth = {
+  withAuth: Supabase;
+  withoutAuth: Supabase;
+};
+
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json }
+  | Json[];
+
+export interface Database {
+  public: {
+    Tables: {
+      works: {
+        Row: {
+          created_at: string | null;
+          description: string;
+          id: string;
+          projectUrl: string | null;
+          repo: Json;
+          techs: string[];
+          thumbnail: Json;
+          title: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          description?: string;
+          id: string;
+          projectUrl?: string | null;
+          repo: Json;
+          techs: string[];
+          thumbnail: Json;
+          title?: string;
+        };
+        Update: {
+          created_at?: string | null;
+          description?: string;
+          id?: string;
+          projectUrl?: string | null;
+          repo?: Json;
+          techs?: string[];
+          thumbnail?: Json;
+          title?: string;
+        };
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      install_available_extensions_and_test: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+  };
 }

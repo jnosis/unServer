@@ -15,7 +15,7 @@ import {
   createNewUser,
 } from '~/tests/auth_utils.ts';
 import {
-  clearCollection as clearWorkCollection,
+  clearTable as clearWorkTable,
   createNewWorks,
   makeWorkDetails,
 } from '~/tests/work_utils.ts';
@@ -35,12 +35,12 @@ describe('Works APIs', () => {
   });
 
   beforeEach(async () => {
-    await clearWorkCollection();
+    await clearWorkTable();
     await clearAuthCollection();
   });
 
   afterAll(async () => {
-    await clearWorkCollection();
+    await clearWorkTable();
     await clearAuthCollection();
   });
 
@@ -187,7 +187,6 @@ describe('Works APIs', () => {
       }).send(work);
 
       const {
-        _id,
         id,
         title,
         description,
@@ -195,9 +194,9 @@ describe('Works APIs', () => {
         repo,
         projectUrl,
         thumbnail,
+        created_at,
       } = response.body;
       const updated = {
-        _id,
         id,
         title,
         description,
@@ -205,6 +204,7 @@ describe('Works APIs', () => {
         repo,
         projectUrl,
         thumbnail,
+        created_at,
       };
 
       assertEquals(response.status, 200);

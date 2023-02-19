@@ -28,46 +28,61 @@ export class ${Name}Controller implements I${Name}Controller {
 
 export const modelTemplate = (name: string) => {
   const Name = name.replace(/\b[a-z]/, (letter) => letter.toUpperCase());
-  return `import { Database, ObjectId } from 'mongo';
-import { ${Name}Data, ${Name}InputData, ${Name}Model, ${Name}Schema } from '~/types.ts';
-import db from '~/db.ts';
-
-const ${Name} = db.getDatabase;
+  return `import type {
+  SupabaseWithAuth,
+  ${Name}Data,
+  ${Name}InputData,
+  ${Name}Model,
+} from '~/types.ts';
+import { supabase, supabaseWithAuth } from '~/supabase.ts';
 
 class ${Name}Repository implements ${Name}Model {
-  #${name};
-  constructor(db: Database) {
-    this.#${name} = db.collection<${Name}Schema>('${name}s');
+  #supabase;
+  constructor(supabase: SupabaseWithAuth) {
+    this.#supabase = { ...supabase };
   }
 
   async getAll() {
-    return await this.#${name}.find().toArray().then((${name}s) =>
-      ${name}s.map(mapOptionalData).filter((${name}): ${name} is ${Name}Data => !!${name})
-    );
+    const { data } = await this.#getSupabase().select('*');
+    return data ? data as WorkData[] : [];
   }
 
-  async create(${name}: ${Name}InputData) {
-    return await this.#${name}.insertOne(${name}).then((insertedId) =>
-      mapOptionalData({ ...${name}, _id: insertedId })
-    );
+  async create(${name}: ${Name}InputData, isAuth?: boolean) {
+    const client = this.#getSupabase(isAuth);
+    const { data } = await client
+      .insert({ ...${name}, id: crypto.randomUUID() })
+      .select('*');
+    if (data) {
+      return data[0] as ${Name}Data;
+    }
   }
 
-  async update(title: string, ${name}: ${Name}InputData) {
-    return await this.#${name}.updateOne({ title }, { $set: ${name} }).then(async () =>
-      await this.#${name}.findOne({ title }).then(mapOptionalData)
-    );
+  async update(key: string, ${name}: ${Name}InputData, isAuth?: boolean) {
+    const client = this.#getSupabase(isAuth);
+    const { data } = await client
+      .update({ ...${name} })
+      .eq('key', key)
+      .select('*');
+    if (data) {
+      return data[0] as ${Name}Data;
+    }
   }
 
-  async remove(title: string) {
-    return await this.#${name}.deleteOne({ title });
+  async remove(key: string, isAuth?: boolean) {
+    const client = this.#getSupabase(isAuth);
+    const { count } = await client.delete().eq('key', key);
+    return count ? count : 0;
+  }
+
+  #getSupabase(isAuth?: boolean) {
+    return this.#supabase[isAuth ? 'withAuth' : 'withoutAuth'].from('${name}s');
   }
 }
 
-function mapOptionalData(data?: ${Name}Schema): ${Name}Data | undefined {
-  return data ? { ...data, id: data._id.toString() } : data;
-}
-
-export const ${name}Repository = new ${Name}Repository(${Name});
+export const ${name}Repository = new ${Name}Repository({
+  withAuth: supabaseWithAuth,
+  withoutAuth: supabase,
+});
 `;
 };
 

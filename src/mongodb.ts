@@ -1,8 +1,6 @@
 import { MongoClient } from 'mongo';
 import config from '~/config.ts';
 
-const { database } = config;
-
 class Database {
   #client: MongoClient;
   #name: string;
@@ -25,11 +23,11 @@ class Database {
   }
 }
 
-const db = new Database(database.name, database.host);
+const mongodb = new Database(config.mongodb.name, config.mongodb.host);
 try {
-  await db.connect();
+  await mongodb.connect();
 } catch (error) {
   console.log(error);
 }
 
-export default db;
+export default mongodb;
