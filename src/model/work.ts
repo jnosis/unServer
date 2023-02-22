@@ -13,7 +13,7 @@ class WorkRepository implements WorkModel {
   }
 
   async getAll() {
-    const { data } = await this.#getSupabase().select('*');
+    const { data } = await this.#getSupabase().select('*').order('created_at');
     return data ? data as WorkData[] : [];
   }
 
