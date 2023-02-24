@@ -44,7 +44,7 @@ class ${Name}Repository implements ${Name}Model {
 
   async getAll() {
     const { data } = await this.#getSupabase().select('*');
-    return data ? data as WorkData[] : [];
+    return data ? data as ${Name}Data[] : [];
   }
 
   async create(${name}: ${Name}InputData, isAuth?: boolean) {
@@ -93,7 +93,7 @@ export const routerTemplate = (
   const Name = name.replace(/\b[a-z]/, (letter) => letter.toUpperCase());
   const routers = Object.keys(endpoints).map((method) =>
     endpoints[method].map((endpoint) =>
-      `router.${method}('${endpoint}', ${name}Controller);`
+      `router.${method.toLowerCase()}('${endpoint}', ${name}Controller);`
     )
   ).flat().join('\n  ');
 
