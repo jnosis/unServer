@@ -1,4 +1,4 @@
-import '$std/dotenv/load.ts';
+import { loadSync } from '$std/dotenv/mod.ts';
 import { CorsOptions } from 'cors';
 import {
   BcryptOptions,
@@ -8,6 +8,8 @@ import {
   RateLimitOptions,
   SupabaseOptions,
 } from '~/types.ts';
+
+loadSync({ allowEmptyValues: true, export: true });
 
 const isTest = Deno.args.includes('test');
 
