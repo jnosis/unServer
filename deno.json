@@ -4,18 +4,12 @@
     "strict": true
   },
   "lint": {
-    "files": {
-      "include": ["src/", "cli/"]
-    }
+    "include": ["src/", "cli/"]
   },
   "fmt": {
-    "files": {
-      "include": ["src/", "cli/"]
-    },
-    "options": {
-      "singleQuote": true,
-      "proseWrap": "preserve"
-    }
+    "include": ["src/", "cli/"],
+    "singleQuote": true,
+    "proseWrap": "preserve"
   },
   "importMap": "./import_map.json",
   "tasks": {
