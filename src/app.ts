@@ -3,7 +3,7 @@ import { cors as honoCors, secureHeaders } from 'hono/middleware';
 import { CorsOptions, opineCors } from 'cors';
 import { json, opine } from 'opine';
 import { UserController } from '~/controller/auth.ts';
-import { WorkController } from '~/controller/work.ts';
+import { HWorkController, WorkController } from '~/controller/work.ts';
 import { elmedenoMiddleware } from '~/middleware/elmedeno.ts';
 import { errorHandler } from '~/middleware/error_handler.ts';
 import log from '~/middleware/logger.ts';
@@ -12,7 +12,7 @@ import { userRepository } from '~/model/auth.ts';
 import { workRepository } from '~/model/work.ts';
 import apiRouter, { hApiRouter } from '~/router/api.ts';
 import userRouter from '~/router/auth.ts';
-import workRouter from '~/router/work.ts';
+import workRouter, { hWorkRouter } from '~/router/work.ts';
 import config, { hConfig } from '~/config.ts';
 
 const { cors } = config;
@@ -52,7 +52,10 @@ app.use(
 );
 hono.route(
   '/api',
-  hApiRouter([]),
+  hApiRouter([{
+    path: '/works',
+    router: hWorkRouter(new HWorkController(workRepository)),
+  }]),
 );
 
 app.use(errorHandler);

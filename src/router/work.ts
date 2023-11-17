@@ -1,7 +1,8 @@
+import type { IHWorkController, IWorkController } from '~/types.ts';
+import { Hono } from 'hono';
 import { Router } from 'opine';
 import { z } from 'zod';
-import { IWorkController } from '~/types.ts';
-import { isAuth } from '~/middleware/auth.ts';
+import { isAuth, isHAuth } from '~/middleware/auth.ts';
 import { validate } from '~/middleware/validator.ts';
 
 const router = Router();
@@ -30,4 +31,16 @@ export default function workRouter(workController: IWorkController) {
   router.delete('/:id', isAuth, workController.delete);
 
   return router;
+}
+
+const work = new Hono();
+
+export function hWorkRouter(workController: IHWorkController) {
+  work.get('/', workController.getAll);
+  work.get('/:id', workController.getByTitle);
+  work.post('/', isHAuth, workController.add);
+  work.put('/:id', isHAuth, workController.update);
+  work.delete('/:id', isHAuth, workController.delete);
+
+  return work;
 }
