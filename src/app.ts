@@ -13,7 +13,7 @@ import { workRepository } from '~/model/work.ts';
 import apiRouter from '~/router/api.ts';
 import userRouter from '~/router/auth.ts';
 import workRouter from '~/router/work.ts';
-import config from '~/config.ts';
+import config, { hConfig } from '~/config.ts';
 
 const { cors } = config;
 
@@ -31,7 +31,7 @@ app.use(elmedenoMiddleware);
 app.use(opineCors(corsOptions));
 app.use(rateLimit);
 hono.use('*', secureHeaders());
-hono.use('*', honoCors());
+hono.use('*', honoCors({ ...hConfig.cors, credentials: true }));
 
 app.get('/', (_req, res) => {
   res.send('Welcome to unServer');

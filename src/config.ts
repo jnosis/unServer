@@ -3,6 +3,8 @@ import { CorsOptions } from 'cors';
 import {
   BcryptOptions,
   Config,
+  CORSOptions,
+  HConfig,
   JwtOptions,
   MongodbOptions,
   RateLimitOptions,
@@ -34,6 +36,10 @@ const cors: CorsOptions = {
   origin: new RegExp(required('CORS_ALLOW_ORIGIN')),
 };
 
+const hCors: CORSOptions = {
+  origin: required('CORS_ALLOW_ORIGIN'),
+};
+
 const mongodb: MongodbOptions = {
   name: required('DATABASE_NAME')!,
   host: required('DATABASE_HOST')!,
@@ -54,6 +60,14 @@ const config: Config = {
   bcrypt,
   jwt,
   cors,
+  mongodb,
+  supabase,
+  rateLimit,
+};
+export const hConfig: HConfig = {
+  bcrypt,
+  jwt,
+  cors: hCors,
   mongodb,
   supabase,
   rateLimit,

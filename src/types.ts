@@ -7,6 +7,15 @@ export type BcryptOptions = {
   saltRound: number;
 };
 
+export type CORSOptions = {
+  origin: string | string[] | ((origin: string) => string | undefined | null);
+  allowMethods?: string[];
+  allowHeaders?: string[];
+  maxAge?: number;
+  credentials?: boolean;
+  exposeHeaders?: string[];
+};
+
 export type JwtOptions = {
   secretKey: string;
   expiresInSec: number;
@@ -36,6 +45,15 @@ export type Config = {
   supabase: SupabaseOptions;
   rateLimit: RateLimitOptions;
 };
+export type HConfig = {
+  bcrypt: BcryptOptions;
+  jwt: JwtOptions;
+  cors: CORSOptions;
+  mongodb: MongodbOptions;
+  supabase: SupabaseOptions;
+  rateLimit: RateLimitOptions;
+};
+
 
 export interface IUserController {
   signup: RequestHandler<ParamsDictionary, AuthToken>;
