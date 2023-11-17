@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { Router } from 'opine';
 import log from '~/middleware/logger.ts';
-import { getEndPoints as getEPs } from '~/util/endpoints.ts';
+import { getEndPoints, getHEndPoints } from '~/util/endpoints.ts';
 import { convertToMessage } from '~/util/message.ts';
 
 const router = Router();
@@ -12,7 +12,7 @@ export default function apiRouter(apis: API[]) {
   const endPoints: { [path: string]: string[] } = {};
 
   apis.forEach((api) => {
-    endPoints[api.path] = getEPs(`/api${api.path}`, api.router);
+    endPoints[api.path] = getEndPoints(`/api${api.path}`, api.router);
     router.use(api.path, api.router);
   });
 
@@ -35,7 +35,7 @@ export function hApiRouter(apis: HAPI[]) {
   const endPoints: { [path: string]: string[] } = {};
 
   apis.forEach((api) => {
-    endPoints[api.path] = getEndPoints(`/api${api.path}`, api.router);
+    endPoints[api.path] = getHEndPoints(`/api${api.path}`, api.router);
     hono.route(api.path, api.router);
   });
 
@@ -48,12 +48,4 @@ export function hApiRouter(apis: HAPI[]) {
   });
 
   return hono;
-}
-
-function getEndPoints(root: string, router: Hono) {
-  const endPoints = router.routes.map(({ path, method }) =>
-    `${method} ${root}${path}`
-  ).flat();
-
-  return endPoints;
 }
