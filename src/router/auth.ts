@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { Router } from 'opine';
 import { z } from 'zod';
 import { isAuth, isHAuth } from '~/middleware/auth.ts';
-import { validate } from '~/middleware/validator.ts';
+import { hValidate, validate } from '~/middleware/validator.ts';
 
 const router = Router();
 
@@ -31,9 +31,22 @@ export default function userRouter(userController: IUserController) {
 
 const auth = new Hono();
 
+const hValidateCredential = hValidate({
+  username: z.string().min(1, { message: 'Username should be not empty' }),
+  password: z.string().min(1, { message: 'Password should be not empty' }),
+});
+
+const hValidateSignup = [
+  hValidateCredential,
+  hValidate({
+    name: z.string().min(1, { message: 'Name should be not empty' }),
+    email: z.string().email('Invalid email'),
+  }),
+];
+
 export function hUserRouter(userController: IHUserController) {
-  auth.post('/signup', userController.signup);
-  auth.post('/login', userController.login);
+  auth.post('/signup', ...hValidateSignup, userController.signup);
+  auth.post('/login', hValidateCredential, userController.login);
   auth.post('/logout', userController.logout);
   auth.get('/me', isHAuth, userController.me);
 
