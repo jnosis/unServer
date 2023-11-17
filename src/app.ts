@@ -10,7 +10,7 @@ import log from '~/middleware/logger.ts';
 import rateLimit from '~/middleware/rate_limiter.ts';
 import { userRepository } from '~/model/auth.ts';
 import { workRepository } from '~/model/work.ts';
-import apiRouter from '~/router/api.ts';
+import apiRouter, { hApiRouter } from '~/router/api.ts';
 import userRouter from '~/router/auth.ts';
 import workRouter from '~/router/work.ts';
 import config, { hConfig } from '~/config.ts';
@@ -49,6 +49,10 @@ app.use(
     path: '/works',
     router: workRouter(new WorkController(workRepository)),
   }]),
+);
+hono.route(
+  '/api',
+  hApiRouter([]),
 );
 
 app.use(errorHandler);

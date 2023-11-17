@@ -1,6 +1,7 @@
+import { Hono } from 'hono';
 import { Router } from 'opine';
 import log from '~/middleware/logger.ts';
-import { getEndPoints } from '~/util/endpoints.ts';
+import { getEndPoints as getEPs } from '~/util/endpoints.ts';
 import { convertToMessage } from '~/util/message.ts';
 
 const router = Router();
@@ -11,7 +12,7 @@ export default function apiRouter(apis: API[]) {
   const endPoints: { [path: string]: string[] } = {};
 
   apis.forEach((api) => {
-    endPoints[api.path] = getEndPoints(`/api${api.path}`, api.router);
+    endPoints[api.path] = getEPs(`/api${api.path}`, api.router);
     router.use(api.path, api.router);
   });
 
@@ -24,4 +25,35 @@ export default function apiRouter(apis: API[]) {
   });
 
   return router;
+}
+
+type HAPI = { path: string; router: Hono };
+
+const hono = new Hono();
+
+export function hApiRouter(apis: HAPI[]) {
+  const endPoints: { [path: string]: string[] } = {};
+
+  apis.forEach((api) => {
+    endPoints[api.path] = getEndPoints(`/api${api.path}`, api.router);
+    hono.route(api.path, api.router);
+  });
+
+  hono.get('/', (c) => {
+    const { method, path } = c.req;
+
+    const msg = convertToMessage({ method, baseUrl: path, status: 200 });
+    log.debug(msg);
+    return c.json(endPoints);
+  });
+
+  return hono;
+}
+
+function getEndPoints(root: string, router: Hono) {
+  const endPoints = router.routes.map(({ path, method }) =>
+    `${method} ${root}${path}`
+  ).flat();
+
+  return endPoints;
 }
