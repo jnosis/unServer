@@ -28,7 +28,7 @@ export const honoErrorHandler: Handler = async (c, next) => {
     await next();
   } catch (err) {
     const msg = convertToMessage(err);
-    const message = { message: err.message || 'Something is wrong' };
+    const message = err.message || 'Something is wrong';
     log.error(msg);
     if (isErr(err)) {
       return c.json({ message }, err.status || 500);
