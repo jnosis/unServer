@@ -1,7 +1,8 @@
+import type { IHUserController, IUserController } from '~/types.ts';
+import { Hono } from 'hono';
 import { Router } from 'opine';
 import { z } from 'zod';
-import { IUserController } from '~/types.ts';
-import { isAuth } from '~/middleware/auth.ts';
+import { isAuth, isHAuth } from '~/middleware/auth.ts';
 import { validate } from '~/middleware/validator.ts';
 
 const router = Router();
@@ -26,4 +27,15 @@ export default function userRouter(userController: IUserController) {
   router.get('/me', isAuth, userController.me);
 
   return router;
+}
+
+const auth = new Hono();
+
+export function hUserRouter(userController: IHUserController) {
+  auth.post('/signup', userController.signup);
+  auth.post('/login', userController.login);
+  auth.post('/logout', userController.logout);
+  auth.get('/me', isHAuth, userController.me);
+
+  return auth;
 }
