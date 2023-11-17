@@ -1,3 +1,4 @@
+import type { Env, Handler, Input, TypedResponse } from 'hono';
 import type { ParamsDictionary, RequestHandler } from 'opine';
 import type { CorsOptions } from 'cors';
 import type { ObjectId } from 'mongo';
@@ -54,6 +55,13 @@ export type HConfig = {
   rateLimit: RateLimitOptions;
 };
 
+type HonoResponse<T> = TypedResponse<T> | Promise<TypedResponse<T>>;
+
+export type AuthEnv = {
+  Variables: {
+    userId: string;
+  };
+};
 
 export interface IUserController {
   signup: RequestHandler<ParamsDictionary, AuthToken>;
@@ -83,6 +91,14 @@ export interface IWorkController {
   add: RequestHandler<ParamsDictionary, WorkData>;
   update: RequestHandler<ParamsDictionary, WorkData>;
   delete: RequestHandler;
+}
+
+export interface IHWorkController {
+  getAll: Handler<Env, string, Input, HonoResponse<WorkData[]>>;
+  getByTitle: Handler<Env, string, Input, HonoResponse<WorkData>>;
+  add: Handler<AuthEnv, string, Input, HonoResponse<WorkData>>;
+  update: Handler<AuthEnv, string, Input, HonoResponse<WorkData>>;
+  delete: Handler<AuthEnv>;
 }
 
 export type Repo = {

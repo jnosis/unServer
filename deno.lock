@@ -550,6 +550,7 @@
     "https://deno.land/x/hono@v3.10.1/router/trie-router/index.ts": "3eb75e7f71ba81801631b30de6b1f5cefb2c7239c03797e2b2cbab5085911b41",
     "https://deno.land/x/hono@v3.10.1/router/trie-router/node.ts": "3af15fa9c9994a8664a2b7a7c11233504b5bb9d4fcf7bb34cf30d7199052c39f",
     "https://deno.land/x/hono@v3.10.1/router/trie-router/router.ts": "54ced78d35676302c8fcdda4204f7bdf5a7cc907fbf9967c75674b1e394f830d",
+    "https://deno.land/x/hono@v3.10.1/types.ts": "edc414a92383f9deb82f5f7a09e95bcf76f6100c23457c27d041986768f5345c",
     "https://deno.land/x/hono@v3.10.1/utils/body.ts": "7a16a6656331a96bcae57642f8d5e3912bd361cbbcc2c0d2157ecc3f218f7a92",
     "https://deno.land/x/hono@v3.10.1/utils/buffer.ts": "9066a973e64498cb262c7e932f47eed525a51677b17f90893862b7279dc0773e",
     "https://deno.land/x/hono@v3.10.1/utils/cookie.ts": "19920ba6756944aae1ad8585c3ddeaa9df479733f59d05359db096f7361e5e4b",
