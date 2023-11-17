@@ -60,6 +60,7 @@ type HonoResponse<T> = TypedResponse<T> | Promise<TypedResponse<T>>;
 export type AuthEnv = {
   Variables: {
     userId: string;
+    token: string;
   };
 };
 
@@ -68,6 +69,13 @@ export interface IUserController {
   login: RequestHandler<ParamsDictionary, AuthToken>;
   logout: RequestHandler;
   me: RequestHandler<ParamsDictionary, AuthToken>;
+}
+
+export interface IHUserController {
+  signup: Handler<Env, string, Input, HonoResponse<AuthToken>>;
+  login: Handler<Env, string, Input, HonoResponse<AuthToken>>;
+  logout: Handler;
+  me: Handler<AuthEnv, string, Input, HonoResponse<AuthToken>>;
 }
 
 export type UserData = {
