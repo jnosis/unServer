@@ -5,7 +5,7 @@ import { json, opine } from 'opine';
 import { UserController } from '~/controller/auth.ts';
 import { HWorkController, WorkController } from '~/controller/work.ts';
 import { elmedenoMiddleware } from '~/middleware/elmedeno.ts';
-import { errorHandler } from '~/middleware/error_handler.ts';
+import { errorHandler, honoErrorHandler } from '~/middleware/error_handler.ts';
 import log from '~/middleware/logger.ts';
 import rateLimit from '~/middleware/rate_limiter.ts';
 import { userRepository } from '~/model/auth.ts';
@@ -32,6 +32,7 @@ app.use(opineCors(corsOptions));
 app.use(rateLimit);
 hono.use('*', secureHeaders());
 hono.use('*', honoCors({ ...hConfig.cors, credentials: true }));
+hono.use('*', honoErrorHandler);
 
 app.get('/', (_req, res) => {
   res.send('Welcome to unServer');
@@ -59,10 +60,6 @@ hono.route(
 );
 
 app.use(errorHandler);
-hono.onError((err, c) => {
-  console.error(`${err}`);
-  return c.text('');
-});
 
 Deno.serve({
   port: 3000,
