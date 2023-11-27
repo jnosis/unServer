@@ -1,10 +1,8 @@
 import { loadSync } from '$std/dotenv/mod.ts';
-import { CorsOptions } from 'cors';
 import {
   BcryptOptions,
   Config,
   CORSOptions,
-  HConfig,
   JwtOptions,
   MongodbOptions,
   RateLimitOptions,
@@ -32,11 +30,7 @@ const jwt: JwtOptions = {
   expiresInSec: parseInt(required('JWT_EXPIRES_IN_SEC', '86400')),
 };
 
-const cors: CorsOptions = {
-  origin: new RegExp(required('CORS_ALLOW_ORIGIN')),
-};
-
-const hCors: CORSOptions = {
+const cors: CORSOptions = {
   origin: required('CORS_ALLOW_ORIGIN'),
 };
 
@@ -56,18 +50,10 @@ const rateLimit: RateLimitOptions = {
   maxRequest: parseInt(required('RATE_LIMIT_MAX_REQUEST', '100')),
 };
 
-const config: Config = {
+export const config: Config = {
   bcrypt,
   jwt,
   cors,
-  mongodb,
-  supabase,
-  rateLimit,
-};
-export const hConfig: HConfig = {
-  bcrypt,
-  jwt,
-  cors: hCors,
   mongodb,
   supabase,
   rateLimit,

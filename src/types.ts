@@ -1,6 +1,4 @@
 import type { Env, Handler, Input, TypedResponse } from 'hono';
-import type { ParamsDictionary, RequestHandler } from 'opine';
-import type { CorsOptions } from 'cors';
 import type { ObjectId } from 'mongo';
 import type { Supabase } from '~/supabase.ts';
 
@@ -41,14 +39,6 @@ export type RateLimitOptions = {
 export type Config = {
   bcrypt: BcryptOptions;
   jwt: JwtOptions;
-  cors: CorsOptions;
-  mongodb: MongodbOptions;
-  supabase: SupabaseOptions;
-  rateLimit: RateLimitOptions;
-};
-export type HConfig = {
-  bcrypt: BcryptOptions;
-  jwt: JwtOptions;
   cors: CORSOptions;
   mongodb: MongodbOptions;
   supabase: SupabaseOptions;
@@ -65,13 +55,6 @@ export type AuthEnv = {
 };
 
 export interface IUserController {
-  signup: RequestHandler<ParamsDictionary, AuthToken>;
-  login: RequestHandler<ParamsDictionary, AuthToken>;
-  logout: RequestHandler;
-  me: RequestHandler<ParamsDictionary, AuthToken>;
-}
-
-export interface IHUserController {
   signup: Handler<Env, string, Input, HonoResponse<AuthToken>>;
   login: Handler<Env, string, Input, HonoResponse<AuthToken>>;
   logout: Handler;
@@ -94,14 +77,6 @@ export type AuthToken = {
 };
 
 export interface IWorkController {
-  getAll: RequestHandler<ParamsDictionary, WorkData[]>;
-  getByTitle: RequestHandler<ParamsDictionary, WorkData>;
-  add: RequestHandler<ParamsDictionary, WorkData>;
-  update: RequestHandler<ParamsDictionary, WorkData>;
-  delete: RequestHandler;
-}
-
-export interface IHWorkController {
   getAll: Handler<Env, string, Input, HonoResponse<WorkData[]>>;
   getByTitle: Handler<Env, string, Input, HonoResponse<WorkData>>;
   add: Handler<AuthEnv, string, Input, HonoResponse<WorkData>>;
