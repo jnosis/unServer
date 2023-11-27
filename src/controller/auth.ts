@@ -13,7 +13,7 @@ import { createJwtToken } from '~/helper/jwt.ts';
 import { throwError } from '~/middleware/error_handler.ts';
 import log from '~/middleware/logger.ts';
 import { convertToMessage } from '~/util/message.ts';
-import config from '~/config.ts';
+import config, { hConfig } from '~/config.ts';
 
 export class UserController implements IUserController {
   #userRepository: UserModel;
@@ -257,10 +257,11 @@ function setHToken(c: Context, token: string) {
     partitioned?: boolean;
   };
   const options: CookieOptions = {
-    maxAge: config.jwt.expiresInSec,
+    maxAge: hConfig.jwt.expiresInSec,
     httpOnly: true,
     sameSite: 'None',
     secure: true,
+    path: '/',
   };
 
   setCookie(c, 'token', token, options);

@@ -56,7 +56,7 @@ hono.route(
   hApiRouter([{
     path: '/auth',
     router: hUserRouter(new HUserController(userRepository)),
-  },{
+  }, {
     path: '/works',
     router: hWorkRouter(new HWorkController(workRepository)),
   }]),
