@@ -1,31 +1,18 @@
-import { create, getNumericDate, Header, Payload, verify } from 'djwt';
+import { sign, verify } from 'hono/jwt';
 import config from '~/config.ts';
 
 const { jwt } = config;
 
-const exp = getNumericDate(jwt.expiresInSec);
-const key = await crypto.subtle.importKey(
-  'raw',
-  new TextEncoder().encode(jwt.secretKey),
-  { name: 'HMAC', hash: 'SHA-512' },
-  true,
-  ['sign', 'verify'],
-);
+const exp = Math.round((Date.now() + jwt.expiresInSec * 1000) / 1000);
 
 export async function createJwtToken(id: string) {
-  const headers: Header = {
-    alg: 'HS512',
-    typ: 'JWS',
-  };
-  const payload: Payload = { exp, id };
-
-  return await create(headers, payload, key);
+  return await sign({ exp, id }, jwt.secretKey, 'HS512');
 }
 
 export async function verifyJwtToken(token: string) {
   try {
-    return await verify(token, key);
-  } catch (_e) {
-    return _e;
+    return await verify(token, jwt.secretKey, 'HS512');
+  } catch (e) {
+    return e;
   }
 }
