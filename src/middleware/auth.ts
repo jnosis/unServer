@@ -42,11 +42,7 @@ export const isAuth = async (c: Context, next: Next) => {
     c.set('userId', user.id);
     c.set('token', token);
     await next();
-  } catch (_e) {
-    return throwError({
-      method,
-      baseUrl: path,
-      ...AUTH_ERROR,
-    });
+  } catch (e) {
+    return throwError(e);
   }
 };
