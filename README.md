@@ -40,6 +40,5 @@ deno task create --create-router
 ### TODO
 
 - Migrate cli for hono
-- Migrate from djwt to hono/helper
 - Fix a issue where work title could not be changed
 - Add image uploader to supabase
