@@ -1,6 +1,6 @@
+import type { Hono } from 'hono';
+import type { UserSignupData } from '~/types.ts';
 import { faker } from 'faker';
-import { SuperDeno } from 'superdeno';
-import { UserSignupData } from '~/types.ts';
 import { createJwtToken } from '~/helper/jwt.ts';
 import db from '~/mongodb.ts';
 
@@ -17,12 +17,15 @@ export function makeUserDetails(): UserSignupData {
   };
 }
 
-export async function createNewUser(request: SuperDeno) {
+export async function createNewUser(app: Hono) {
   const user = makeUserDetails();
-  const createdUser = await request.post('/auth/signup').send(user);
+  const createdUser = await app.request('/auth/signup', {
+    method: 'post',
+    body: JSON.stringify(user),
+  });
   return {
     ...user,
-    token: createdUser.body.token,
+    token: (await createdUser.json()).token,
     res: createdUser,
   };
 }

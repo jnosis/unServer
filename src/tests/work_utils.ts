@@ -1,6 +1,6 @@
+import type { Hono } from 'hono';
+import type { WorkData, WorkInputData } from '~/types.ts';
 import { faker } from 'faker';
-import { SuperDeno } from 'superdeno';
-import { WorkData, WorkInputData } from '~/types.ts';
 import { createNewUser } from '~/tests/auth_utils.ts';
 import { supabaseWithAuth } from '~/supabase.ts';
 
@@ -26,17 +26,19 @@ export function makeWorkDetails(username: string): WorkInputData {
   };
 }
 
-export async function createNewWorks(request: SuperDeno, n = 1) {
-  const { username, token } = await createNewUser(request);
+export async function createNewWorks(app: Hono, n = 1) {
+  const { username, token } = await createNewUser(app);
   let works: WorkData[] = [];
   let cnt = 0;
 
   while (cnt++ < n) {
     const work = makeWorkDetails(username);
-    const response = await request.post('/works').set({
-      Authorization: `Bearer ${token}`,
-    }).send(work);
-    const { created_at, id } = response.body;
+    const response = await app.request('/works', {
+      method: 'post',
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(work),
+    });
+    const { created_at, id } = await response.json();
     works = [...works, { ...work, created_at, id }];
   }
   return {

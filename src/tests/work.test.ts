@@ -1,6 +1,5 @@
 import { faker } from 'faker';
-import { json, Opine, opine } from 'opine';
-import { SuperDeno, superdeno } from 'superdeno';
+import { Hono } from 'hono';
 import { assertEquals } from 'testing/asserts.ts';
 import { afterAll, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
 import { UserController } from '~/controller/auth.ts';
@@ -21,17 +20,13 @@ import {
 } from '~/tests/work_utils.ts';
 
 describe('Works APIs', () => {
-  let app: Opine;
-  let request: SuperDeno;
+  let app: Hono;
 
   beforeAll(() => {
-    app = opine();
-    app.use(json());
-    app.use('/auth', userRouter(new UserController(userRepository)));
-    app.use('/works', workRouter(new WorkController(workRepository)));
-    app.use(errorHandler);
-
-    request = superdeno(app);
+    app = new Hono();
+    app.use('*', errorHandler);
+    app.route('/auth', userRouter(new UserController(userRepository)));
+    app.route('/works', workRouter(new WorkController(workRepository)));
   });
 
   beforeEach(async () => {
@@ -46,12 +41,14 @@ describe('Works APIs', () => {
 
   describe('POST to /works', () => {
     it('returns 201 and creates work', async () => {
-      const { username, token } = await createNewUser(request);
+      const { username, token } = await createNewUser(app);
       const work = makeWorkDetails(username);
 
-      const response = await request.post('/works').set({
-        Authorization: `Bearer ${token}`,
-      }).send(work);
+      const response = await app.request('/works', {
+        method: 'post',
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify(work),
+      });
 
       const {
         title,
@@ -60,7 +57,7 @@ describe('Works APIs', () => {
         repo,
         projectUrl,
         thumbnail,
-      } = response.body;
+      } = await response.json();
       const created = {
         title,
         description,
@@ -75,55 +72,65 @@ describe('Works APIs', () => {
     });
 
     it('returns 400 when title field is invalid', async () => {
-      const { username, token } = await createNewUser(request);
+      const { username, token } = await createNewUser(app);
       const work = makeWorkDetails(username);
       work.title = '';
 
-      const response = await request.post('/works').set({
-        Authorization: `Bearer ${token}`,
-      }).send(work);
+      const response = await app.request('/works', {
+        method: 'post',
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify(work),
+      });
 
       assertEquals(response.status, 400);
-      assertEquals(response.body.message, 'Title should be not empty');
+      assertEquals(
+        (await response.json()).message,
+        'Title should be not empty',
+      );
     });
 
     it('returns 400 when repository url field is invalid', async () => {
-      const { username, token } = await createNewUser(request);
+      const { username, token } = await createNewUser(app);
       const work = makeWorkDetails(username);
       work.repo.url = faker.random.alpha(20);
 
-      const response = await request.post('/works').set({
-        Authorization: `Bearer ${token}`,
-      }).send(work);
+      const response = await app.request('/works', {
+        method: 'post',
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify(work),
+      });
 
       assertEquals(response.status, 400);
-      assertEquals(response.body.message, 'Invalid repository url');
+      assertEquals((await response.json()).message, 'Invalid repository url');
     });
 
     it('returns 400 when project url field is invalid', async () => {
-      const { username, token } = await createNewUser(request);
+      const { username, token } = await createNewUser(app);
       const work = makeWorkDetails(username);
       work.projectUrl = faker.random.alpha(20);
 
-      const response = await request.post('/works').set({
-        Authorization: `Bearer ${token}`,
-      }).send(work);
+      const response = await app.request('/works', {
+        method: 'post',
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify(work),
+      });
 
       assertEquals(response.status, 400);
-      assertEquals(response.body.message, 'Invalid project url');
+      assertEquals((await response.json()).message, 'Invalid project url');
     });
   });
 
   describe('GET to /works', () => {
     it('returns all works', async () => {
       const n = Math.floor(Math.random() * 5);
-      const { works } = await createNewWorks(request, n);
+      const { works } = await createNewWorks(app, n);
 
-      const response = await request.get('/works');
+      const response = await app.request('/works', { method: 'get' });
 
+      const body = await response.json();
       assertEquals(response.status, 200);
-      assertEquals(response.body, works);
-      assertEquals(response.body.length, n);
+      assertEquals(body, works);
+      assertEquals(body.length, n);
     });
   });
 
@@ -131,60 +138,71 @@ describe('Works APIs', () => {
     it('returns 404 when work does not exist', async () => {
       const title = faker.commerce.product();
 
-      const response = await request.get(`/works/${title}`);
+      const response = await app.request(`/works/${title}`, { method: 'get' });
 
       assertEquals(response.status, 404);
-      assertEquals(response.body.message, `Work title(${title}) not found`);
+      assertEquals(
+        (await response.json()).message,
+        `Work title(${title}) not found`,
+      );
     });
 
     it('returns 200 and the work object when work exists', async () => {
-      const { works } = await createNewWorks(request);
+      const { works } = await createNewWorks(app);
       const work = works[0];
 
-      const response = await request.get(`/works/${work.title}`);
+      const response = await app.request(`/works/${work.title}`, {
+        method: 'get',
+      });
 
       assertEquals(response.status, 200);
-      assertEquals(response.body, { ...work });
+      assertEquals(await response.json(), { ...work });
     });
   });
 
   describe('PUT to /works/:id', () => {
     it('returns 404 when work does not exist', async () => {
-      const { username, token } = await createNewUser(request);
+      const { username, token } = await createNewUser(app);
       const work = makeWorkDetails(username);
 
-      const response = await request.put(`/works/${work.title}`).set({
-        Authorization: `Bearer ${token}`,
-      }).send(work);
+      const response = await app.request(`/works/${work.title}`, {
+        method: 'put',
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify(work),
+      });
 
       assertEquals(response.status, 404);
       assertEquals(
-        response.body.message,
+        (await response.json()).message,
         `Work title(${work.title}) not found`,
       );
     });
 
     it('returns 404 when work title does not matched', async () => {
-      const { token, works } = await createNewWorks(request);
+      const { token, works } = await createNewWorks(app);
       const work = works[0];
 
       const updated = { ...work, title: faker.commerce.product() };
 
-      const response = await request.put(`/works/${work.title}`).set({
-        Authorization: `Bearer ${token}`,
-      }).send(updated);
+      const response = await app.request(`/works/${work.title}`, {
+        method: 'put',
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify(updated),
+      });
 
       assertEquals(response.status, 404);
-      assertEquals(response.body.message, 'Update access forbidden');
+      assertEquals((await response.json()).message, 'Update access forbidden');
     });
 
     it('returns 200 and the work object when work exists', async () => {
-      const { token, works } = await createNewWorks(request);
+      const { token, works } = await createNewWorks(app);
       const work = works[0];
 
-      const response = await request.put(`/works/${work.title}`).set({
-        Authorization: `Bearer ${token}`,
-      }).send(work);
+      const response = await app.request(`/works/${work.title}`, {
+        method: 'put',
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify(work),
+      });
 
       const {
         id,
@@ -195,7 +213,7 @@ describe('Works APIs', () => {
         projectUrl,
         thumbnail,
         created_at,
-      } = response.body;
+      } = await response.json();
       const updated = {
         id,
         title,
@@ -214,22 +232,27 @@ describe('Works APIs', () => {
 
   describe('DELETE to /works/:id', () => {
     it('returns 404 when work does not exist', async () => {
-      const { token } = await createNewUser(request);
+      const { token } = await createNewUser(app);
 
-      const response = await request.delete('/works/something').set({
-        Authorization: `Bearer ${token}`,
+      const response = await app.request('/works/something', {
+        method: 'delete',
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       assertEquals(response.status, 404);
-      assertEquals(response.body.message, `Work title(something) not found`);
+      assertEquals(
+        (await response.json()).message,
+        `Work title(something) not found`,
+      );
     });
 
     it('returns 204 and the work should be deleted when work exists', async () => {
-      const { token, works } = await createNewWorks(request);
+      const { token, works } = await createNewWorks(app);
       const work = works[0];
 
-      const response = await request.delete(`/works/${work.title}`).set({
-        Authorization: `Bearer ${token}`,
+      const response = await app.request(`/works/${work.title}`, {
+        method: 'delete',
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       assertEquals(response.status, 204);

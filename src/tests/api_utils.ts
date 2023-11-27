@@ -1,14 +1,13 @@
 import { faker } from 'faker';
-import { Router } from 'opine';
+import { Hono } from 'hono';
 
 export function createRouter() {
-  const router = Router();
   const root = faker.system.directoryPath();
   const path = '/' + faker.random.word();
   const data = JSON.parse(faker.datatype.json());
 
-  router.get(path, (_requestBase, res) => {
-    res.json(data);
+  const router = new Hono().get(path, (c) => {
+    return c.json(data);
   });
 
   return { root, router, path, data };
