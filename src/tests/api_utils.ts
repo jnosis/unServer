@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 
 export function createRouter() {
   const root = faker.system.directoryPath();
-  const path = '/' + faker.random.word();
+  const path = '/' + faker.word.sample();
   const data = JSON.parse(faker.datatype.json());
 
   const router = new Hono().get(path, (c) => {

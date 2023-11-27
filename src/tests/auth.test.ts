@@ -104,7 +104,7 @@ describe('Auth APIs', () => {
       const user = makeUserDetails();
       const response = await app.request('/auth/signup', {
         method: 'post',
-        body: JSON.stringify({ ...user, email: faker.random.alpha(13) }),
+        body: JSON.stringify({ ...user, email: faker.string.alpha(13) }),
       });
 
       assertEquals(response.status, 400);
@@ -210,7 +210,7 @@ describe('Auth APIs', () => {
     it('returns 401 when token is invalid', async () => {
       const response = await app.request('/auth/me', {
         method: 'get',
-        headers: { Authorization: `Bearer ${faker.datatype.string()}` },
+        headers: { Authorization: `Bearer ${faker.string.sample()}` },
       });
 
       assertEquals(response.status, 401);
@@ -221,7 +221,7 @@ describe('Auth APIs', () => {
       const _token = await createToken();
       const response = await app.request('/auth/me', {
         method: 'get',
-        headers: { Authorization: `Bearer ${faker.datatype.string()}` },
+        headers: { Authorization: `Bearer ${faker.string.sample()}` },
       });
 
       assertEquals(response.status, 401);

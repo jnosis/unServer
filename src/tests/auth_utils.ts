@@ -10,9 +10,9 @@ export async function clearCollection() {
 
 export function makeUserDetails(): UserSignupData {
   return {
-    username: faker.name.middleName(),
+    username: faker.person.middleName(),
     password: faker.internet.password(),
-    name: faker.name.findName(),
+    name: faker.person.fullName(),
     email: faker.internet.email(),
   };
 }
