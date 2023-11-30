@@ -1,7 +1,7 @@
-import type { OpineRequest, OpineResponse } from 'opine';
+import type { Context } from 'hono';
 import type {
+  AuthEnv,
   IWorkController,
-  WorkData,
   WorkInputData,
   WorkModel,
 } from '~/types.ts';
@@ -15,29 +15,28 @@ export class WorkController implements IWorkController {
     this.#workRepository = workRepository;
   }
 
-  getAll = async (req: OpineRequest, res: OpineResponse<WorkData[]>) => {
-    const { method, baseUrl } = req;
+  getAll = async (c: Context) => {
+    const { method, path } = c.req;
     const works = await this.#workRepository.getAll();
 
     const msg = convertToMessage({
       method,
-      baseUrl,
+      baseUrl: path,
       status: 200,
     });
     log.debug(msg);
-    res.setStatus(200).json(works);
+    return c.jsonT(works, 200);
   };
 
-  getByTitle = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
-    const { method, baseUrl } = req;
-    const title = req.params.id;
+  getByTitle = async (c: Context) => {
+    const { method, path } = c.req;
+    const title = c.req.param('id');
     const work = await this.#workRepository.getByTitle(title);
 
     if (!work) {
-      throwError({
+      return throwError({
         method,
-        baseUrl,
-        param: title,
+        baseUrl: path,
         status: 404,
         message: `Work title(${title}) not found`,
       });
@@ -45,18 +44,18 @@ export class WorkController implements IWorkController {
 
     const msg = convertToMessage({
       method,
-      baseUrl,
-      param: title,
+      baseUrl: path,
       status: 200,
     });
     log.debug(msg);
-    return res.setStatus(200).json(work);
+    return c.jsonT(work, 200);
   };
 
-  add = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
-    const { method, baseUrl } = req;
-    const { title, description, techs, repo, projectUrl, thumbnail, userId } =
-      req.body;
+  add = async (c: Context<AuthEnv>) => {
+    const { method, path } = c.req;
+    const { title, description, techs, repo, projectUrl, thumbnail } = await c
+      .req.json<WorkInputData>();
+    const userId = c.get('userId');
     const isAuth = !!userId;
     const workInput: WorkInputData = {
       title,
@@ -69,18 +68,26 @@ export class WorkController implements IWorkController {
 
     const work = await this.#workRepository.create(workInput, isAuth);
 
+    if (!work) {
+      return throwError({
+        method,
+        baseUrl: path,
+        status: 500,
+        message: `Work title(${title}) could not create`,
+      });
+    }
     const msg = convertToMessage({
       method,
-      baseUrl,
+      baseUrl: path,
       status: 201,
     });
     log.debug(msg);
-    res.setStatus(201).json(work);
+    return c.jsonT(work, 201);
   };
 
-  update = async (req: OpineRequest, res: OpineResponse<WorkData>) => {
-    const { method, baseUrl } = req;
-    const title = req.params.id;
+  update = async (c: Context<AuthEnv>) => {
+    const { method, path } = c.req;
+    const title = c.req.param('id');
     const {
       title: updatedTitle,
       description,
@@ -88,8 +95,8 @@ export class WorkController implements IWorkController {
       repo,
       projectUrl,
       thumbnail,
-      userId,
-    } = req.body;
+    } = await c.req.json<WorkInputData>();
+    const userId = c.get('userId');
     const isAuth = !!userId;
     const workInput: WorkInputData = {
       title: updatedTitle,
@@ -102,10 +109,9 @@ export class WorkController implements IWorkController {
     const work = await this.#workRepository.getByTitle(title);
 
     if (!work) {
-      throwError({
+      return throwError({
         method,
-        baseUrl,
-        param: title,
+        baseUrl: path,
         status: 404,
         message: `Work title(${title}) not found`,
       });
@@ -113,8 +119,7 @@ export class WorkController implements IWorkController {
     if (title !== workInput.title) {
       throwError({
         method,
-        baseUrl,
-        param: title,
+        baseUrl: path,
         status: 404,
         message: `Update access forbidden`,
       });
@@ -123,26 +128,24 @@ export class WorkController implements IWorkController {
     const updated = await this.#workRepository.update(title, workInput, isAuth);
     const msg = convertToMessage({
       method,
-      baseUrl,
-      param: title,
+      baseUrl: path,
       status: 200,
     });
     log.debug(msg);
-    return res.setStatus(200).json(updated);
+    return c.jsonT(updated!, 200);
   };
 
-  delete = async (req: OpineRequest, res: OpineResponse) => {
-    const { method, baseUrl } = req;
-    const { userId } = req.body;
+  delete = async (c: Context) => {
+    const { method, path } = c.req;
+    const userId = c.get('userId');
     const isAuth = !!userId;
-    const title = req.params.id;
+    const title = c.req.param('id');
     const work = await this.#workRepository.getByTitle(title);
 
     if (!work) {
-      throwError({
+      return throwError({
         method,
-        baseUrl,
-        param: title,
+        baseUrl: path,
         status: 404,
         message: `Work title(${title}) not found`,
       });
@@ -151,11 +154,10 @@ export class WorkController implements IWorkController {
     await this.#workRepository.remove(title, isAuth);
     const msg = convertToMessage({
       method,
-      baseUrl,
-      param: title,
+      baseUrl: path,
       status: 204,
     });
     log.debug(msg);
-    return res.sendStatus(204);
+    return c.body(null, 204);
   };
 }

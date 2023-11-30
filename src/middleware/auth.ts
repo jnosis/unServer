@@ -1,4 +1,4 @@
-import { NextFunction, OpineRequest, OpineResponse } from 'opine';
+import type { Context, Next } from 'hono';
 import { getCookie } from '~/helper/cookie.ts';
 import { verifyJwtToken } from '~/helper/jwt.ts';
 import { userRepository } from '~/model/auth.ts';
@@ -9,25 +9,22 @@ const AUTH_ERROR = {
   message: 'Authorization Error',
 };
 
-export const isAuth = async (
-  req: OpineRequest,
-  _res: OpineResponse,
-  next: NextFunction,
-) => {
+export const isAuth = async (c: Context, next: Next) => {
   let token;
 
-  const authHeader = req.get('Authorization');
-  const { method, originalUrl } = req;
+  const authHeader = c.req.header('Authorization');
+  const { method, path } = c.req;
+  c.set('test', 'test');
   if (authHeader && authHeader.startsWith('Bearer ')) {
     token = authHeader.split(' ')[1];
   } else {
-    token = getCookie(req.headers, 'token');
+    token = getCookie(c.req.raw.headers, 'token');
   }
 
   if (!token) {
     return throwError({
       method,
-      baseUrl: originalUrl,
+      baseUrl: path,
       ...AUTH_ERROR,
     });
   }
@@ -38,18 +35,14 @@ export const isAuth = async (
     if (!user) {
       return throwError({
         method,
-        baseUrl: originalUrl,
+        baseUrl: path,
         ...AUTH_ERROR,
       });
     }
-    req.body.userId = user.id;
-    req.body.token = token;
-    next();
-  } catch (_e) {
-    return throwError({
-      method,
-      baseUrl: originalUrl,
-      ...AUTH_ERROR,
-    });
+    c.set('userId', user.id);
+    c.set('token', token);
+    await next();
+  } catch (e) {
+    return throwError(e);
   }
 };

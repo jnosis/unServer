@@ -1,36 +1,29 @@
-import { json, opine } from 'opine';
-import { superdeno } from 'superdeno';
-import { assertEquals } from 'testing/asserts.ts';
+import { Hono } from 'hono';
+import { assertEquals } from '$std/assert/mod.ts';
 import { describe, it } from 'testing/bdd.ts';
 import apiRouter from '~/router/api.ts';
 import { createRouter } from '~/tests/api_utils.ts';
 
 describe('Api Router', () => {
   it('gets end points', async () => {
-    const app = opine();
+    const app = new Hono();
     const { root, router, path } = createRouter();
 
-    app.use(json());
-    app.use('/api', apiRouter([{ path: root, router }]));
+    app.route('/api', apiRouter([{ path: root, router }]));
 
-    const request = superdeno(app);
+    const response = await app.request('/api', { method: 'get' });
 
-    const response = await request.get('/api');
-
-    assertEquals(response.body, { [root]: [`GET /api${root}${path}`] });
+    assertEquals(await response.json(), { [root]: [`GET /api${root}${path}`] });
   });
 
   it('gets data from added routers', async () => {
-    const app = opine();
+    const app = new Hono();
     const { root, router, path, data } = createRouter();
 
-    app.use(json());
-    app.use('/api', apiRouter([{ path: root, router }]));
+    app.route('/api', apiRouter([{ path: root, router }]));
 
-    const request = superdeno(app);
+    const response = await app.request(`/api${root}${path}`);
 
-    const response = await request.get(`/api${root}${path}`);
-
-    assertEquals(response.body, { ...data });
+    assertEquals(await response.json(), { ...data });
   });
 });

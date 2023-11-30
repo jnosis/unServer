@@ -1,11 +1,9 @@
-import { CorsOptions, opineCors } from 'cors';
-import { json, opine } from 'opine';
+import { Hono } from 'hono';
+import { cors, secureHeaders } from 'hono/middleware';
 import { UserController } from '~/controller/auth.ts';
 import { WorkController } from '~/controller/work.ts';
-import { elmedenoMiddleware } from '~/middleware/elmedeno.ts';
 import { errorHandler } from '~/middleware/error_handler.ts';
 import log from '~/middleware/logger.ts';
-import rateLimit from '~/middleware/rate_limiter.ts';
 import { userRepository } from '~/model/auth.ts';
 import { workRepository } from '~/model/work.ts';
 import apiRouter from '~/router/api.ts';
@@ -13,26 +11,17 @@ import userRouter from '~/router/auth.ts';
 import workRouter from '~/router/work.ts';
 import config from '~/config.ts';
 
-const { cors } = config;
+const app = new Hono();
 
-const app = opine();
+app.use('*', secureHeaders());
+app.use('*', cors({ ...config.cors, credentials: true }));
+app.use('*', errorHandler);
 
-const corsOptions: CorsOptions = {
-  origin: cors.origin,
-  optionsSuccessStatus: 200,
-  credentials: true,
-};
-
-app.use(json());
-app.use(elmedenoMiddleware);
-app.use(opineCors(corsOptions));
-app.use(rateLimit);
-
-app.get('/', (_req, res) => {
-  res.send('Welcome to unServer');
+app.get('/', (c) => {
+  return c.text('Welcome to unServer');
 });
 
-app.use(
+app.route(
   '/api',
   apiRouter([{
     path: '/auth',
@@ -43,8 +32,9 @@ app.use(
   }]),
 );
 
-app.use(errorHandler);
-
-app.listen({ port: 3000 }, () => {
-  log.info(`Server is started...`);
-});
+Deno.serve({
+  port: 3000,
+  onListen: ({ hostname, port }) => {
+    log.info(`Server running on ${hostname}:${port}`);
+  },
+}, app.fetch);

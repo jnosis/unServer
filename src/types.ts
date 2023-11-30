@@ -1,10 +1,18 @@
-import type { ParamsDictionary, RequestHandler } from 'opine';
-import type { CorsOptions } from 'cors';
+import type { Env, Handler, Input, TypedResponse } from 'hono';
 import type { ObjectId } from 'mongo';
 import type { Supabase } from '~/supabase.ts';
 
 export type BcryptOptions = {
   saltRound: number;
+};
+
+export type CORSOptions = {
+  origin: string | string[] | ((origin: string) => string | undefined | null);
+  allowMethods?: string[];
+  allowHeaders?: string[];
+  maxAge?: number;
+  credentials?: boolean;
+  exposeHeaders?: string[];
 };
 
 export type JwtOptions = {
@@ -31,17 +39,26 @@ export type RateLimitOptions = {
 export type Config = {
   bcrypt: BcryptOptions;
   jwt: JwtOptions;
-  cors: CorsOptions;
+  cors: CORSOptions;
   mongodb: MongodbOptions;
   supabase: SupabaseOptions;
   rateLimit: RateLimitOptions;
 };
 
+type HonoResponse<T> = TypedResponse<T> | Promise<TypedResponse<T>>;
+
+export type AuthEnv = {
+  Variables: {
+    userId: string;
+    token: string;
+  };
+};
+
 export interface IUserController {
-  signup: RequestHandler<ParamsDictionary, AuthToken>;
-  login: RequestHandler<ParamsDictionary, AuthToken>;
-  logout: RequestHandler;
-  me: RequestHandler<ParamsDictionary, AuthToken>;
+  signup: Handler<Env, string, Input, HonoResponse<AuthToken>>;
+  login: Handler<Env, string, Input, HonoResponse<AuthToken>>;
+  logout: Handler;
+  me: Handler<AuthEnv, string, Input, HonoResponse<AuthToken>>;
 }
 
 export type UserData = {
@@ -60,11 +77,11 @@ export type AuthToken = {
 };
 
 export interface IWorkController {
-  getAll: RequestHandler<ParamsDictionary, WorkData[]>;
-  getByTitle: RequestHandler<ParamsDictionary, WorkData>;
-  add: RequestHandler<ParamsDictionary, WorkData>;
-  update: RequestHandler<ParamsDictionary, WorkData>;
-  delete: RequestHandler;
+  getAll: Handler<Env, string, Input, HonoResponse<WorkData[]>>;
+  getByTitle: Handler<Env, string, Input, HonoResponse<WorkData>>;
+  add: Handler<AuthEnv, string, Input, HonoResponse<WorkData>>;
+  update: Handler<AuthEnv, string, Input, HonoResponse<WorkData>>;
+  delete: Handler<AuthEnv>;
 }
 
 export type Repo = {

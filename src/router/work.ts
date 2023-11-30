@@ -1,10 +1,10 @@
-import { Router } from 'opine';
+import type { IWorkController } from '~/types.ts';
+import { Hono } from 'hono';
 import { z } from 'zod';
-import { IWorkController } from '~/types.ts';
 import { isAuth } from '~/middleware/auth.ts';
 import { validate } from '~/middleware/validator.ts';
 
-const router = Router();
+const work = new Hono();
 
 const validateWork = validate({
   title: z.string().min(1, { message: 'Title should be not empty' }),
@@ -23,11 +23,11 @@ const validateWork = validate({
 });
 
 export default function workRouter(workController: IWorkController) {
-  router.get('/', workController.getAll);
-  router.get('/:id', workController.getByTitle);
-  router.post('/', isAuth, validateWork, workController.add);
-  router.put('/:id', isAuth, validateWork, workController.update);
-  router.delete('/:id', isAuth, workController.delete);
+  work.get('/', workController.getAll);
+  work.get('/:id', workController.getByTitle);
+  work.post('/', isAuth, validateWork, workController.add);
+  work.put('/:id', isAuth, validateWork, workController.update);
+  work.delete('/:id', isAuth, workController.delete);
 
-  return router;
+  return work;
 }

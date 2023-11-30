@@ -39,6 +39,6 @@ deno task create --create-router
 
 ### TODO
 
-- Add README
+- Migrate cli for hono
 - Fix a issue where work title could not be changed
 - Add image uploader to supabase
