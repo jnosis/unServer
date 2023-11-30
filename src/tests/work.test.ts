@@ -1,6 +1,6 @@
 import { faker } from 'faker';
 import { Hono } from 'hono';
-import { assertEquals } from 'testing/asserts.ts';
+import { assertEquals } from '$std/assert/mod.ts';
 import { afterAll, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
 import { UserController } from '~/controller/auth.ts';
 import { WorkController } from '~/controller/work.ts';

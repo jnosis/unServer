@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { assertEquals } from 'testing/asserts.ts';
+import { assertEquals } from '$std/assert/mod.ts';
 import { describe, it } from 'testing/bdd.ts';
 import apiRouter from '~/router/api.ts';
 import { createRouter } from '~/tests/api_utils.ts';
