@@ -4,8 +4,9 @@ export const controllerTemplate = (name: string, handlers: string[]) => {
     `${handler} = (req: OpineRequest, res: OpineResponse) => {}`
   ).join('\n\n  ');
 
-  return `import { OpineRequest, OpineResponse } from 'opine';
-import {
+  return `import type { Context } from 'hono';
+import type {
+  AuthEnv,
   I${Name}Controller,
   ${Name}Data,
   ${Name}InputData,
@@ -93,17 +94,17 @@ export const routerTemplate = (
   const Name = name.replace(/\b[a-z]/, (letter) => letter.toUpperCase());
   const routers = Object.keys(endpoints).map((method) =>
     endpoints[method].map((endpoint) =>
-      `router.${method.toLowerCase()}('${endpoint}', ${name}Controller);`
+      `${name}.${method.toLowerCase()}('${endpoint}', ${name}Controller);`
     )
   ).flat().join('\n  ');
 
-  return `import { Router } from 'opine';
+  return `import type { I${Name}Controller } from '~/types.ts';
+  import { Hono } from 'hono';
 import { z } from 'zod';
-import { I${Name}Controller } from '~/types.ts';
 import { isAuth } from '~/middleware/auth.ts';
 import { validate } from '~/middleware/validator.ts';
 
-const router = Router();
+const ${name} = new Hono();
 
 const validate${Name} = validate({});
 
