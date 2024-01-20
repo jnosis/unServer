@@ -43,7 +43,7 @@ export class UserController implements IUserController {
     log.debug(msg);
 
     setToken(c, token);
-    return c.jsonT({ token, username }, 201);
+    return c.json({ token, username }, 201);
   };
 
   login = async (c: Context) => {
@@ -77,7 +77,7 @@ export class UserController implements IUserController {
     log.debug(msg);
 
     setToken(c, token);
-    return c.jsonT({ token, username }, 200);
+    return c.json({ token, username }, 200);
   };
 
   logout = (c: Context) => {
@@ -94,7 +94,7 @@ export class UserController implements IUserController {
     });
     log.debug(msg);
 
-    return c.jsonT({ message: 'User has been logged out' }, 200);
+    return c.json({ message: 'User has been logged out' }, 200);
   };
 
   me = async (c: Context<AuthEnv>) => {
@@ -115,7 +115,7 @@ export class UserController implements IUserController {
       status: 200,
     });
     log.debug(msg);
-    return c.jsonT({ token: c.get('token'), username: user.username }, 200);
+    return c.json({ token: c.get('token'), username: user.username }, 200);
   };
 }
 

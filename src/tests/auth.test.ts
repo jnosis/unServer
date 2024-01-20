@@ -167,7 +167,7 @@ describe('Auth APIs', () => {
       assertEquals(response.status, 200);
       assertEquals(
         response.headers.getSetCookie(),
-        ['token=; Max-Age=0; HttpOnly; Secure; SameSite=None'],
+        ['token=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=None'],
       );
       assertEquals((await response.json()).message, 'User has been logged out');
     });

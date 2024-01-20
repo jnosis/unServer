@@ -25,7 +25,7 @@ export class WorkController implements IWorkController {
       status: 200,
     });
     log.debug(msg);
-    return c.jsonT(works, 200);
+    return c.json(works, 200);
   };
 
   getByTitle = async (c: Context) => {
@@ -48,7 +48,7 @@ export class WorkController implements IWorkController {
       status: 200,
     });
     log.debug(msg);
-    return c.jsonT(work, 200);
+    return c.json(work, 200);
   };
 
   add = async (c: Context<AuthEnv>) => {
@@ -82,7 +82,7 @@ export class WorkController implements IWorkController {
       status: 201,
     });
     log.debug(msg);
-    return c.jsonT(work, 201);
+    return c.json(work, 201);
   };
 
   update = async (c: Context<AuthEnv>) => {
@@ -132,7 +132,7 @@ export class WorkController implements IWorkController {
       status: 200,
     });
     log.debug(msg);
-    return c.jsonT(updated!, 200);
+    return c.json(updated!, 200);
   };
 
   delete = async (c: Context) => {
