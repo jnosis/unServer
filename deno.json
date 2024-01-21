@@ -13,10 +13,10 @@
   },
   "importMap": "./import_map.json",
   "tasks": {
-    "start": "deno run --allow-net --allow-env --allow-read --watch ./src/app.ts",
-    "test": "deno test --allow-net --allow-env --allow-read --no-check --quiet --watch ./src -- test",
-    "test:detail": "deno test --allow-net --allow-env --allow-read --no-check -- test",
-    "coverage": "deno test --coverage=./coverage --allow-net --allow-env --allow-read --no-check --quiet -- test && deno coverage ./coverage",
+    "start": "deno run --allow-net --allow-env --allow-read --env --watch ./src/app.ts",
+    "test": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet --watch ./src",
+    "test:detail": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check",
+    "coverage": "deno test --coverage=./coverage --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet && deno coverage ./coverage",
     "create": "deno run --allow-write ./cli/command.ts"
   }
 }

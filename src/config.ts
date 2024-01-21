@@ -1,4 +1,3 @@
-import { loadSync } from '$std/dotenv/mod.ts';
 import {
   BcryptOptions,
   Config,
@@ -8,12 +7,8 @@ import {
   SupabaseOptions,
 } from '~/types.ts';
 
-loadSync({ allowEmptyValues: true, export: true });
-
-const isTest = Deno.args.includes('test');
-
 function required(key: string, defaultValue?: string): string {
-  const value = Deno.env.get(`${key}${isTest ? '_TEST' : ''}`) || defaultValue;
+  const value = Deno.env.get(key) || defaultValue;
   if (value == null) {
     throw new Error(`Key ${key} is undefined`);
   }
