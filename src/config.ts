@@ -5,7 +5,6 @@ import {
   CORSOptions,
   JwtOptions,
   MongodbOptions,
-  RateLimitOptions,
   SupabaseOptions,
 } from '~/types.ts';
 
@@ -45,18 +44,12 @@ const supabase: SupabaseOptions = {
   serviceRole: required('SUPABASE_SERVICE_ROLE')!,
 };
 
-const rateLimit: RateLimitOptions = {
-  windowMs: parseInt(required('RATE_LIMIT_WINDOW_MS', '60000')),
-  maxRequest: parseInt(required('RATE_LIMIT_MAX_REQUEST', '100')),
-};
-
 export const config: Config = {
   bcrypt,
   jwt,
   cors,
   mongodb,
   supabase,
-  rateLimit,
 };
 
 export default config;

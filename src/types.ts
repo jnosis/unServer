@@ -31,18 +31,12 @@ export type SupabaseOptions = {
   serviceRole: string;
 };
 
-export type RateLimitOptions = {
-  windowMs: number;
-  maxRequest: number;
-};
-
 export type Config = {
   bcrypt: BcryptOptions;
   jwt: JwtOptions;
   cors: CORSOptions;
   mongodb: MongodbOptions;
   supabase: SupabaseOptions;
-  rateLimit: RateLimitOptions;
 };
 
 type HonoResponse<T> = TypedResponse<T> | Promise<TypedResponse<T>>;
