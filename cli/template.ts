@@ -13,8 +13,6 @@ import type {
   ${Name}Model,
 } from '~/types.ts';
 import { throwError } from '~/middleware/error_handler.ts';
-import log from '~/middleware/logger.ts';
-import { convertToMessage } from '~/util/message.ts';
 
 export class ${Name}Controller implements I${Name}Controller {
   #${name}Repository: ${Name}Model

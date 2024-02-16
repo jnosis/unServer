@@ -1,24 +1,19 @@
-type Message = {
+type MessageOptions = {
   method: string;
-  baseUrl: string;
+  path: string;
   status: number;
-  param?: string;
+  start: number;
   message?: string;
 };
 
-export const convertToMessage = (msg: Message | Error): string | Error => {
-  if (isMessage(msg)) {
-    const { method, baseUrl, param, status, message } = msg;
-    const path = `${baseUrl}${param ? `/${param}` : ''}`;
-    return `${method} ${path} ${status} ${message ? message : ''}`;
-  }
-  return msg;
+export const convertToMessage = (options: MessageOptions) => {
+  const { method, path, status, start, message } = options;
+  const elapsed = '- ' + time(start);
+  const msg = message ? `${message} ${elapsed}` : elapsed;
+  const args = [method, path, status];
+  return [msg, args];
 };
 
-function isMessage(msg: unknown): msg is Message {
-  return (
-    !!(msg as Message).method &&
-    !!(msg as Message).baseUrl &&
-    !!(msg as Message).status
-  );
+export function time(start: number) {
+  return (Date.now() - start) + 'ms';
 }

@@ -6,8 +6,6 @@ import type {
   WorkModel,
 } from '~/types.ts';
 import { throwError } from '~/middleware/error_handler.ts';
-import log from '~/middleware/logger.ts';
-import { convertToMessage } from '~/util/message.ts';
 
 export class WorkController implements IWorkController {
   #workRepository: WorkModel;
@@ -16,20 +14,12 @@ export class WorkController implements IWorkController {
   }
 
   getAll = async (c: Context) => {
-    const { method, path } = c.req;
     const works = await this.#workRepository.getAll();
 
-    const msg = convertToMessage({
-      method,
-      baseUrl: path,
-      status: 200,
-    });
-    log.debug(msg);
     return c.json(works, 200);
   };
 
   getByTitle = async (c: Context) => {
-    const { method, path } = c.req;
     const title = c.req.param('id');
     const work = await this.#workRepository.getByTitle(title);
 
@@ -37,17 +27,10 @@ export class WorkController implements IWorkController {
       return throwError(404, `Work title(${title}) not found`);
     }
 
-    const msg = convertToMessage({
-      method,
-      baseUrl: path,
-      status: 200,
-    });
-    log.debug(msg);
     return c.json(work, 200);
   };
 
   add = async (c: Context<AuthEnv>) => {
-    const { method, path } = c.req;
     const { title, description, techs, repo, projectUrl, thumbnail } = await c
       .req.json<WorkInputData>();
     const userId = c.get('userId');
@@ -66,17 +49,11 @@ export class WorkController implements IWorkController {
     if (!work) {
       return throwError(500, `Work title(${title}) could not create`);
     }
-    const msg = convertToMessage({
-      method,
-      baseUrl: path,
-      status: 201,
-    });
-    log.debug(msg);
+
     return c.json(work, 201);
   };
 
   update = async (c: Context<AuthEnv>) => {
-    const { method, path } = c.req;
     const title = c.req.param('id');
     const {
       title: updatedTitle,
@@ -106,17 +83,11 @@ export class WorkController implements IWorkController {
     }
 
     const updated = await this.#workRepository.update(title, workInput, isAuth);
-    const msg = convertToMessage({
-      method,
-      baseUrl: path,
-      status: 200,
-    });
-    log.debug(msg);
+
     return c.json(updated!, 200);
   };
 
   delete = async (c: Context) => {
-    const { method, path } = c.req;
     const userId = c.get('userId');
     const isAuth = !!userId;
     const title = c.req.param('id');
@@ -127,12 +98,7 @@ export class WorkController implements IWorkController {
     }
 
     await this.#workRepository.remove(title, isAuth);
-    const msg = convertToMessage({
-      method,
-      baseUrl: path,
-      status: 204,
-    });
-    log.debug(msg);
+
     return c.body(null, 204);
   };
 }
