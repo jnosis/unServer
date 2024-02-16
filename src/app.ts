@@ -3,7 +3,7 @@ import { cors, secureHeaders } from 'hono/middleware';
 import { UserController } from '~/controller/auth.ts';
 import { WorkController } from '~/controller/work.ts';
 import { errorHandler } from '~/middleware/error_handler.ts';
-import log from '~/middleware/logger.ts';
+import { log, logger } from '~/middleware/logger.ts';
 import { userRepository } from '~/model/auth.ts';
 import { workRepository } from '~/model/work.ts';
 import apiRouter from '~/router/api.ts';
@@ -16,6 +16,7 @@ const app = new Hono();
 app.use('*', secureHeaders());
 app.use('*', cors({ ...config.cors, credentials: true }));
 app.onError(errorHandler);
+app.use(logger);
 
 app.get('/', (c) => {
   return c.text('Welcome to unServer');

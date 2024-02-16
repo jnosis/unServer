@@ -1,7 +1,5 @@
 import { Hono } from 'hono';
-import log from '~/middleware/logger.ts';
 import { getEndPoints } from '~/util/endpoints.ts';
-import { convertToMessage } from '~/util/message.ts';
 
 type API = { path: string; router: Hono };
 
@@ -16,10 +14,6 @@ export default function apiRouter(apis: API[]) {
   });
 
   hono.get('/', (c) => {
-    const { method, path } = c.req;
-
-    const [msg, args] = convertToMessage({ method, path, status: 200 });
-    log.debug(msg, ...args);
     return c.json(endPoints);
   });
 

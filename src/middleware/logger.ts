@@ -1,4 +1,6 @@
+import { createMiddleware } from 'hono/helper';
 import { ConsoleHandler, getLogger, setup } from '$std/log/mod.ts';
+import { convertToMessage } from '~/util/message.ts';
 
 setup({
   handlers: {
@@ -25,6 +27,24 @@ setup({
   },
 });
 
-const loggerMiddleware = getLogger();
+export const log = getLogger();
 
-export default loggerMiddleware;
+export const logger = createMiddleware(async (c, next) => {
+  const { method, path } = c.req;
+
+  await next();
+
+  const status = c.res.status;
+  const message =
+    c.res.headers.get('Content-Type')?.includes('application/json')
+      ? (await c.res.json()).message
+      : '';
+  const [msg, args] = convertToMessage({
+    method,
+    path,
+    status,
+    message: message ? message : '',
+  });
+  if (status < 400) log.debug(msg, ...args);
+  else log.error(msg, ...args);
+});
