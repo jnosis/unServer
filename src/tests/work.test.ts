@@ -24,7 +24,7 @@ describe('Works APIs', () => {
 
   beforeAll(() => {
     app = new Hono();
-    app.use('*', errorHandler);
+    app.onError(errorHandler);
     app.route('/auth', userRouter(new UserController(userRepository)));
     app.route('/works', workRouter(new WorkController(workRepository)));
   });
