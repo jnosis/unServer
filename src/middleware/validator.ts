@@ -8,14 +8,7 @@ export const validate = (schema: ZodRawShape) => {
     const result = await validation.safeParseAsync(await c.req.json());
 
     if (!result.success) {
-      const { method, path } = c.req;
-
-      return throwError({
-        method,
-        baseUrl: path,
-        status: 400,
-        message: result.error.errors[0].message,
-      });
+      return throwError(400, result.error.errors[0].message);
     }
 
     await next();

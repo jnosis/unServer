@@ -13,7 +13,6 @@ export const isAuth = async (c: Context, next: Next) => {
   let token;
 
   const authHeader = c.req.header('Authorization');
-  const { method, path } = c.req;
   c.set('test', 'test');
   if (authHeader && authHeader.startsWith('Bearer ')) {
     token = authHeader.split(' ')[1];
@@ -22,27 +21,19 @@ export const isAuth = async (c: Context, next: Next) => {
   }
 
   if (!token) {
-    return throwError({
-      method,
-      baseUrl: path,
-      ...AUTH_ERROR,
-    });
+    return throwError(AUTH_ERROR.status, AUTH_ERROR.message);
   }
 
   try {
     const decoded = await verifyJwtToken(token);
     const user = await userRepository.findById(decoded.id);
     if (!user) {
-      return throwError({
-        method,
-        baseUrl: path,
-        ...AUTH_ERROR,
-      });
+      return throwError(AUTH_ERROR.status, AUTH_ERROR.message);
     }
     c.set('userId', user.id);
     c.set('token', token);
     await next();
   } catch (e) {
-    return throwError(e);
+    throw e;
   }
 };

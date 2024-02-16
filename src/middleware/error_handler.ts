@@ -1,37 +1,23 @@
-import type { Handler } from 'hono';
+import type { ErrorHandler } from 'hono';
+import { HTTPException } from 'hono';
 import log from '~/middleware/logger.ts';
 import { convertToMessage } from '~/util/message.ts';
 
-type Err = {
-  status: number;
-  method: string;
-  baseUrl: string;
-  param?: string;
-  message: string;
+export const throwError = (status: number, message: string) => {
+  throw new HTTPException(status, { message });
 };
 
-export const throwError = (options: Err) => {
-  throw options;
-};
-
-export const errorHandler: Handler = async (c, next) => {
-  try {
-    await next();
-  } catch (err) {
-    const msg = convertToMessage(err);
-    const message = err.message || 'Something is wrong';
+export const errorHandler: ErrorHandler = (err, c) => {
+  const { method, path } = c.req;
+  const message = err.message || 'Something is wrong';
+  const raw = { method, baseUrl: path, message };
+  if (err instanceof HTTPException) {
+    const msg = convertToMessage({ ...raw, status: err.status });
     log.error(msg);
-    if (isErr(err)) {
-      return c.json({ message }, err.status || 500);
-    }
-    return c.json({ message }, 500);
+    const res = err.getResponse();
+    return c.json({ message }, res);
   }
+  const msg = convertToMessage({ ...raw, status: 500 });
+  log.error(msg);
+  return c.text('Internal Server Error', 500);
 };
-
-function isErr(err: unknown): err is Err {
-  return (
-    !!(err as Err).method &&
-    !!(err as Err).baseUrl &&
-    !!(err as Err).status
-  );
-}

@@ -34,12 +34,7 @@ export class WorkController implements IWorkController {
     const work = await this.#workRepository.getByTitle(title);
 
     if (!work) {
-      return throwError({
-        method,
-        baseUrl: path,
-        status: 404,
-        message: `Work title(${title}) not found`,
-      });
+      return throwError(404, `Work title(${title}) not found`);
     }
 
     const msg = convertToMessage({
@@ -69,12 +64,7 @@ export class WorkController implements IWorkController {
     const work = await this.#workRepository.create(workInput, isAuth);
 
     if (!work) {
-      return throwError({
-        method,
-        baseUrl: path,
-        status: 500,
-        message: `Work title(${title}) could not create`,
-      });
+      return throwError(500, `Work title(${title}) could not create`);
     }
     const msg = convertToMessage({
       method,
@@ -109,20 +99,10 @@ export class WorkController implements IWorkController {
     const work = await this.#workRepository.getByTitle(title);
 
     if (!work) {
-      return throwError({
-        method,
-        baseUrl: path,
-        status: 404,
-        message: `Work title(${title}) not found`,
-      });
+      return throwError(404, `Work title(${title}) not found`);
     }
     if (title !== workInput.title) {
-      throwError({
-        method,
-        baseUrl: path,
-        status: 404,
-        message: `Update access forbidden`,
-      });
+      return throwError(404, `Update access forbidden`);
     }
 
     const updated = await this.#workRepository.update(title, workInput, isAuth);
@@ -143,12 +123,7 @@ export class WorkController implements IWorkController {
     const work = await this.#workRepository.getByTitle(title);
 
     if (!work) {
-      return throwError({
-        method,
-        baseUrl: path,
-        status: 404,
-        message: `Work title(${title}) not found`,
-      });
+      return throwError(404, `Work title(${title}) not found`);
     }
 
     await this.#workRepository.remove(title, isAuth);

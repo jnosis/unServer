@@ -19,12 +19,7 @@ export class UserController implements IUserController {
     const { method, path } = c.req;
     const found = await this.#userRepository.findByUsername(username);
     if (found) {
-      return throwError({
-        method,
-        baseUrl: path,
-        status: 409,
-        message: `${username} already exists`,
-      });
+      return throwError(409, `${username} already exists`);
     }
 
     const hashed = hash(password);
@@ -51,21 +46,11 @@ export class UserController implements IUserController {
     const { username, password } = await c.req.json();
     const user = await this.#userRepository.findByUsername(username);
     if (!user) {
-      return throwError({
-        method,
-        baseUrl: path,
-        status: 401,
-        message: `Invalid username or password`,
-      });
+      return throwError(401, `Invalid username or password`);
     }
     const isValidPassword = compare(password, user.password);
     if (!isValidPassword) {
-      return throwError({
-        method,
-        baseUrl: path,
-        status: 401,
-        message: `Invalid username or password`,
-      });
+      return throwError(401, `Invalid username or password`);
     }
 
     const token = await createJwtToken(user.id);
@@ -101,12 +86,7 @@ export class UserController implements IUserController {
     const { method, path } = c.req;
     const user = await this.#userRepository.findById(c.get('userId'));
     if (!user) {
-      return throwError({
-        method,
-        baseUrl: path,
-        status: 404,
-        message: 'User not found',
-      });
+      return throwError(404, 'User not found');
     }
 
     const msg = convertToMessage({
