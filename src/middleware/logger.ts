@@ -31,6 +31,7 @@ export const log = getLogger();
 
 export const logger = createMiddleware(async (c, next) => {
   const { method, path } = c.req;
+  const start = Date.now();
 
   await next();
 
@@ -43,7 +44,8 @@ export const logger = createMiddleware(async (c, next) => {
     method,
     path,
     status,
-    message: message ? message : '',
+    start,
+    message,
   });
   if (status < 400) log.debug(msg, ...args);
   else log.error(msg, ...args);
