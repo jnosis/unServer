@@ -18,7 +18,7 @@ describe('Auth APIs', () => {
 
   beforeAll(() => {
     app = new Hono();
-    app.use('*', errorHandler);
+    app.onError(errorHandler);
     app.route('/auth', userRouter(new UserController(userRepository)));
   });
 

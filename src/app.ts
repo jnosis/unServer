@@ -15,7 +15,7 @@ const app = new Hono();
 
 app.use('*', secureHeaders());
 app.use('*', cors({ ...config.cors, credentials: true }));
-app.use('*', errorHandler);
+app.onError(errorHandler);
 
 app.get('/', (c) => {
   return c.text('Welcome to unServer');
