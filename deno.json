@@ -30,6 +30,7 @@
     "test": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet --watch ./src",
     "test:detail": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check",
     "coverage": "deno test --coverage=./coverage --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet && deno coverage ./coverage",
+    "coverage:detailed": "deno coverage --detailed ./coverage",
     "create": "deno run --allow-write ./cli/command.ts"
   }
 }
