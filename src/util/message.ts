@@ -1,24 +1,11 @@
 type Message = {
   method: string;
-  baseUrl: string;
+  path: string;
   status: number;
-  param?: string;
   message?: string;
 };
 
-export const convertToMessage = (msg: Message | Error): string | Error => {
-  if (isMessage(msg)) {
-    const { method, baseUrl, param, status, message } = msg;
-    const path = `${baseUrl}${param ? `/${param}` : ''}`;
-    return `${method} ${path} ${status} ${message ? message : ''}`;
-  }
-  return msg;
+export const convertToMessage = (msg: Message): string => {
+  const { method, path, status, message } = msg;
+  return `${method} ${path} ${status} ${message ? message : ''}`;
 };
-
-function isMessage(msg: unknown): msg is Message {
-  return (
-    !!(msg as Message).method &&
-    !!(msg as Message).baseUrl &&
-    !!(msg as Message).status
-  );
-}

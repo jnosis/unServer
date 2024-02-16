@@ -10,7 +10,7 @@ export const throwError = (status: number, message: string) => {
 export const errorHandler: ErrorHandler = (err, c) => {
   const { method, path } = c.req;
   const message = err.message || 'Something is wrong';
-  const raw = { method, baseUrl: path, message };
+  const raw = { method, path, message };
   if (err instanceof HTTPException) {
     const msg = convertToMessage({ ...raw, status: err.status });
     log.error(msg);
