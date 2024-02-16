@@ -1,8 +1,8 @@
-import { getLogger, handlers, setup } from '$std/log/mod.ts';
+import { ConsoleHandler, getLogger, setup } from '$std/log/mod.ts';
 
 setup({
   handlers: {
-    functionFmt: new handlers.ConsoleHandler('DEBUG', {
+    functionFmt: new ConsoleHandler('DEBUG', {
       formatter: (logRecord) => {
         const time = logRecord.datetime.toLocaleString('en', {
           hour12: false,
