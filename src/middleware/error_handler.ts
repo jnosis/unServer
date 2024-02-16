@@ -12,12 +12,12 @@ export const errorHandler: ErrorHandler = (err, c) => {
   const message = err.message || 'Something is wrong';
   const raw = { method, path, message };
   if (err instanceof HTTPException) {
-    const msg = convertToMessage({ ...raw, status: err.status });
-    log.error(msg);
+    const [msg, args] = convertToMessage({ ...raw, status: err.status });
+    log.error(msg, ...args);
     const res = err.getResponse();
     return c.json({ message }, res);
   }
-  const msg = convertToMessage({ ...raw, status: 500 });
-  log.error(msg);
+  const [msg, args] = convertToMessage({ ...raw, status: 500 });
+  log.error(msg, ...args);
   return c.text('Internal Server Error', 500);
 };

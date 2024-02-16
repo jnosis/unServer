@@ -9,12 +9,10 @@ setup({
           timeZone: 'Asia/Seoul',
           timeZoneName: 'short',
         });
-        let msg = `${time} [${logRecord.levelName}] ${logRecord.msg}`;
-
-        logRecord.args.forEach((arg, index) => {
-          msg += `, arg${index}: ${arg}`;
-        });
-        return msg;
+        const args = logRecord.args.length > 0
+          ? `${logRecord.args.join(' ')} `
+          : '';
+        return `${time} [${logRecord.levelName}] ${args}${logRecord.msg}`;
       },
     }),
   },

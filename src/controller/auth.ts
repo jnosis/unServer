@@ -30,8 +30,8 @@ export class UserController implements IUserController {
       email,
     });
     const token = await createJwtToken(userId);
-    const msg = convertToMessage({ method, path, status: 201 });
-    log.debug(msg);
+    const [msg, args] = convertToMessage({ method, path, status: 201 });
+    log.debug(msg, ...args);
 
     setToken(c, token);
     return c.json({ token, username }, 201);
@@ -50,8 +50,8 @@ export class UserController implements IUserController {
     }
 
     const token = await createJwtToken(user.id);
-    const msg = convertToMessage({ method, path, status: 200 });
-    log.debug(msg);
+    const [msg, args] = convertToMessage({ method, path, status: 200 });
+    log.debug(msg, ...args);
 
     setToken(c, token);
     return c.json({ token, username }, 200);
@@ -64,8 +64,8 @@ export class UserController implements IUserController {
       sameSite: 'None',
       secure: true,
     });
-    const msg = convertToMessage({ method, path, status: 200 });
-    log.debug(msg);
+    const [msg, args] = convertToMessage({ method, path, status: 200 });
+    log.debug(msg, ...args);
 
     return c.json({ message: 'User has been logged out' }, 200);
   };
@@ -77,8 +77,8 @@ export class UserController implements IUserController {
       return throwError(404, 'User not found');
     }
 
-    const msg = convertToMessage({ method, path, status: 200 });
-    log.debug(msg);
+    const [msg, args] = convertToMessage({ method, path, status: 200 });
+    log.debug(msg, ...args);
     return c.json({ token: c.get('token'), username: user.username }, 200);
   };
 }

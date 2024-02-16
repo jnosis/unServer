@@ -19,8 +19,8 @@ export class WorkController implements IWorkController {
     const { method, path } = c.req;
     const works = await this.#workRepository.getAll();
 
-    const msg = convertToMessage({ method, path, status: 200 });
-    log.debug(msg);
+    const [msg, args] = convertToMessage({ method, path, status: 200 });
+    log.debug(msg, ...args);
     return c.json(works, 200);
   };
 
@@ -33,8 +33,8 @@ export class WorkController implements IWorkController {
       return throwError(404, `Work title(${title}) not found`);
     }
 
-    const msg = convertToMessage({ method, path, status: 200 });
-    log.debug(msg);
+    const [msg, args] = convertToMessage({ method, path, status: 200 });
+    log.debug(msg, ...args);
     return c.json(work, 200);
   };
 
@@ -58,8 +58,8 @@ export class WorkController implements IWorkController {
     if (!work) {
       return throwError(500, `Work title(${title}) could not create`);
     }
-    const msg = convertToMessage({ method, path, status: 201 });
-    log.debug(msg);
+    const [msg, args] = convertToMessage({ method, path, status: 201 });
+    log.debug(msg, ...args);
     return c.json(work, 201);
   };
 
@@ -94,8 +94,8 @@ export class WorkController implements IWorkController {
     }
 
     const updated = await this.#workRepository.update(title, workInput, isAuth);
-    const msg = convertToMessage({ method, path, status: 200 });
-    log.debug(msg);
+    const [msg, args] = convertToMessage({ method, path, status: 200 });
+    log.debug(msg, ...args);
     return c.json(updated!, 200);
   };
 
@@ -111,8 +111,8 @@ export class WorkController implements IWorkController {
     }
 
     await this.#workRepository.remove(title, isAuth);
-    const msg = convertToMessage({ method, path, status: 204 });
-    log.debug(msg);
+    const [msg, args] = convertToMessage({ method, path, status: 204 });
+    log.debug(msg, ...args);
     return c.body(null, 204);
   };
 }
