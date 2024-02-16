@@ -63,7 +63,7 @@ async function promptAll() {
 }
 
 async function promptController() {
-  return await List.prompt('Input controller\'s handlers');
+  return await List.prompt("Input controller's handlers");
 }
 
 async function promptRouter() {
