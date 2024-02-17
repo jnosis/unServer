@@ -4,7 +4,8 @@ import { assertEquals } from '$std/assert/mod.ts';
 import { afterAll, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
 import { UserController } from '~/controller/auth.ts';
 import { WorkController } from '~/controller/work.ts';
-import { errorHandler } from '~/middleware/error_handler.ts';
+import { errorHandler, notFoundHandler } from '~/middleware/error_handler.ts';
+import { logger } from '~/middleware/logger.ts';
 import { userRepository } from '~/model/auth.ts';
 import { workRepository } from '~/model/work.ts';
 import userRouter from '~/router/auth.ts';
@@ -24,7 +25,9 @@ describe('Works APIs', () => {
 
   beforeAll(() => {
     app = new Hono();
+    app.use(logger);
     app.onError(errorHandler);
+    app.notFound(notFoundHandler);
     app.route('/auth', userRouter(new UserController(userRepository)));
     app.route('/works', workRouter(new WorkController(workRepository)));
   });

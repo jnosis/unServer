@@ -3,7 +3,8 @@ import { Hono } from 'hono';
 import { assertEquals, assertExists } from '$std/assert/mod.ts';
 import { afterAll, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
 import { UserController } from '~/controller/auth.ts';
-import { errorHandler } from '~/middleware/error_handler.ts';
+import { errorHandler, notFoundHandler } from '~/middleware/error_handler.ts';
+import { logger } from '~/middleware/logger.ts';
 import { userRepository } from '~/model/auth.ts';
 import userRouter from '~/router/auth.ts';
 import {
@@ -18,7 +19,9 @@ describe('Auth APIs', () => {
 
   beforeAll(() => {
     app = new Hono();
+    app.use(logger);
     app.onError(errorHandler);
+    app.notFound(notFoundHandler);
     app.route('/auth', userRouter(new UserController(userRepository)));
   });
 
