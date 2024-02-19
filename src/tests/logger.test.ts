@@ -1,10 +1,11 @@
 import type { Spy } from 'testing/mock.ts';
 import { faker } from 'faker';
+import { Hono } from 'hono';
 import { LogRecord } from '$std/log/logger.ts';
 import { assertEquals, assertNotEquals } from '$std/assert/mod.ts';
-import { afterEach, beforeEach, describe, it } from 'testing/bdd.ts';
-import { assertSpyCall, spy } from 'testing/mock.ts';
-import { formatter, log } from '~/middleware/logger.ts';
+import { afterEach, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
+import { assertSpyCall, assertSpyCalls, spy } from 'testing/mock.ts';
+import { formatter, log, logger } from '~/middleware/logger.ts';
 import { colorStatus, convertToMessage, formatArgs } from '~/util/message.ts';
 import {
   createHttpArgs,
@@ -235,6 +236,62 @@ describe('Logger', () => {
           args: [`\x1b[1m\x1b[31m${formatted}\x1b[39m\x1b[22m`],
         });
       });
+    });
+  });
+
+  describe('Logger middleware', () => {
+    let app: Hono;
+    let logSpy: Spy;
+
+    beforeAll(() => {
+      app = new Hono();
+      app.use('*', logger);
+      app.get('/:text', (c) => {
+        const text = c.req.param('text');
+        if (text === 'json') return c.json({ message: text });
+        return c.text(text);
+      });
+    });
+
+    beforeEach(() => {
+      logSpy = spy(console, 'log');
+    });
+
+    afterEach(() => {
+      logSpy.restore();
+    });
+
+    it('counts logger calls', async () => {
+      let cnt = 0;
+      while (cnt++ < Math.floor(Math.random() * 5) + 1) {
+        await app.request('/', { method: 'get' });
+      }
+
+      assertSpyCalls(logSpy, cnt - 1);
+    });
+
+    it('checks content type', async () => {
+      const text = await app.request('/text', { method: 'get' });
+      const json = await app.request('/json', { method: 'get' });
+
+      assertEquals(text.status, 200);
+      assertEquals(json.status, 200);
+
+      assertSpyCalls(logSpy, 2);
+      const textArgs = (logSpy.calls[0].args[0] as string).split(' ');
+      const jsonArgs = (logSpy.calls[1].args[0] as string).split(' ');
+
+      assertEquals(
+        text.headers.get('Content-Type')?.includes('application/json'),
+        false,
+      );
+      assertEquals(textArgs.length, 9);
+
+      assertEquals(
+        json.headers.get('Content-Type')?.includes('application/json'),
+        true,
+      );
+      assertEquals(jsonArgs.length, 10);
     });
   });
 });
