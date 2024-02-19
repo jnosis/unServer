@@ -1,16 +1,16 @@
+import type { Spy } from 'testing/mock.ts';
 import { faker } from 'faker';
 import { LogRecord } from '$std/log/logger.ts';
 import { assertEquals, assertNotEquals } from '$std/assert/mod.ts';
-import { describe, it } from 'testing/bdd.ts';
+import { afterEach, beforeEach, describe, it } from 'testing/bdd.ts';
 import { assertSpyCall, spy } from 'testing/mock.ts';
 import { formatter, log } from '~/middleware/logger.ts';
-import { convertToMessage, formatArgs } from '~/util/message.ts';
+import { colorStatus, convertToMessage, formatArgs } from '~/util/message.ts';
 import {
   createHttpArgs,
   createMessageOptions,
   createRandomArgs,
 } from '~/tests/logger_utils.ts';
-import { colorStatus } from '~/util/message.ts';
 
 describe('Logger', () => {
   describe('Util', () => {
@@ -173,10 +173,19 @@ describe('Logger', () => {
     });
 
     describe('logging', () => {
-      const logSpy = spy(console, 'log');
+      let logSpy: Spy;
+      let msg: string;
+
+      beforeEach(() => {
+        logSpy = spy(console, 'log');
+        msg = faker.word.sample();
+      });
+
+      afterEach(() => {
+        logSpy.restore();
+      });
 
       it('debug', () => {
-        const msg = faker.word.sample();
         const formatted = formatter(
           new LogRecord({ msg, args: [], level: 10, loggerName: 'default' }),
         );
@@ -192,7 +201,7 @@ describe('Logger', () => {
         );
         log.info(msg);
 
-        assertSpyCall(logSpy, 1, { args: [`\x1b[34m${formatted}\x1b[39m`] });
+        assertSpyCall(logSpy, 0, { args: [`\x1b[34m${formatted}\x1b[39m`] });
       });
 
       it('warn', () => {
@@ -202,7 +211,7 @@ describe('Logger', () => {
         );
         log.warn(msg);
 
-        assertSpyCall(logSpy, 2, { args: [`\x1b[33m${formatted}\x1b[39m`] });
+        assertSpyCall(logSpy, 0, { args: [`\x1b[33m${formatted}\x1b[39m`] });
       });
 
       it('error', () => {
@@ -212,7 +221,7 @@ describe('Logger', () => {
         );
         log.error(msg);
 
-        assertSpyCall(logSpy, 3, { args: [`\x1b[31m${formatted}\x1b[39m`] });
+        assertSpyCall(logSpy, 0, { args: [`\x1b[31m${formatted}\x1b[39m`] });
       });
 
       it('critical', () => {
@@ -222,7 +231,7 @@ describe('Logger', () => {
         );
         log.critical(msg);
 
-        assertSpyCall(logSpy, 4, {
+        assertSpyCall(logSpy, 0, {
           args: [`\x1b[1m\x1b[31m${formatted}\x1b[39m\x1b[22m`],
         });
       });
