@@ -231,4 +231,40 @@ describe('Auth APIs', () => {
       assertEquals((await response.json()).message, 'Authorization Error');
     });
   });
+
+  describe('unused userRepository methods', () => {
+    it('returns all user', async () => {
+      let list: string[] = [];
+      let cnt = 0;
+      while (cnt++ < Math.floor(Math.random() * 5)) {
+        const user = await createNewUser(app);
+        list = [...list, user.username];
+      }
+
+      const users = await userRepository.getAll();
+
+      assertEquals(users.length, list.length);
+      assertEquals(users.map((user) => user.username), list);
+    });
+
+    it('updates user data', async () => {
+      const user = await createNewUser(app);
+      const email = faker.internet.email();
+
+      const updated = await userRepository.update(user.username, { email });
+
+      assertEquals(updated?.email, email);
+      assertEquals(updated?.username, user.username);
+    });
+
+    it('removes user data', async () => {
+      const user = await createNewUser(app);
+
+      const num = await userRepository.remove(user.username);
+      const found = await userRepository.findByUsername(user.username);
+
+      assertEquals(num, 1);
+      assertEquals(found, undefined);
+    });
+  });
 });

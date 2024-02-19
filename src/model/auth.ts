@@ -38,7 +38,7 @@ class UserRepository implements UserModel {
     );
   }
 
-  async update(username: string, user: UserSignupData) {
+  async update(username: string, user: Partial<UserSignupData>) {
     return await this.#user.updateOne({ username }, { $set: user }).then(
       async () => await this.#user.findOne({ username }).then(mapOptionalData),
     );
