@@ -39,6 +39,8 @@ export type Config = {
   supabase: SupabaseOptions;
 };
 
+export type HttpArgs = [string, string, number];
+
 type HonoResponse<T> = TypedResponse<T> | Promise<TypedResponse<T>>;
 
 export type AuthEnv = {

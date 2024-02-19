@@ -1,38 +1,67 @@
+import type { ConsoleHandlerOptions, LogRecord } from '$std/log/mod.ts';
+import type { HttpArgs } from '~/types.ts';
 import { createMiddleware } from 'hono/helper';
-import { cyan, green, magenta, red, yellow } from '$std/fmt/colors.ts';
-import { ConsoleHandler, getLogger, setup } from '$std/log/mod.ts';
-import { convertToMessage } from '~/util/message.ts';
+import { ConsoleHandler, Logger as BaseLogger } from '$std/log/mod.ts';
+import { convertToMessage, formatArgs } from '~/util/message.ts';
 
-setup({
-  handlers: {
-    functionFmt: new ConsoleHandler('DEBUG', {
-      formatter: (logRecord) => {
-        const time = logRecord.datetime.toLocaleString('en', {
-          hour12: false,
-          timeZone: 'Asia/Seoul',
-          timeZoneName: 'short',
-        });
-        const args = logRecord.args.length > 0
-          ? `${
-            logRecord.args.map((arg, i) =>
-              i === 2 ? colorStatus(arg as number) : arg
-            ).join(' ')
-          } `
-          : '';
-        return `${time} [${logRecord.levelName}] ${args}${logRecord.msg}`;
-      },
-    }),
-  },
+export const formatter = (logRecord: LogRecord) => {
+  const time = logRecord.datetime.toLocaleString('en', {
+    hour12: false,
+    timeZone: 'Asia/Seoul',
+    timeZoneName: 'short',
+  });
+  const args = formatArgs(logRecord.args);
+  return `${time} [${logRecord.levelName}] ${args}${logRecord.msg}`;
+};
 
-  loggers: {
-    default: {
-      level: 'DEBUG',
-      handlers: ['functionFmt'],
-    },
-  },
-});
+type Args = HttpArgs | [];
 
-export const log = getLogger();
+class Logger {
+  #log: BaseLogger;
+  constructor(options: ConsoleHandlerOptions) {
+    this.#log = new BaseLogger('default', 'DEBUG', {
+      handlers: [new ConsoleHandler('DEBUG', options)],
+    });
+  }
+
+  get level() {
+    return this.#log.level;
+  }
+
+  get levelName() {
+    return this.#log.levelName;
+  }
+
+  get loggerName() {
+    return this.#log.loggerName;
+  }
+
+  get handlers() {
+    return this.#log.handlers;
+  }
+
+  debug(msg: string, ...args: Args) {
+    return this.#log.debug(msg, ...args);
+  }
+
+  info(msg: string, ...args: Args) {
+    return this.#log.info(msg, ...args);
+  }
+
+  warn(msg: string, ...args: Args) {
+    return this.#log.warn(msg, ...args);
+  }
+
+  error(msg: string, ...args: Args) {
+    return this.#log.error(msg, ...args);
+  }
+
+  critical(msg: string, ...args: Args) {
+    return this.#log.critical(msg, ...args);
+  }
+}
+
+export const log = new Logger({ formatter });
 
 export const logger = createMiddleware(async (c, next) => {
   const { method, path } = c.req;
@@ -55,19 +84,3 @@ export const logger = createMiddleware(async (c, next) => {
   if (status < 400) log.debug(msg, ...args);
   else log.error(msg, ...args);
 });
-
-const colorStatus = (status: number) => {
-  const out: { [key: string]: string } = {
-    7: magenta(`${status}`),
-    5: red(`${status}`),
-    4: yellow(`${status}`),
-    3: cyan(`${status}`),
-    2: green(`${status}`),
-    1: green(`${status}`),
-    0: yellow(`${status}`),
-  };
-
-  const calculateStatus = (status / 100) | 0;
-
-  return out[calculateStatus];
-};
