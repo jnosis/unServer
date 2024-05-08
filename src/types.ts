@@ -84,8 +84,8 @@ export interface IUploadController {
 }
 
 export type FileData = {
-  fileName: string;
-  fileUrl: string;
+  path: string;
+  name: string;
 };
 
 export type UploadData = {
@@ -160,13 +160,12 @@ export type TransformOptions = {
   format?: 'origin';
 };
 
-export type PublicUrlOptions = {
-  download?: string | boolean;
+export type DownloadOptions = {
   transform?: TransformOptions;
 };
 
 export interface UploadModel {
-  getPublicUrl(path: string, options?: PublicUrlOptions): string | null;
+  download(path: string, options?: DownloadOptions): Promise<Blob | null>;
   upload(file: UploadData, isAuth?: boolean): Promise<FileData | undefined>;
   update(
     path: string,
