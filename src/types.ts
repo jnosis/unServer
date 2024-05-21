@@ -161,6 +161,7 @@ export type TransformOptions = {
 };
 
 export type DownloadOptions = {
+  isAuth?: boolean;
   transform?: TransformOptions;
 };
 
