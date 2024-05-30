@@ -1,5 +1,6 @@
 import type { Env, Handler, Input, TypedResponse } from 'hono';
 import type { ObjectId } from 'mongo';
+import type { StorageError } from 'supabase/storage';
 import type { Supabase } from '~/supabase.ts';
 
 export type BcryptOptions = {
@@ -165,15 +166,29 @@ export type DownloadOptions = {
   transform?: TransformOptions;
 };
 
+export type DataOrError<Data, E extends Error> = {
+  data: Data;
+  error: null;
+} | {
+  data: null;
+  error: E;
+};
+
 export interface UploadModel {
-  download(path: string, options?: DownloadOptions): Promise<Blob | null>;
+  download(
+    path: string,
+    options?: DownloadOptions,
+  ): Promise<DataOrError<Blob, StorageError>>;
   upload(file: UploadData, isAuth?: boolean): Promise<FileData | undefined>;
   update(
     path: string,
     file: UploadData,
     isAuth?: boolean,
-  ): Promise<FileData | undefined>;
-  remove(key: string, isAuth?: boolean): Promise<number>;
+  ): Promise<DataOrError<FileData, StorageError>>;
+  remove(
+    key: string,
+    isAuth?: boolean,
+  ): Promise<DataOrError<number, StorageError>>;
 }
 
 export interface WorkSchema {

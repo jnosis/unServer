@@ -12,9 +12,10 @@ class UploadRepository implements UploadModel {
     this.#supabase = { ...supabase };
   }
   async download(path: string, options?: DownloadOptions) {
-    const { data } = await this.#getSupabase(options?.isAuth)
+    const { data, error } = await this.#getSupabase(options?.isAuth)
       .download(path, { transform: options?.transform });
-    return data;
+    if (error) return { data: null, error };
+    return { data, error: null };
   }
 
   async upload(upload: UploadData, isAuth?: boolean) {
@@ -26,17 +27,19 @@ class UploadRepository implements UploadModel {
   }
 
   async update(path: string, upload: UploadData, isAuth?: boolean) {
-    const { data } = await this.#getSupabase(isAuth)
+    const { data, error } = await this.#getSupabase(isAuth)
       .update(path, upload.file);
-    if (data) {
-      return { path, name: upload.file.name };
-    }
+    if (data) return { data: { path, name: upload.file.name }, error: null };
+    return { data: null, error };
   }
 
   async remove(path: string, isAuth?: boolean) {
-    const { data } = await this.#getSupabase(isAuth)
+    const { error } = await this.download(path, { isAuth });
+    if (error) return { data: null, error };
+    const { data: d } = await this.#getSupabase(isAuth)
       .remove([path]);
-    return data ? data.length : 0;
+    const data = d ? d.length : 0;
+    return { data, error };
   }
 
   #getSupabase(isAuth?: boolean) {
