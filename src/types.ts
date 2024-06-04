@@ -179,7 +179,10 @@ export interface UploadModel {
     path: string,
     options?: DownloadOptions,
   ): Promise<DataOrError<Blob, StorageError>>;
-  upload(file: UploadData, isAuth?: boolean): Promise<FileData | undefined>;
+  upload(
+    file: UploadData,
+    isAuth?: boolean,
+  ): Promise<DataOrError<FileData, StorageError>>;
   update(
     path: string,
     file: UploadData,

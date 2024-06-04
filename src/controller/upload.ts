@@ -16,13 +16,13 @@ export class UploadController implements IUploadController {
     if (!(file instanceof File)) return throwError(400, 'File should be File');
     if (typeof path !== 'string') return throwError(400, 'Invalid path');
 
-    const uploaded = await this.#uploadRepository.upload(
+    const { data: uploaded, error } = await this.#uploadRepository.upload(
       { file, path: path + '/' + file.name },
       isAuth,
     );
 
     if (!uploaded) {
-      return throwError(500, `File(${path}) could not upload`);
+      return throwError(500, `File(${path}): ${error.message}`);
     }
 
     return c.json(uploaded, 201);

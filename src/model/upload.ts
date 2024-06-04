@@ -19,11 +19,15 @@ class UploadRepository implements UploadModel {
   }
 
   async upload(upload: UploadData, isAuth?: boolean) {
-    const { data } = await this.#getSupabase(isAuth)
+    const { data, error } = await this.#getSupabase(isAuth)
       .upload(upload.path, upload.file);
     if (data) {
-      return { path: upload.path, name: upload.file.name };
+      return {
+        data: { path: upload.path, name: upload.file.name },
+        error: null,
+      };
     }
+    return { data: null, error };
   }
 
   async update(path: string, upload: UploadData, isAuth?: boolean) {
