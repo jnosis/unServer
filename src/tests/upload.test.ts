@@ -13,7 +13,11 @@ import {
   clearCollection as clearAuthCollection,
   createNewUser,
 } from '~/tests/auth_utils.ts';
-import { clearBucket, makeFileDetails } from '~/tests/file_utils.ts';
+import {
+  clearBucket,
+  makeFileDetails,
+  uploadFile,
+} from '~/tests/file_utils.ts';
 import config from '~/config.ts';
 
 describe('Upload APIs', () => {
@@ -169,6 +173,52 @@ describe('Upload APIs', () => {
         (await response.json()).message,
         'Max size is 50MB',
       );
+    });
+  });
+
+  describe('PUT to /upload/*', () => {
+    it('returns 404 when uploaded file does not exist', async () => {
+      const { token } = await createNewUser(app);
+      const file = makeFileDetails({ isImage: true, size: 1024 });
+
+      const response = await app.request(`/upload${file.get('path')}`, {
+        method: 'put',
+        headers: { Authorization: `Bearer ${token}` },
+        body: file,
+      });
+
+      assertEquals(response.status, 404);
+      assertEquals(
+        (await response.json()).message,
+        `File(${(file.get('path'))}) not found`,
+      );
+    });
+
+    // todo: Fix issue of response not being consumed
+    it('returns 200 and the uploaded file when file exists', async () => {
+      const { token, uploaded } = await uploadFile(app, {
+        isImage: true,
+        size: 1024,
+      });
+      const file = makeFileDetails({ isImage: true, size: 1024 });
+      file.set('path', uploaded.path);
+
+      const response = await app.request(
+        `/upload${uploaded.path}`,
+        {
+          method: 'put',
+          headers: { Authorization: `Bearer ${token}` },
+          body: file,
+        },
+      );
+
+      const updated = await response.json();
+
+      assertEquals(response.status, 200);
+      assertEquals({ ...updated }, {
+        ...uploaded,
+        name: (file.get('file') as File).name,
+      });
     });
   });
 });
