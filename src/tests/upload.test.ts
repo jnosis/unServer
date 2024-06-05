@@ -221,4 +221,39 @@ describe('Upload APIs', () => {
       });
     });
   });
+
+  describe('DELETE to /upload/*', () => {
+    it('returns 404 when uploaded file does not exist', async () => {
+      const { token } = await createNewUser(app);
+
+      const response = await app.request('/upload/something', {
+        method: 'delete',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      assertEquals(
+        (await response.json()).message,
+        `File(/something) not found`,
+      );
+      assertEquals(response.status, 404);
+    });
+
+    // todo: Fix issue of response not being consumed
+    it('returns 204 and the uploaded should be deleted when uploaded file exists', async () => {
+      const { token, uploaded } = await uploadFile(app, {
+        isImage: true,
+        size: 1024,
+      });
+
+      const response = await app.request(
+        `/upload/${uploaded.path}`,
+        {
+          method: 'delete',
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      assertEquals(response.status, 204);
+    });
+  });
 });
