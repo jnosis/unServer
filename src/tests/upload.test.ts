@@ -20,15 +20,15 @@ describe('Upload APIs', () => {
   let app: Hono;
 
   beforeAll(() => {
-  });
-
-  beforeEach(async () => {
     app = new Hono();
     app.use(logger);
     app.onError(errorHandler);
     app.notFound(notFoundHandler);
     app.route('/auth', userRouter(new UserController(userRepository)));
     app.route('/upload', uploadRouter(new UploadController(uploadRepository)));
+  });
+
+  beforeEach(async () => {
     await clearBucket();
     await clearAuthCollection();
   });
