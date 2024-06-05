@@ -20,8 +20,8 @@ export function makeWorkDetails(username: string): WorkInputData {
     },
     projectUrl: faker.internet.url(),
     thumbnail: {
-      fileName: faker.word.words(10),
-      fileUrl: faker.image.url(),
+      name: faker.word.words(10),
+      path: faker.image.url(),
     },
   };
 }

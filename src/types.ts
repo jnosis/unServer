@@ -1,5 +1,6 @@
 import type { Env, Handler, Input, TypedResponse } from 'hono';
 import type { ObjectId } from 'mongo';
+import type { StorageError } from 'supabase/storage';
 import type { Supabase } from '~/supabase.ts';
 
 export type BcryptOptions = {
@@ -31,12 +32,17 @@ export type SupabaseOptions = {
   serviceRole: string;
 };
 
+export type UploadOptions = {
+  maxFileSize: number;
+};
+
 export type Config = {
   bcrypt: BcryptOptions;
   jwt: JwtOptions;
   cors: CORSOptions;
   mongodb: MongodbOptions;
   supabase: SupabaseOptions;
+  upload: UploadOptions;
 };
 
 export type HttpArgs = [string, string, number];
@@ -72,6 +78,22 @@ export type AuthToken = {
   username: string;
 };
 
+export interface IUploadController {
+  upload: Handler<AuthEnv, string, Input, HonoResponse<FileData>>;
+  update: Handler<AuthEnv, string, Input, HonoResponse<FileData>>;
+  delete: Handler<AuthEnv>;
+}
+
+export type FileData = {
+  path: string;
+  name: string;
+};
+
+export type UploadData = {
+  path: string;
+  file: File;
+};
+
 export interface IWorkController {
   getAll: Handler<Env, string, Input, HonoResponse<WorkData[]>>;
   getByTitle: Handler<Env, string, Input, HonoResponse<WorkData>>;
@@ -86,11 +108,6 @@ export type Repo = {
 };
 
 export type Techs = string[];
-
-export type FileData = {
-  fileName: string;
-  fileUrl: string;
-};
 
 export type WorkData = {
   id: string;
@@ -128,6 +145,53 @@ export interface UserModel extends Model<UserSchema, UserSignupData, UserData> {
   findByUsername(username: string): Promise<UserData | undefined>;
   findById(id: string): Promise<UserData | undefined>;
   create(user: UserSignupData): Promise<string>;
+}
+
+export interface UploadSchema {
+  _id: ObjectId;
+  fileName: string;
+  fileUrl: string;
+}
+
+export type TransformOptions = {
+  width?: number;
+  height?: number;
+  resize?: 'cover' | 'contain' | 'fill';
+  quality?: number;
+  format?: 'origin';
+};
+
+export type DownloadOptions = {
+  isAuth?: boolean;
+  transform?: TransformOptions;
+};
+
+export type DataOrError<Data, E extends Error> = {
+  data: Data;
+  error: null;
+} | {
+  data: null;
+  error: E;
+};
+
+export interface UploadModel {
+  download(
+    path: string,
+    options?: DownloadOptions,
+  ): Promise<DataOrError<Blob, StorageError>>;
+  upload(
+    file: UploadData,
+    isAuth?: boolean,
+  ): Promise<DataOrError<FileData, StorageError>>;
+  update(
+    path: string,
+    file: UploadData,
+    isAuth?: boolean,
+  ): Promise<DataOrError<FileData, StorageError>>;
+  remove(
+    key: string,
+    isAuth?: boolean,
+  ): Promise<DataOrError<number, StorageError>>;
 }
 
 export interface WorkSchema {

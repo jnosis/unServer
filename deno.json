@@ -21,6 +21,7 @@
     "hono/middleware": "https://deno.land/x/hono@v3.12.6/middleware.ts",
     "mongo": "https://deno.land/x/mongo@v0.32.0/mod.ts",
     "supabase":"https://esm.sh/@supabase/supabase-js@2.38.5",
+    "supabase/storage":"https://esm.sh/@supabase/storage-js@2.5.4",
     "faker": "https://esm.sh/@faker-js/faker@v8.4.1",
     "testing/": "https://deno.land/std@0.212.0/testing/",
     "zod": "https://deno.land/x/zod@v3.22.4/mod.ts"
@@ -28,7 +29,7 @@
   "tasks": {
     "start": "deno run --allow-net --allow-env --allow-read --env --watch ./src/app.ts",
     "test": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet --watch ./src",
-    "test:detail": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check",
+    "test:detail": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check --watch",
     "coverage": "deno test --coverage=./coverage --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet && deno coverage ./coverage",
     "coverage:detailed": "deno coverage --detailed ./coverage",
     "create": "deno run --allow-write ./cli/command.ts"

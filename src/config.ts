@@ -1,11 +1,14 @@
-import {
+import type {
   BcryptOptions,
   Config,
   CORSOptions,
   JwtOptions,
   MongodbOptions,
   SupabaseOptions,
+  UploadOptions,
 } from '~/types.ts';
+
+const MAX_FILE_SIZE = 512 * 1024 * 100;
 
 function required(key: string, defaultValue?: string): string {
   const value = Deno.env.get(key) || defaultValue;
@@ -39,12 +42,17 @@ const supabase: SupabaseOptions = {
   serviceRole: required('SUPABASE_SERVICE_ROLE')!,
 };
 
+const upload: UploadOptions = {
+  maxFileSize: MAX_FILE_SIZE,
+};
+
 export const config: Config = {
   bcrypt,
   jwt,
   cors,
   mongodb,
   supabase,
+  upload,
 };
 
 export default config;
