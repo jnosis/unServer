@@ -1,13 +1,16 @@
 import { Hono } from 'hono';
 import { cors, secureHeaders } from 'hono/middleware';
 import { UserController } from '~/controller/auth.ts';
+import { UploadController } from '~/controller/upload.ts';
 import { WorkController } from '~/controller/work.ts';
 import { errorHandler, notFoundHandler } from '~/middleware/error_handler.ts';
 import { log, logger } from '~/middleware/logger.ts';
 import { userRepository } from '~/model/auth.ts';
+import { uploadRepository } from '~/model/upload.ts';
 import { workRepository } from '~/model/work.ts';
 import apiRouter from '~/router/api.ts';
 import userRouter from '~/router/auth.ts';
+import uploadRouter from '~/router/upload.ts';
 import workRouter from '~/router/work.ts';
 import { time } from '~/util/message.ts';
 import config from '~/config.ts';
@@ -35,6 +38,9 @@ app.route(
   }, {
     path: '/works',
     router: workRouter(new WorkController(workRepository)),
+  }, {
+    path: '/upload',
+    router: uploadRouter(new UploadController(uploadRepository)),
   }]),
 );
 
