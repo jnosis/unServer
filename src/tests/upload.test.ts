@@ -200,7 +200,6 @@ describe('Upload APIs', () => {
       );
     });
 
-    // todo: Fix issue of response not being consumed
     it('returns 200 and the uploaded file when file exists', async () => {
       const { token, uploaded } = await uploadFile(app, {
         isImage: true,
@@ -244,7 +243,6 @@ describe('Upload APIs', () => {
       assertEquals(response.status, 404);
     });
 
-    // todo: Fix issue of response not being consumed
     it('returns 204 and the uploaded should be deleted when uploaded file exists', async () => {
       const { token, uploaded } = await uploadFile(app, {
         isImage: true,
