@@ -1,4 +1,4 @@
-import { Checkbox, Confirm, Input, List } from './deps.ts';
+import { Checkbox, Confirm, Input, List } from '@cliffy/prompt';
 import {
   createAll,
   createController,

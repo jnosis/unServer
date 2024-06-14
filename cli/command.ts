@@ -1,4 +1,4 @@
-import { Command } from './deps.ts';
+import { Command } from '@cliffy/command';
 import { promptCreation } from './prompt.ts';
 
 await new Command()
