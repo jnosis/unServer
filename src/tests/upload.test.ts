@@ -1,6 +1,12 @@
 import { Hono } from 'hono';
-import { assertEquals, assertGreater } from '$std/assert/mod.ts';
-import { afterAll, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
+import { assertEquals, assertGreater } from '@std/assert';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  it,
+} from '@std/testing/bdd';
 import { UserController } from '~/controller/auth.ts';
 import { UploadController } from '~/controller/upload.ts';
 import { errorHandler, notFoundHandler } from '~/middleware/error_handler.ts';

@@ -1,5 +1,5 @@
 import type { HttpArgs } from '~/types.ts';
-import { cyan, green, magenta, red, yellow } from '$std/fmt/colors.ts';
+import { cyan, green, magenta, red, yellow } from '@std/fmt/colors';
 
 type MessageOptions = {
   method: string;

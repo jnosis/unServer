@@ -1,4 +1,4 @@
-import { getCookies } from '$std/http/cookie.ts';
+import { getCookies } from '@std/http/cookie';
 
 export function getCookie(headers: Headers, name: string) {
   const cookies = getCookies(headers);

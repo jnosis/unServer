@@ -1,10 +1,10 @@
-import type { Spy } from 'testing/mock.ts';
+import type { Spy } from '@std/testing/mock';
 import { faker } from 'faker';
 import { Hono } from 'hono';
-import { LogRecord } from '$std/log/logger.ts';
-import { assertEquals, assertNotEquals } from '$std/assert/mod.ts';
-import { afterEach, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
-import { assertSpyCall, assertSpyCalls, spy } from 'testing/mock.ts';
+import { LogRecord } from '@std/log/logger';
+import { assertEquals, assertNotEquals } from '@std/assert';
+import { afterEach, beforeAll, beforeEach, describe, it } from '@std/testing/bdd';
+import { assertSpyCall, assertSpyCalls, spy } from '@std/testing/mock';
 import { formatter, log, logger } from '~/middleware/logger.ts';
 import { colorStatus, convertToMessage, formatArgs } from '~/util/message.ts';
 import {

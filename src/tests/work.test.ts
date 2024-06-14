@@ -1,7 +1,7 @@
 import { faker } from 'faker';
 import { Hono } from 'hono';
-import { assertEquals } from '$std/assert/mod.ts';
-import { afterAll, beforeAll, beforeEach, describe, it } from 'testing/bdd.ts';
+import { assertEquals } from '@std/assert';
+import { afterAll, beforeAll, beforeEach, describe, it } from '@std/testing/bdd';
 import { UserController } from '~/controller/auth.ts';
 import { WorkController } from '~/controller/work.ts';
 import { errorHandler, notFoundHandler } from '~/middleware/error_handler.ts';

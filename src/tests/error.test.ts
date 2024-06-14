@@ -1,7 +1,7 @@
 import { faker } from 'faker';
 import { Hono } from 'hono';
-import { assertEquals } from '$std/assert/mod.ts';
-import { describe, it } from 'testing/bdd.ts';
+import { assertEquals } from '@std/assert';
+import { describe, it } from '@std/testing/bdd';
 import {
   errorHandler,
   notFoundHandler,

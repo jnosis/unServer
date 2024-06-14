@@ -12,8 +12,12 @@
     "proseWrap": "preserve"
   },
   "imports": {
-    "~/":"./src/",
-    "$std/": "https://deno.land/std@0.212.0/",
+    "~/": "./src/",
+    "@std/assert": "jsr:@std/assert@0.226.0",
+    "@std/fmt": "jsr:@std/fmt@0.225.4",
+    "@std/http": "jsr:@std/http@0.224.4",
+    "@std/testing": "jsr:@std/testing@0.225.1",
+    "@std/log": "jsr:@std/log@0.224.2",
     "bcrypt": "https://deno.land/x/bcrypt@v0.4.1/mod.ts",
     "hono": "https://deno.land/x/hono@v3.12.6/mod.ts",
     "hono/helper": "https://deno.land/x/hono@v3.12.6/helper.ts",
@@ -23,7 +27,6 @@
     "supabase":"https://esm.sh/@supabase/supabase-js@2.38.5",
     "supabase/storage":"https://esm.sh/@supabase/storage-js@2.5.4",
     "faker": "https://esm.sh/@faker-js/faker@v8.4.1",
-    "testing/": "https://deno.land/std@0.212.0/testing/",
     "zod": "https://deno.land/x/zod@v3.22.4/mod.ts"
   },
   "tasks": {

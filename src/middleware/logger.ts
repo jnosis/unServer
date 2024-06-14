@@ -1,7 +1,7 @@
-import type { ConsoleHandlerOptions, LogRecord } from '$std/log/mod.ts';
+import type { ConsoleHandlerOptions, LogRecord } from '@std/log';
 import type { HttpArgs } from '~/types.ts';
 import { createMiddleware } from 'hono/helper';
-import { ConsoleHandler, Logger as BaseLogger } from '$std/log/mod.ts';
+import { ConsoleHandler, Logger as BaseLogger } from '@std/log';
 import { convertToMessage, formatArgs } from '~/util/message.ts';
 
 export const formatter = (logRecord: LogRecord) => {
