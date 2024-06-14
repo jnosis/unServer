@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { assertEquals, assertGreater } from '@std/assert';
+import { format } from '@std/fmt/bytes';
 import {
   afterAll,
   beforeAll,
@@ -177,7 +178,7 @@ describe('Upload APIs', () => {
       assertEquals(response.status, 400);
       assertEquals(
         (await response.json()).message,
-        'Max size is 50MB',
+        `Max size is ${format(config.upload.maxFileSize, { binary: true })}`,
       );
     });
   });

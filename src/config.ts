@@ -43,7 +43,9 @@ const supabase: SupabaseOptions = {
 };
 
 const upload: UploadOptions = {
-  maxFileSize: MAX_FILE_SIZE,
+  maxFileSize: parseInt(
+    required('UPLOAD_MAX_FILE_SIZE', MAX_FILE_SIZE.toString()),
+  ),
 };
 
 export const config: Config = {
