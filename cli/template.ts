@@ -1,8 +1,7 @@
 export const controllerTemplate = (name: string, handlers: string[]) => {
   const Name = name.replace(/\b[a-z]/, (letter) => letter.toUpperCase());
-  const methods = handlers.map((handler) =>
-    `${handler} = (req: OpineRequest, res: OpineResponse) => {}`
-  ).join('\n\n  ');
+  const methods = handlers.map((handler) => `${handler} = (c: Context) => {}`)
+    .join('\n\n  ');
 
   return `import type { Context } from 'hono';
 import type {
