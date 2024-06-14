@@ -35,7 +35,8 @@
     "start": "deno run --allow-net --allow-env --allow-read --env --watch ./src/app.ts",
     "test": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet --watch ./src",
     "test:detail": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check --watch",
-    "coverage": "deno test --coverage=./coverage --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet && deno coverage ./coverage",
+    "test:coverage": "deno test --clean --coverage=./coverage --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet",
+    "coverage": "deno coverage ./coverage",
     "coverage:detailed": "deno coverage --detailed ./coverage",
     "create": "deno run --allow-write ./cli/command.ts"
   }
