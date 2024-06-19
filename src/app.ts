@@ -1,5 +1,6 @@
-import { Hono } from 'hono';
-import { cors, secureHeaders } from 'hono/middleware';
+import { Hono } from'hono';
+import { cors } from'hono/cors';
+import { secureHeaders } from'hono/secure-headers';
 import { UserController } from '~/controller/auth.ts';
 import { UploadController } from '~/controller/upload.ts';
 import { WorkController } from '~/controller/work.ts';

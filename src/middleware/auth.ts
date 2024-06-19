@@ -7,7 +7,7 @@ import { throwError } from '~/middleware/error_handler.ts';
 const AUTH_ERROR = {
   status: 401,
   message: 'Authorization Error',
-};
+} as const;
 
 export const isAuth = async (c: Context, next: Next) => {
   let token;

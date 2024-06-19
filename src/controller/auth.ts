@@ -1,6 +1,6 @@
 import type { Context } from 'hono';
 import type { AuthEnv, IUserController, UserModel } from '~/types.ts';
-import { deleteCookie, setCookie } from 'hono/helper';
+import { deleteCookie, setCookie } from 'hono/cookie';
 import { compare, hash } from '~/helper/bcrypt.ts';
 import { createJwtToken } from '~/helper/jwt.ts';
 import { throwError } from '~/middleware/error_handler.ts';
