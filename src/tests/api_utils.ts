@@ -1,6 +1,6 @@
 import type { Handler } from 'hono';
 import { Hono } from 'hono';
-import { createMiddleware } from 'hono/helper';
+import { createMiddleware } from 'hono/factory';
 import { faker } from 'faker';
 
 export function createRouter() {

@@ -1,4 +1,4 @@
-import { createMiddleware } from 'hono/helper';
+import { createMiddleware } from 'hono/factory';
 import { z, ZodRawShape } from 'zod';
 import { throwError } from '~/middleware/error_handler.ts';
 

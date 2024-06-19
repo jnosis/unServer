@@ -1,6 +1,6 @@
 import type { ConsoleHandlerOptions, LogRecord } from '@std/log';
 import type { HttpArgs } from '~/types.ts';
-import { createMiddleware } from 'hono/helper';
+import { createMiddleware } from 'hono/factory';
 import { ConsoleHandler, Logger as BaseLogger } from '@std/log';
 import { convertToMessage, formatArgs } from '~/util/message.ts';
 

@@ -1,7 +1,8 @@
 import type { ErrorHandler, NotFoundHandler } from 'hono';
-import { HTTPException } from 'hono';
+import type { StatusCode } from 'hono/utils/http-status';
+import { HTTPException } from 'hono/http-exception';
 
-export const throwError = (status: number, message: string) => {
+export const throwError = (status: StatusCode, message: string) => {
   throw new HTTPException(status, { message });
 };
 
