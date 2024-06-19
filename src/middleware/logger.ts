@@ -72,7 +72,7 @@ export const logger = createMiddleware(async (c, next) => {
   const status = c.res.status;
   const message =
     c.res.headers.get('Content-Type')?.includes('application/json')
-      ? (await c.res.json()).message
+      ? (await c.res.clone().json()).message
       : '';
   const [msg, args] = convertToMessage({
     method,
