@@ -2,6 +2,7 @@ import type {
   BcryptOptions,
   Config,
   CORSOptions,
+  JoinOptions,
   JwtOptions,
   MongodbOptions,
   SupabaseOptions,
@@ -22,13 +23,18 @@ const bcrypt: BcryptOptions = {
   saltRound: parseInt(required('BCRYPT_SALT_ROUND', '12')),
 };
 
+const cors: CORSOptions = {
+  origin: required('CORS_ALLOW_ORIGIN'),
+};
+
+const join: JoinOptions = {
+  apiKey: required('JOIN_API_KEY'),
+  deviceId: required('JOIN_DEVICE_ID', 'group.all'),
+};
+
 const jwt: JwtOptions = {
   secretKey: required('JWT_SECRET_KEY'),
   expiresInSec: parseInt(required('JWT_EXPIRES_IN_SEC', '86400')),
-};
-
-const cors: CORSOptions = {
-  origin: required('CORS_ALLOW_ORIGIN'),
 };
 
 const mongodb: MongodbOptions = {
@@ -50,8 +56,9 @@ const upload: UploadOptions = {
 
 export const config: Config = {
   bcrypt,
-  jwt,
   cors,
+  join,
+  jwt,
   mongodb,
   supabase,
   upload,

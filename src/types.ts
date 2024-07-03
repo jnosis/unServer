@@ -1,5 +1,4 @@
 import type { Env, Handler, Input, TypedResponse } from 'hono';
-// import type { Env, Handler, Input, TypedResponse } from 'hono';
 import type { ObjectId } from 'mongo';
 import type { StorageError } from 'supabase/storage';
 import type { Supabase } from '~/supabase.ts';
@@ -15,6 +14,11 @@ export type CORSOptions = {
   maxAge?: number;
   credentials?: boolean;
   exposeHeaders?: string[];
+};
+
+export type JoinOptions = {
+  apiKey: string;
+  deviceId: string;
 };
 
 export type JwtOptions = {
@@ -39,6 +43,7 @@ export type UploadOptions = {
 
 export type Config = {
   bcrypt: BcryptOptions;
+  join: JoinOptions;
   jwt: JwtOptions;
   cors: CORSOptions;
   mongodb: MongodbOptions;
