@@ -1,4 +1,4 @@
-import { Hono } from'hono';
+import { Hono } from 'hono';
 import { getEndPoints } from '~/util/endpoints.ts';
 
 type API = { path: string; router: Hono };

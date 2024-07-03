@@ -23,7 +23,9 @@ const validateUpload = validate({
     .refine(checkFileIsImage, { message: 'Only image files are accepted' })
     .refine(checkMinFileSize, { message: 'Input file' })
     .refine(checkMaxFileSize, {
-      message: `Max size is ${format(config.upload.maxFileSize, { binary: true})}`,
+      message: `Max size is ${
+        format(config.upload.maxFileSize, { binary: true })
+      }`,
     }),
 });
 
