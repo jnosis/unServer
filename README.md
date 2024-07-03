@@ -40,6 +40,5 @@ deno task create --create-router
 ### TODO
 
 - Fix a issue where work title could not be changed
-- Add notification feature when an error occurs using JoinJoaomgcd
 - Add image loader to supabase
 - Migrate cloudinary to supabase storage
