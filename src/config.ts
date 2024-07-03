@@ -29,6 +29,7 @@ const cors: CORSOptions = {
 
 const join: JoinOptions = {
   apiKey: required('JOIN_API_KEY'),
+  deviceId: required('JOIN_DEVICE_ID', 'group.all'),
 };
 
 const jwt: JwtOptions = {

@@ -18,6 +18,7 @@ export type CORSOptions = {
 
 export type JoinOptions = {
   apiKey: string;
+  deviceId: string;
 };
 
 export type JwtOptions = {
