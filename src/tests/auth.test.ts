@@ -8,6 +8,7 @@ import {
   describe,
   it,
 } from '@std/testing/bdd';
+import { resolvesNext, stub } from '@std/testing/mock';
 import { UserController } from '~/controller/auth.ts';
 import { errorHandler, notFoundHandler } from '~/middleware/error_handler.ts';
 import { logger } from '~/middleware/logger.ts';
@@ -235,6 +236,27 @@ describe('Auth APIs', () => {
 
       assertEquals(response.status, 401);
       assertEquals((await response.json()).message, 'Authorization Error');
+    });
+
+    it('returns 404 when userRepository returns undefined', async () => {
+      const { token, username, password, name, email } = await createNewUser(
+        app,
+      );
+      const user = { id: '', username, password, name, email };
+
+      const stubbed = stub(
+        userRepository,
+        'findById',
+        resolvesNext([user, undefined]),
+      );
+      const response = await app.request('/auth/me', {
+        method: 'get',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      stubbed.restore();
+
+      assertEquals(response.status, 404);
+      assertEquals((await response.json()).message, 'User not found');
     });
   });
 
