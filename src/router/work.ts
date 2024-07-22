@@ -1,24 +1,27 @@
 import type { IWorkController } from '~/types.ts';
 import { Hono } from 'hono';
-import { z } from 'zod';
+import * as v from 'valibot';
 import { isAuth } from '~/middleware/auth.ts';
 import { validate } from '~/middleware/validator.ts';
 
 const work = new Hono();
 
 const validateWork = validate({
-  title: z.string().min(1, { message: 'Title should be not empty' }),
-  description: z.string(),
-  repo: z.object({
-    url: z.string().regex(
-      /^(https?\:\/\/)?github.com\/[\w]+\/[\w]+/,
-      'Invalid repository url',
+  title: v.pipe(v.string(), v.minLength(1, 'Title should be not empty')),
+  description: v.string(),
+  repo: v.object({
+    url: v.pipe(
+      v.string(),
+      v.regex(
+        /^(https?\:\/\/)?github.com\/[\w]+\/[\w]+/,
+        'Invalid repository url',
+      ),
     ),
-    branch: z.string(),
+    branch: v.string(),
   }),
-  projectUrl: z.union([
-    z.literal(''),
-    z.string().url({ message: 'Invalid project url' }),
+  projectUrl: v.union([
+    v.literal(''),
+    v.pipe(v.string(), v.url('Invalid project url')),
   ]),
 });
 

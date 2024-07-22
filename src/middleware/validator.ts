@@ -1,20 +1,21 @@
 import { createMiddleware } from 'hono/factory';
-import { z, ZodRawShape } from 'zod';
+import * as v from 'valibot';
 import { throwError } from '~/middleware/error_handler.ts';
 
-export const validate = (schema: ZodRawShape) => {
+export const validate = (schema: v.ObjectEntries) => {
   return createMiddleware(async (c, next) => {
-    const validation = z.object(schema);
+    const validation = v.object(schema);
     const contentType = c.req.header('Content-Type');
 
-    const result = await validation.safeParseAsync(
+    const result = await v.safeParseAsync(
+      validation,
       isFormData(contentType || '')
         ? await c.req.parseBody()
         : await c.req.json(),
     );
 
     if (!result.success) {
-      return throwError(400, result.error.errors[0].message);
+      return throwError(400, result.issues[0].message);
     }
 
     await next();

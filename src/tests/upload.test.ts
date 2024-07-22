@@ -85,7 +85,7 @@ describe('Upload APIs', () => {
       assertEquals(response.status, 400);
       assertEquals(
         (await response.json()).message,
-        'Required',
+        'Invalid type: Expected string but received undefined',
       );
     });
 
@@ -128,7 +128,7 @@ describe('Upload APIs', () => {
       );
     });
 
-    it('returns 400 when file size is not image', async () => {
+    it('returns 400 when file is not image', async () => {
       const { token } = await createNewUser(app);
       const file = makeFileDetails();
 
