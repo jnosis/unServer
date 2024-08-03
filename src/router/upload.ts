@@ -11,8 +11,6 @@ import {
 } from '~/util/file.ts';
 import config from '~/config.ts';
 
-const upload = new Hono();
-
 const validateUpload = validate({
   path: v.pipe(
     v.string(),
@@ -33,9 +31,10 @@ const validateUpload = validate({
 });
 
 export default function uploadRouter(uploadController: IUploadController) {
-  upload.post('/', isAuth, validateUpload, uploadController.upload);
-  upload.put('/*', isAuth, validateUpload, uploadController.update);
-  upload.delete('/*', isAuth, uploadController.delete);
+  const upload = new Hono()
+    .post('/', isAuth, validateUpload, uploadController.upload)
+    .put('/*', isAuth, validateUpload, uploadController.update)
+    .delete('/*', isAuth, uploadController.delete);
 
   return upload;
 }

@@ -4,8 +4,6 @@ import * as v from 'valibot';
 import { isAuth } from '~/middleware/auth.ts';
 import { validate } from '~/middleware/validator.ts';
 
-const auth = new Hono();
-
 const validateCredential = validate({
   username: v.pipe(v.string(), v.minLength(1, 'Username should be not empty')),
   password: v.pipe(v.string(), v.minLength(1, 'Password should be not empty')),
@@ -20,10 +18,11 @@ const validateSignup = [
 ];
 
 export default function userRouter(userController: IUserController) {
-  auth.post('/signup', ...validateSignup, userController.signup);
-  auth.post('/login', validateCredential, userController.login);
-  auth.post('/logout', userController.logout);
-  auth.get('/me', isAuth, userController.me);
+  const auth = new Hono()
+    .post('/signup', ...validateSignup, userController.signup)
+    .post('/login', validateCredential, userController.login)
+    .post('/logout', userController.logout)
+    .get('/me', isAuth, userController.me);
 
   return auth;
 }

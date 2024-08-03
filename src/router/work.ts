@@ -4,8 +4,6 @@ import * as v from 'valibot';
 import { isAuth } from '~/middleware/auth.ts';
 import { validate } from '~/middleware/validator.ts';
 
-const work = new Hono();
-
 const validateWork = validate({
   title: v.pipe(v.string(), v.minLength(1, 'Title should be not empty')),
   description: v.string(),
@@ -26,11 +24,12 @@ const validateWork = validate({
 });
 
 export default function workRouter(workController: IWorkController) {
-  work.get('/', workController.getAll);
-  work.get('/:id', workController.getByTitle);
-  work.post('/', isAuth, validateWork, workController.add);
-  work.put('/:id', isAuth, validateWork, workController.update);
-  work.delete('/:id', isAuth, workController.delete);
+  const work = new Hono()
+    .get('/', workController.getAll)
+    .get('/:id', workController.getByTitle)
+    .post('/', isAuth, validateWork, workController.add)
+    .put('/:id', isAuth, validateWork, workController.update)
+    .delete('/:id', isAuth, workController.delete);
 
   return work;
 }

@@ -55,6 +55,10 @@ export type HttpArgs = [string, string, number];
 
 type HonoResponse<T> = TypedResponse<T> | Promise<TypedResponse<T>>;
 
+export type IController<P extends string> = {
+  [path in P]: Handler;
+};
+
 export type AuthEnv = {
   Variables: {
     userId: string;
@@ -62,7 +66,8 @@ export type AuthEnv = {
   };
 };
 
-export interface IUserController {
+export type UserPath = 'signup' | 'login' | 'logout' | 'me';
+export interface IUserController extends IController<UserPath> {
   signup: Handler<Env, string, Input, HonoResponse<AuthToken>>;
   login: Handler<Env, string, Input, HonoResponse<AuthToken>>;
   logout: Handler;
@@ -84,7 +89,8 @@ export type AuthToken = {
   username: string;
 };
 
-export interface IUploadController {
+type UploadPath = 'upload' | 'update' | 'delete';
+export interface IUploadController extends IController<UploadPath> {
   upload: Handler<AuthEnv, string, Input, HonoResponse<FileData>>;
   update: Handler<AuthEnv, string, Input, HonoResponse<FileData>>;
   delete: Handler<AuthEnv>;
@@ -100,7 +106,8 @@ export type UploadData = {
   file: File;
 };
 
-export interface IWorkController {
+type WorkPath = 'getAll' | 'getByTitle' | 'add' | 'update' | 'delete';
+export interface IWorkController extends IController<WorkPath> {
   getAll: Handler<Env, string, Input, HonoResponse<WorkData[]>>;
   getByTitle: Handler<Env, string, Input, HonoResponse<WorkData>>;
   add: Handler<AuthEnv, string, Input, HonoResponse<WorkData>>;

@@ -1,4 +1,5 @@
 import type { Context, Next } from 'hono';
+import type { AuthEnv } from '~/types.ts';
 import { getCookie } from '~/helper/cookie.ts';
 import { verifyJwtToken } from '~/helper/jwt.ts';
 import { userRepository } from '~/model/auth.ts';
@@ -9,11 +10,11 @@ const AUTH_ERROR = {
   message: 'Authorization Error',
 } as const;
 
-export const isAuth = async (c: Context, next: Next) => {
+export const isAuth = async (c: Context<AuthEnv>, next: Next) => {
   let token;
 
   const authHeader = c.req.header('Authorization');
-  c.set('test', 'test');
+
   if (authHeader && authHeader.startsWith('Bearer ')) {
     token = authHeader.split(' ')[1];
   } else {
