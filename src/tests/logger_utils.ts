@@ -1,4 +1,4 @@
-import type { HttpArgs } from '~/types.ts';
+import type { LogLevel, LogRecord } from 'logtape';
 import { faker } from 'faker';
 
 type MessageOptions = {
@@ -10,30 +10,33 @@ type MessageOptions = {
 };
 
 export function createMessageOptions(): MessageOptions {
-  const httpOptions = createHttpArgs();
   return {
-    method: httpOptions[0],
-    path: httpOptions[1],
-    status: httpOptions[2],
+    method: faker.internet.httpMethod(),
+    path: faker.system.directoryPath(),
+    status: faker.internet.httpStatusCode(),
     start: Date.now(),
   };
 }
 
-export function createHttpArgs(): HttpArgs {
-  return [
-    faker.internet.httpMethod(),
-    faker.system.directoryPath(),
-    faker.internet.httpStatusCode(),
-  ];
+type LogRecordOptions = Partial<LogRecord>;
+
+export function createLogRecord(options?: LogRecordOptions): LogRecord {
+  return {
+    category: options?.category ?? [''],
+    level: options?.level ?? randomLogLevel(),
+    message: options?.message ?? [],
+    properties: options?.properties ?? {},
+    timestamp: options?.timestamp ?? Date.now(),
+  };
 }
 
-export function createRandomArgs(n: number = Math.floor(Math.random() * 5)) {
-  let args: string[] = [];
-  let cnt = 0;
-
-  while (cnt++ < n) {
-    args = [...args, faker.word.sample()];
-  }
-
-  return args;
+function randomLogLevel(): LogLevel {
+  const level: { [key: string]: LogLevel } = {
+    0: 'debug',
+    1: 'info',
+    2: 'warning',
+    3: 'error',
+    4: 'fatal',
+  };
+  return level[Math.floor(Math.random() * 4)];
 }
