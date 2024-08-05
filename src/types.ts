@@ -51,8 +51,6 @@ export type Config = {
   upload: UploadOptions;
 };
 
-export type HttpArgs = [string, string, number];
-
 type HonoResponse<T> = TypedResponse<T> | Promise<TypedResponse<T>>;
 
 export type IController<P extends string> = {
