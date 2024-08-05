@@ -43,42 +43,6 @@ describe('Logger', () => {
       });
     });
 
-    describe('Format message', () => {
-      it('return empty string when options is empty', () => {
-        const options = {};
-        const formatted = formatMsg(options);
-
-        assertEquals(formatted, '');
-      });
-
-      it('return formatted string without message', () => {
-        const options = createMessageOptions();
-        const formatted = formatMsg(options).split(' ');
-
-        assertEquals(formatted.length, 5);
-        assertEquals(formatted[2], colorStatus(options.status));
-        assertNotEquals(Number.parseInt(formatted[4]), NaN);
-        assertEquals(formatted[4].slice(-2), 'ms');
-      });
-
-      it('return formatted string with message', () => {
-        const options = createMessageOptions();
-        const message = faker.lorem.sentence();
-        const formatted = formatMsg({ ...options, message }).split(' ');
-        const formattedMessage = formatted
-          .filter((_, index) =>
-            index !== 0 && index !== 1 && index !== 2 &&
-            index !== formatted.length - 1 &&
-            index !== formatted.length - 2
-          )
-          .join(' ');
-
-        assertGreater(formatted.length, 5);
-        assertEquals(Number.parseInt(formatted[4]), NaN);
-        assertEquals(formattedMessage, message);
-      });
-    });
-
     describe('Color status', () => {
       it('greened when http status is informational', () => {
         const status = faker.internet.httpStatusCode({
@@ -125,16 +89,80 @@ describe('Logger', () => {
         assertEquals(colorized, `\x1b[31m${status}\x1b[39m`);
       });
     });
+
+    describe('Format message', () => {
+      it('return empty string when options is empty', () => {
+        const options = {};
+        const formatted = formatMsg(options);
+
+        assertEquals(formatted, '');
+      });
+
+      it('return elapsed when options has only start', () => {
+        const options = { start: Date.now() };
+        const formatted = formatMsg(options).split(' ');
+
+        assertEquals(formatted.length, 2);
+        assertNotEquals(parseInt(formatted[1]), NaN);
+        assertEquals(formatted[1].slice(-2), 'ms');
+      });
+
+      it('return formatted string without message', () => {
+        const options = createMessageOptions();
+        const formatted = formatMsg(options).split(' ');
+
+        assertEquals(formatted.length, 5);
+        assertEquals(formatted[0], options.method);
+        assertEquals(formatted[1], options.path);
+        assertEquals(formatted[2], colorStatus(options.status));
+        assertNotEquals(Number.parseInt(formatted[4]), NaN);
+        assertEquals(formatted[4].slice(-2), 'ms');
+      });
+
+      it('return formatted string with message', () => {
+        const options = createMessageOptions();
+        const message = faker.lorem.sentence();
+        const formatted = formatMsg({ ...options, message }).split(' ');
+        const formattedMessage = formatted
+          .filter((_, index) =>
+            index !== 0 && index !== 1 && index !== 2 &&
+            index !== formatted.length - 1 &&
+            index !== formatted.length - 2
+          )
+          .join(' ');
+
+        assertGreater(formatted.length, 5);
+        assertEquals(Number.parseInt(formatted[4]), NaN);
+        assertEquals(formattedMessage, message);
+      });
+    });
   });
 
   describe('Formatter', () => {
-    it('Normal log', () => {
+    it('General log without start', () => {
       const msg = faker.word.sample();
       const record = createLogRecord({ message: [msg] });
       const formatted = formatter(record)[0].split(' ');
 
+      assertEquals(formatted[0].split('/').length, 3);
+      assertEquals(formatted[1].split(':').length, 3);
+      assertEquals(formatted[2], 'GMT+9');
       assertEquals(formatted[3], `[${record.level.toUpperCase()}]`);
       assertEquals(formatted[4], msg);
+    });
+
+    it('General log with start', () => {
+      const msg = faker.word.sample();
+      const start = Date.now();
+      const record = createLogRecord({
+        level: 'debug',
+        message: [msg],
+        properties: { start },
+      });
+      const formatted = formatter(record)[0].split(' ');
+
+      assertEquals(formatted[5], '-');
+      assertEquals(formatted[6].slice(-2), 'ms');
     });
 
     it('Router Log without message', () => {
@@ -142,7 +170,6 @@ describe('Logger', () => {
       const record = createLogRecord({ level: 'debug', properties: options });
       const formatted = formatter(record)[0].split(' ');
 
-      assertEquals(formatted[3], `[${record.level.toUpperCase()}]`);
       assertEquals(formatted[4], options.method);
       assertEquals(formatted[5], options.path);
       assertEquals(formatted[6], colorStatus(options.status));

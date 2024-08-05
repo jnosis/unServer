@@ -13,7 +13,7 @@ import apiRouter from '~/router/api.ts';
 import userRouter from '~/router/auth.ts';
 import uploadRouter from '~/router/upload.ts';
 import workRouter from '~/router/work.ts';
-import { log, time } from '~/util/logger.ts';
+import { log } from '~/util/logger.ts';
 import config from '~/config.ts';
 
 const start = Date.now();
@@ -48,6 +48,6 @@ app.route(
 Deno.serve({
   port: 3000,
   onListen: ({ hostname, port }) => {
-    log.info(`Server running on ${hostname}:${port} - ${time(start)}`);
+    log.info(`Server running on ${hostname}:${port}`, { start });
   },
 }, app.fetch);

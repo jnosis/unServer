@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongo';
+import { log } from '~/util/logger.ts';
 import config from '~/config.ts';
 
 class Database {
@@ -25,9 +26,11 @@ class Database {
 
 const mongodb = new Database(config.mongodb.name, config.mongodb.host);
 try {
+  const start = Date.now();
   await mongodb.connect();
+  log.info('MongoDB connected', { start });
 } catch (error) {
-  console.log(error);
+  log.error(error);
 }
 
 export default mongodb;

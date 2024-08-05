@@ -2,14 +2,6 @@ import type { LogLevel, LogRecord } from 'logtape';
 import { configure, getConsoleSink, getLogger } from 'logtape';
 import { blue, bold, cyan, green, magenta, red, yellow } from '@std/fmt/colors';
 
-type MessageOptions = {
-  method: string;
-  path: string;
-  status: number;
-  start: number;
-  message?: string;
-};
-
 export const formatter = (record: LogRecord) => {
   const time = new Date(record.timestamp).toLocaleString('en', {
     hour12: false,
@@ -55,12 +47,16 @@ export const colorLog = (level: LogLevel, message: string) => {
 };
 
 export const formatMsg = (options: unknown): string => {
-  if (isMessageOptions(options)) {
-    const { method, path, status, start, message } = options;
-    const routeMsg = `${method} ${path} ${colorStatus(status)} `;
+  if (isMsgOptions(options)) {
+    const { start } = options;
     const elapsed = '- ' + time(start);
-    const msg = message ? `${message} ${elapsed}` : elapsed;
-    return routeMsg + msg;
+    if (isRouteMsgOptions(options)) {
+      const { method, path, status, message } = options;
+      const routeMsg = `${method} ${path} ${colorStatus(status)} `;
+      const msg = message ? `${message} ${elapsed}` : elapsed;
+      return routeMsg + msg;
+    }
+    return elapsed;
   }
   return '';
 };
@@ -85,11 +81,27 @@ export const colorStatus = (status: number) => {
   return out[calculateStatus];
 };
 
-function isMessageOptions(options: unknown): options is MessageOptions {
-  return typeof (options as MessageOptions).method === 'string' &&
-    typeof (options as MessageOptions).path === 'string' &&
-    typeof (options as MessageOptions).status === 'number' &&
-    typeof (options as MessageOptions).start === 'number' &&
-    (typeof (options as MessageOptions).message === 'string' ||
-      (options as MessageOptions).message === undefined);
+type MsgOptions = {
+  start: number;
+};
+
+type RouteMsgOptions = {
+  method: string;
+  path: string;
+  status: number;
+  start: number;
+  message?: string;
+};
+
+function isMsgOptions(options: unknown): options is MsgOptions {
+  return typeof (options as RouteMsgOptions).start === 'number';
+}
+
+function isRouteMsgOptions(options: unknown): options is RouteMsgOptions {
+  return isMsgOptions(options) &&
+    typeof (options as RouteMsgOptions).method === 'string' &&
+    typeof (options as RouteMsgOptions).path === 'string' &&
+    typeof (options as RouteMsgOptions).status === 'number' &&
+    (typeof (options as RouteMsgOptions).message === 'string' ||
+      (options as RouteMsgOptions).message === undefined);
 }
