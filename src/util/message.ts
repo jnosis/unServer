@@ -1,5 +1,5 @@
-import type { HttpArgs } from '~/types.ts';
-import { cyan, green, magenta, red, yellow } from '@std/fmt/colors';
+import type { LogLevel } from 'logtape';
+import { blue, bold, cyan, green, magenta, red, yellow } from '@std/fmt/colors';
 
 type MessageOptions = {
   method: string;
@@ -9,27 +9,32 @@ type MessageOptions = {
   message?: string;
 };
 
-export const convertToMessage = (
-  options: MessageOptions,
-): [string, HttpArgs] => {
-  const { method, path, status, start, message } = options;
-  const elapsed = '- ' + time(start);
-  const msg = message ? `${message} ${elapsed}` : elapsed;
-  const args: HttpArgs = [method, path, status];
-  return [msg, args];
+export const colorLog = (level: LogLevel, message: string) => {
+  const out: { [key: string]: string } = {
+    info: blue(message),
+    debug: message,
+    warning: yellow(message),
+    error: red(message),
+    fatal: bold(red(message)),
+  };
+
+  return out[level];
+};
+
+export const formatMsg = (options: unknown): string => {
+  if (isMessageOptions(options)) {
+    const { method, path, status, start, message } = options;
+    const routeMsg = `${method} ${path} ${colorStatus(status)} `;
+    const elapsed = '- ' + time(start);
+    const msg = message ? `${message} ${elapsed}` : elapsed;
+    return routeMsg + msg;
+  }
+  return '';
 };
 
 export function time(start: number) {
   return (Date.now() - start) + 'ms';
 }
-
-export const formatArgs = (args: unknown[]): string => {
-  return args.length > 0
-    ? isHttpArgs(args)
-      ? `${[args[0], args[1], colorStatus(args[2])].join(' ')} `
-      : args.join(' ')
-    : '';
-};
 
 export const colorStatus = (status: number) => {
   const out: { [key: string]: string } = {
@@ -47,9 +52,11 @@ export const colorStatus = (status: number) => {
   return out[calculateStatus];
 };
 
-function isHttpArgs(args: unknown[]): args is HttpArgs {
-  return args.length === 3
-    ? (typeof args[0] === 'string' && typeof args[1] === 'string' &&
-      typeof args[2] === 'number')
-    : false;
+function isMessageOptions(options: unknown): options is MessageOptions {
+  return typeof (options as MessageOptions).method === 'string' &&
+    typeof (options as MessageOptions).path === 'string' &&
+    typeof (options as MessageOptions).status === 'number' &&
+    typeof (options as MessageOptions).start === 'number' &&
+    (typeof (options as MessageOptions).message === 'string' ||
+      (options as MessageOptions).message === undefined);
 }

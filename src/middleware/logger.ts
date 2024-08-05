@@ -1,67 +1,39 @@
-import type { ConsoleHandlerOptions, LogRecord } from '@std/log';
-import type { HttpArgs } from '~/types.ts';
+import type { LogRecord } from 'logtape';
 import { createMiddleware } from 'hono/factory';
-import { ConsoleHandler, Logger as BaseLogger } from '@std/log';
-import { convertToMessage, formatArgs } from '~/util/message.ts';
+import { colorLog, formatMsg } from '~/util/message.ts';
+import { configure, getConsoleSink, getLogger } from 'logtape';
 
-export const formatter = (logRecord: LogRecord) => {
-  const time = logRecord.datetime.toLocaleString('en', {
+export const formatter = (record: LogRecord) => {
+  const time = new Date(record.timestamp).toLocaleString('en', {
     hour12: false,
     timeZone: 'Asia/Seoul',
     timeZoneName: 'short',
   });
-  const args = formatArgs(logRecord.args);
-  return `${time} [${logRecord.levelName}] ${args}${logRecord.msg}`;
+
+  const msg = colorLog(
+    record.level,
+    `${time} [${record.level.toUpperCase()}] ${
+      record.message[0] ? record.message + ' ' : ''
+    }${formatMsg(record.properties)}`,
+  );
+
+  return [
+    msg,
+  ];
 };
 
-type Args = HttpArgs | [];
+await configure({
+  sinks: {
+    console: getConsoleSink({ formatter }),
+  },
+  filters: {},
+  loggers: [
+    { category: 'unserver', level: 'debug', sinks: ['console'] },
+    { category: ['logtape', 'meta'], level: 'warning', sinks: ['console'] },
+  ],
+});
 
-class Logger {
-  #log: BaseLogger;
-  constructor(options: ConsoleHandlerOptions) {
-    this.#log = new BaseLogger('default', 'DEBUG', {
-      handlers: [new ConsoleHandler('DEBUG', options)],
-    });
-  }
-
-  get level() {
-    return this.#log.level;
-  }
-
-  get levelName() {
-    return this.#log.levelName;
-  }
-
-  get loggerName() {
-    return this.#log.loggerName;
-  }
-
-  get handlers() {
-    return this.#log.handlers;
-  }
-
-  debug(msg: string, ...args: Args) {
-    return this.#log.debug(msg, ...args);
-  }
-
-  info(msg: string, ...args: Args) {
-    return this.#log.info(msg, ...args);
-  }
-
-  warn(msg: string, ...args: Args) {
-    return this.#log.warn(msg, ...args);
-  }
-
-  error(msg: string, ...args: Args) {
-    return this.#log.error(msg, ...args);
-  }
-
-  critical(msg: string, ...args: Args) {
-    return this.#log.critical(msg, ...args);
-  }
-}
-
-export const log = new Logger({ formatter });
+export const log = getLogger(['unserver']);
 
 export const logger = createMiddleware(async (c, next) => {
   const { method, path } = c.req;
@@ -74,13 +46,10 @@ export const logger = createMiddleware(async (c, next) => {
     c.res.headers.get('Content-Type')?.includes('application/json')
       ? (await c.res.clone().json()).message
       : '';
-  const [msg, args] = convertToMessage({
-    method,
-    path,
-    status,
-    start,
-    message,
-  });
-  if (status < 400) log.debug(msg, ...args);
-  else log.error(msg, ...args);
+
+  if (status < 400) {
+    log.debug('', { method, path, status, message, start });
+  } else {
+    log.error('', { method, path, status, message, start });
+  }
 });
