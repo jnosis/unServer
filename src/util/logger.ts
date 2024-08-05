@@ -1,4 +1,5 @@
-import type { LogLevel } from 'logtape';
+import type { LogLevel, LogRecord } from 'logtape';
+import { configure, getConsoleSink, getLogger } from 'logtape';
 import { blue, bold, cyan, green, magenta, red, yellow } from '@std/fmt/colors';
 
 type MessageOptions = {
@@ -8,6 +9,38 @@ type MessageOptions = {
   start: number;
   message?: string;
 };
+
+export const formatter = (record: LogRecord) => {
+  const time = new Date(record.timestamp).toLocaleString('en', {
+    hour12: false,
+    timeZone: 'Asia/Seoul',
+    timeZoneName: 'short',
+  });
+
+  const msg = colorLog(
+    record.level,
+    `${time} [${record.level.toUpperCase()}] ${
+      record.message[0] ? record.message + ' ' : ''
+    }${formatMsg(record.properties)}`,
+  );
+
+  return [
+    msg,
+  ];
+};
+
+await configure({
+  sinks: {
+    console: getConsoleSink({ formatter }),
+  },
+  filters: {},
+  loggers: [
+    { category: 'unserver', level: 'debug', sinks: ['console'] },
+    { category: ['logtape', 'meta'], level: 'warning', sinks: ['console'] },
+  ],
+});
+
+export const log = getLogger(['unserver']);
 
 export const colorLog = (level: LogLevel, message: string) => {
   const out: { [key: string]: string } = {

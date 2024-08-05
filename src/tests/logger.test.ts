@@ -2,16 +2,10 @@ import type { Spy } from '@std/testing/mock';
 import { faker } from 'faker';
 import { Hono } from 'hono';
 import { assertEquals, assertGreater, assertNotEquals } from '@std/assert';
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  it,
-} from '@std/testing/bdd';
+import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
 import { assertSpyCalls, spy } from '@std/testing/mock';
-import { formatter, logger } from '~/middleware/logger.ts';
-import { colorLog, colorStatus, formatMsg } from '~/util/message.ts';
+import { logger } from '~/middleware/logger.ts';
+import { colorLog, colorStatus, formatMsg, formatter } from '~/util/logger.ts';
 import { createLogRecord, createMessageOptions } from '~/tests/logger_utils.ts';
 
 describe('Logger', () => {
@@ -168,21 +162,17 @@ describe('Logger', () => {
   });
 
   describe('Logger middleware', () => {
-    let app: Hono;
     let logSpy: Spy;
-
-    beforeAll(() => {
-      app = new Hono();
-      app.use('*', logger);
-      app.get('/', (c) => {
+    const app = new Hono()
+      .use('*', logger)
+      .get('/', (c) => {
         return c.text('Hello');
-      });
-      app.get('/:text', (c) => {
+      })
+      .get('/:text', (c) => {
         const text = c.req.param('text');
         if (text === 'json') return c.json({ message: text });
         return c.text(text);
       });
-    });
 
     beforeEach(() => {
       logSpy = spy(console, 'debug');

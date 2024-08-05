@@ -1,39 +1,5 @@
-import type { LogRecord } from 'logtape';
 import { createMiddleware } from 'hono/factory';
-import { colorLog, formatMsg } from '~/util/message.ts';
-import { configure, getConsoleSink, getLogger } from 'logtape';
-
-export const formatter = (record: LogRecord) => {
-  const time = new Date(record.timestamp).toLocaleString('en', {
-    hour12: false,
-    timeZone: 'Asia/Seoul',
-    timeZoneName: 'short',
-  });
-
-  const msg = colorLog(
-    record.level,
-    `${time} [${record.level.toUpperCase()}] ${
-      record.message[0] ? record.message + ' ' : ''
-    }${formatMsg(record.properties)}`,
-  );
-
-  return [
-    msg,
-  ];
-};
-
-await configure({
-  sinks: {
-    console: getConsoleSink({ formatter }),
-  },
-  filters: {},
-  loggers: [
-    { category: 'unserver', level: 'debug', sinks: ['console'] },
-    { category: ['logtape', 'meta'], level: 'warning', sinks: ['console'] },
-  ],
-});
-
-export const log = getLogger(['unserver']);
+import { log } from '~/util/logger.ts';
 
 export const logger = createMiddleware(async (c, next) => {
   const { method, path } = c.req;
