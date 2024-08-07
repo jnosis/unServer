@@ -5,7 +5,14 @@ import { assertEquals, assertGreater, assertNotEquals } from '@std/assert';
 import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
 import { assertSpyCalls, spy } from '@std/testing/mock';
 import { logger } from '~/middleware/logger.ts';
-import { colorLog, colorStatus, formatMsg, formatter } from '~/util/logger.ts';
+import {
+  colorLog,
+  colorStatus,
+  formatMsg,
+  formatter,
+  getKvSink,
+  recordKv,
+} from '~/util/logger.ts';
 import { createLogRecord, createMessageOptions } from '~/tests/logger_utils.ts';
 
 describe('Logger', () => {
@@ -185,6 +192,46 @@ describe('Logger', () => {
 
       assertNotEquals(formatted[7], '-');
       assertEquals(formatted[7], message);
+    });
+  });
+
+  describe('Kv Sink', () => {
+    type RecordMessage = { message: string; error: Error };
+    it('writes record on deno kv', async () => {
+      const sink = getKvSink();
+      const error = new Error('ERROR');
+      const record = createLogRecord({ level: 'error', properties: { error } });
+      sink(record);
+      const { value } = await recordKv.get<RecordMessage>([
+        'record',
+        'error',
+        record.timestamp,
+      ]);
+
+      assertEquals(value?.message, formatter(record)[0] + '\n\t');
+      assertEquals(value?.error, error);
+    });
+
+    it('writes record on deno kv with path', async () => {
+      const sink = getKvSink();
+      const options = createMessageOptions();
+      const error = new Error('ERROR');
+      const record = createLogRecord({
+        level: 'error',
+        properties: { ...options, error },
+      });
+      sink(record);
+      const { value } = await recordKv.get<RecordMessage>([
+        'record',
+        'error',
+        options.path,
+        record.timestamp,
+      ]);
+      const { message, error: recordedError } = value!;
+
+      assertEquals(message.split('-')[0], formatter(record)[0].split('-')[0]);
+      assertEquals(message.endsWith('\n\t'), true);
+      assertEquals(recordedError, error);
     });
   });
 
