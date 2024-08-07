@@ -4,51 +4,56 @@ import type { StorageError } from 'supabase/storage';
 import type { Supabase } from '~/supabase.ts';
 
 export type BcryptOptions = {
-  saltRound: number;
+  readonly saltRound: number;
 };
 
 export type CORSOptions = {
-  origin: string | string[] | ((origin: string) => string | undefined | null);
-  allowMethods?: string[];
-  allowHeaders?: string[];
-  maxAge?: number;
-  credentials?: boolean;
-  exposeHeaders?: string[];
+  readonly origin: string | string[] | ((origin: string) => string | undefined | null);
+  readonly allowMethods?: string[];
+  readonly allowHeaders?: string[];
+  readonly maxAge?: number;
+  readonly credentials?: boolean;
+  readonly exposeHeaders?: string[];
 };
 
 export type JoinOptions = {
-  apiKey: string;
-  deviceId: string;
+  readonly apiKey: string;
+  readonly deviceId: string;
 };
 
 export type JwtOptions = {
-  secretKey: string;
-  expiresInSec: number;
+  readonly secretKey: string;
+  readonly expiresInSec: number;
 };
 
 export type MongodbOptions = {
-  name: string;
-  host: string;
+  readonly name: string;
+  readonly host: string;
+};
+
+export type RecordOptions = {
+  readonly expireIn: number;
 };
 
 export type SupabaseOptions = {
-  url: string;
-  key: string;
-  serviceRole: string;
+  readonly url: string;
+  readonly key: string;
+  readonly serviceRole: string;
 };
 
 export type UploadOptions = {
-  maxFileSize: number;
+  readonly maxFileSize: number;
 };
 
 export type Config = {
-  bcrypt: BcryptOptions;
-  join: JoinOptions;
-  jwt: JwtOptions;
-  cors: CORSOptions;
-  mongodb: MongodbOptions;
-  supabase: SupabaseOptions;
-  upload: UploadOptions;
+  readonly bcrypt: BcryptOptions;
+  readonly join: JoinOptions;
+  readonly jwt: JwtOptions;
+  readonly cors: CORSOptions;
+  readonly mongodb: MongodbOptions;
+  readonly record: RecordOptions;
+  readonly supabase: SupabaseOptions;
+  readonly upload: UploadOptions;
 };
 
 type HonoResponse<T> = TypedResponse<T> | Promise<TypedResponse<T>>;
