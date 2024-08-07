@@ -3,6 +3,7 @@
     "allowJs": true,
     "strict": true
   },
+  "unstable": ["kv"],
   "lint": {
     "include": ["src/", "cli/"]
   },
@@ -33,6 +34,7 @@
   "tasks": {
     "start": "deno run --allow-net --allow-env --allow-read --env --watch ./src/app.ts",
     "test": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet --watch",
+    "test:logger": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet --watch ./src/tests/logger.test.ts",
     "test:detail": "deno test --allow-net --allow-env --allow-read --env=.env.test --no-check --watch",
     "test:coverage": "deno test --clean --coverage=./coverage --allow-net --allow-env --allow-read --env=.env.test --no-check --quiet",
     "cov": "deno coverage",
