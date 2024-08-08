@@ -5,7 +5,7 @@ import type {
   WorkInputData,
   WorkModel,
 } from '~/types.ts';
-import { throwError } from '~/middleware/error_handler.ts';
+import { throwError } from '~/helper/error.ts';
 
 export class WorkController implements IWorkController {
   #workRepository: WorkModel;

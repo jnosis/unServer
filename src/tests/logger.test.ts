@@ -4,11 +4,8 @@ import { Hono } from 'hono';
 import { assertEquals, assertGreater, assertNotEquals } from '@std/assert';
 import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
 import { assertSpyCalls, spy } from '@std/testing/mock';
-import {
-  errorHandler,
-  notFoundHandler,
-  throwError,
-} from '~/middleware/error_handler.ts';
+import { throwError } from '~/helper/error.ts';
+import { errorHandler, notFoundHandler } from '~/middleware/error_handler.ts';
 import { logger } from '~/middleware/logger.ts';
 import {
   colorLog,

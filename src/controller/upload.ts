@@ -1,6 +1,6 @@
 import type { Context } from 'hono';
 import type { AuthEnv, IUploadController, UploadModel } from '~/types.ts';
-import { throwError } from '~/middleware/error_handler.ts';
+import { throwError } from '~/helper/error.ts';
 
 export class UploadController implements IUploadController {
   #uploadRepository: UploadModel;

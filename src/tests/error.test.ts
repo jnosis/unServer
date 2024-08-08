@@ -2,11 +2,8 @@ import { faker } from 'faker';
 import { Hono } from 'hono';
 import { assertEquals } from '@std/assert';
 import { describe, it } from '@std/testing/bdd';
-import {
-  errorHandler,
-  notFoundHandler,
-  throwError,
-} from '~/middleware/error_handler.ts';
+import { throwError } from '~/helper/error.ts';
+import { errorHandler, notFoundHandler } from '~/middleware/error_handler.ts';
 
 describe('Error', () => {
   const app = new Hono();

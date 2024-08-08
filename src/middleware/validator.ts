@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 import * as v from 'valibot';
-import { throwError } from '~/middleware/error_handler.ts';
+import { throwError } from '~/helper/error.ts';
 
 export const validate = (schema: v.ObjectEntries) => {
   return createMiddleware(async (c, next) => {
