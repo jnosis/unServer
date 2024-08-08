@@ -1,5 +1,6 @@
 import type { LogLevel, LogRecord } from 'logtape';
 import { faker } from 'faker';
+import { recordKv } from '~/util/logger.ts';
 
 type MessageOptions = {
   method: string;
@@ -8,6 +9,14 @@ type MessageOptions = {
   start: number;
   message?: string;
 };
+
+export async function initRecordKv() {
+  const entries = recordKv.list({ prefix: ['record'] });
+
+  for await (const entry of entries) {
+    await recordKv.delete(entry.key);
+  }
+}
 
 export function createMessageOptions(): MessageOptions {
   return {
