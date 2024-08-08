@@ -8,7 +8,10 @@ export type BcryptOptions = {
 };
 
 export type CORSOptions = {
-  readonly origin: string | string[] | ((origin: string) => string | undefined | null);
+  readonly origin:
+    | string
+    | string[]
+    | ((origin: string) => string | undefined | null);
   readonly allowMethods?: string[];
   readonly allowHeaders?: string[];
   readonly maxAge?: number;
