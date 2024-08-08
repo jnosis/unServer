@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongo';
-import { log } from '~/util/logger.ts';
+import { log, recorder } from '~/util/logger.ts';
 import config from '~/config.ts';
 
 class Database {
@@ -31,6 +31,7 @@ try {
   log.info('MongoDB connected', { start });
 } catch (error) {
   log.error(error);
+  recorder.error(error, { error });
 }
 
 export default mongodb;
