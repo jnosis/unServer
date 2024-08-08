@@ -1,6 +1,9 @@
-import type { LogLevel, LogRecord } from 'logtape';
+import type { LogLevel, LogRecord, Sink } from 'logtape';
 import { configure, getConsoleSink, getLogger } from 'logtape';
 import { blue, bold, cyan, green, magenta, red, yellow } from '@std/fmt/colors';
+import config from '~/config.ts';
+
+const { record: { expireIn } } = config;
 
 export const formatter = (record: LogRecord) => {
   const time = new Date(record.timestamp).toLocaleString('en', {
@@ -21,18 +24,46 @@ export const formatter = (record: LogRecord) => {
   ];
 };
 
+export const recordKv = await Deno.openKv();
+
+export function getKvSink() {
+  const sink: Sink = (record: LogRecord) => {
+    const { timestamp } = record;
+    const { path, error } = record.properties;
+    const formatted = formatter(record);
+    const message = `${formatted}\n\t`;
+    if (path) {
+      recordKv.set(
+        ['record', record.level, path as string, timestamp],
+        { message, error },
+        { expireIn },
+      );
+    } else {
+      recordKv.set(
+        ['record', record.level, timestamp],
+        { message, error },
+        { expireIn },
+      );
+    }
+  };
+  return sink;
+}
+
 await configure({
   sinks: {
     console: getConsoleSink({ formatter }),
+    kv: getKvSink(),
   },
   filters: {},
   loggers: [
-    { category: 'unserver', level: 'debug', sinks: ['console'] },
+    { category: ['unserver', 'common'], level: 'debug', sinks: ['console'] },
+    { category: ['unserver', 'record'], level: 'error', sinks: ['kv'] },
     { category: ['logtape', 'meta'], level: 'warning', sinks: ['console'] },
   ],
 });
 
-export const log = getLogger(['unserver']);
+export const log = getLogger(['unserver', 'common']);
+export const recorder = getLogger(['unserver', 'record']);
 
 export const colorLog = (level: LogLevel, message: string) => {
   const out: { [key: string]: string } = {

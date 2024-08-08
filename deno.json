@@ -3,6 +3,7 @@
     "allowJs": true,
     "strict": true
   },
+  "unstable": ["kv"],
   "lint": {
     "include": ["src/", "cli/"]
   },

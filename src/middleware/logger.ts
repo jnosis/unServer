@@ -1,5 +1,5 @@
 import { createMiddleware } from 'hono/factory';
-import { log } from '~/util/logger.ts';
+import { log, recorder } from '~/util/logger.ts';
 
 export const logger = createMiddleware(async (c, next) => {
   const { method, path } = c.req;
@@ -17,5 +17,13 @@ export const logger = createMiddleware(async (c, next) => {
     log.debug('', { method, path, status, message, start });
   } else {
     log.error('', { method, path, status, message, start });
+    recorder.error('', {
+      method,
+      path,
+      status,
+      message,
+      start,
+      error: status === 404 ? new Error('not found') : c.error,
+    });
   }
 });

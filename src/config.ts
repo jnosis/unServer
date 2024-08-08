@@ -5,6 +5,7 @@ import type {
   JoinOptions,
   JwtOptions,
   MongodbOptions,
+  RecordOptions,
   SupabaseOptions,
   UploadOptions,
 } from '~/types.ts';
@@ -42,6 +43,10 @@ const mongodb: MongodbOptions = {
   host: required('DATABASE_HOST')!,
 };
 
+const record: RecordOptions = {
+  expireIn: parseInt(required('RECORD_EXPIRE_IN', '60000')),
+};
+
 const supabase: SupabaseOptions = {
   url: required('SUPABASE_URL')!,
   key: required('SUPABASE_KEY')!,
@@ -60,8 +65,9 @@ export const config: Config = {
   join,
   jwt,
   mongodb,
+  record,
   supabase,
   upload,
-};
+} as const;
 
 export default config;

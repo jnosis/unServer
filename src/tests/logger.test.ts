@@ -4,9 +4,27 @@ import { Hono } from 'hono';
 import { assertEquals, assertGreater, assertNotEquals } from '@std/assert';
 import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
 import { assertSpyCalls, spy } from '@std/testing/mock';
+import {
+  errorHandler,
+  notFoundHandler,
+  throwError,
+} from '~/middleware/error_handler.ts';
 import { logger } from '~/middleware/logger.ts';
-import { colorLog, colorStatus, formatMsg, formatter } from '~/util/logger.ts';
-import { createLogRecord, createMessageOptions } from '~/tests/logger_utils.ts';
+import {
+  colorLog,
+  colorStatus,
+  formatMsg,
+  formatter,
+  getKvSink,
+  recordKv,
+} from '~/util/logger.ts';
+import {
+  createLogRecord,
+  createMessageOptions,
+  initRecordKv,
+} from '~/tests/logger_utils.ts';
+
+type RecordMessage = { message: string; error: Error };
 
 describe('Logger', () => {
   describe('Util', () => {
@@ -188,21 +206,72 @@ describe('Logger', () => {
     });
   });
 
+  describe('Kv Sink', () => {
+    beforeEach(async () => {
+      await initRecordKv();
+    });
+
+    it('writes record on deno kv', async () => {
+      const sink = getKvSink();
+      const error = new Error('ERROR');
+      const record = createLogRecord({ level: 'error', properties: { error } });
+      sink(record);
+      const { value } = await recordKv.get<RecordMessage>([
+        'record',
+        'error',
+        record.timestamp,
+      ]);
+
+      assertEquals(value?.message, formatter(record)[0] + '\n\t');
+      assertEquals(value?.error, error);
+    });
+
+    it('writes record on deno kv with path', async () => {
+      const sink = getKvSink();
+      const options = createMessageOptions();
+      const error = new Error('ERROR');
+      const record = createLogRecord({
+        level: 'error',
+        properties: { ...options, error },
+      });
+      sink(record);
+      const { value } = await recordKv.get<RecordMessage>([
+        'record',
+        'error',
+        options.path,
+        record.timestamp,
+      ]);
+      const { message, error: recordedError } = value!;
+
+      assertEquals(message.split('-')[0], formatter(record)[0].split('-')[0]);
+      assertEquals(message.endsWith('\n\t'), true);
+      assertEquals(recordedError, error);
+    });
+  });
+
   describe('Logger middleware', () => {
     let logSpy: Spy;
     const app = new Hono()
       .use('*', logger)
+      .notFound(notFoundHandler)
+      .onError(errorHandler)
       .get('/', (c) => {
         return c.text('Hello');
       })
-      .get('/:text', (c) => {
-        const text = c.req.param('text');
-        if (text === 'json') return c.json({ message: text });
-        return c.text(text);
+      .get('/route/text', (c) => {
+        return c.text('text');
+      })
+      .get('/route/json', (c) => {
+        return c.json({ message: 'json' });
+      })
+      .get('/error/:error', (c) => {
+        const error = c.req.param('error');
+        return error === 'notfound' ? c.notFound() : throwError(500, error);
       });
 
-    beforeEach(() => {
+    beforeEach(async () => {
       logSpy = spy(console, 'debug');
+      await initRecordKv();
     });
 
     afterEach(() => {
@@ -219,8 +288,8 @@ describe('Logger', () => {
     });
 
     it('checks content type', async () => {
-      const text = await app.request('/text', { method: 'get' });
-      const json = await app.request('/json', { method: 'get' });
+      const text = await app.request('route/text', { method: 'get' });
+      const json = await app.request('route/json', { method: 'get' });
 
       assertEquals(text.status, 200);
       assertEquals(json.status, 200);
@@ -240,6 +309,44 @@ describe('Logger', () => {
         true,
       );
       assertEquals(jsonArgs.length, 10);
+    });
+
+    it('records error when not found', async () => {
+      await app.request('/error/notfound', { method: 'get' });
+
+      const entries = recordKv.list<RecordMessage>({
+        prefix: ['record', 'error'],
+      });
+
+      for await (const entry of entries) {
+        const { message, error } = entry.value;
+        assertEquals(message.endsWith('\n\t'), true);
+        assertEquals(error.message, 'not found');
+      }
+    });
+
+    it('records error when error has occurred', async () => {
+      let cnt = 0;
+      let errors: string[] = [];
+      while (cnt < Math.floor(Math.random() * 5) + 1) {
+        const error = faker.word.sample();
+        errors = [...errors, error];
+        await app.request(`/error/${error}`, { method: 'get' });
+        cnt++;
+      }
+
+      const entries = recordKv.list<RecordMessage>({
+        prefix: ['record', 'error'],
+      });
+
+      let length = 0;
+      for await (const entry of entries) {
+        const { message, error } = entry.value;
+        assertEquals(message.endsWith('\n\t'), true);
+        assertEquals(errors.includes(error.message), true);
+        length++;
+      }
+      assertEquals(length, cnt);
     });
   });
 });
