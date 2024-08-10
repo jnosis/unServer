@@ -43,7 +43,7 @@ export class UploadController implements IUploadController {
       if (error.message === 'Object not found') {
         return throwError(404, `File(${path}) not found`);
       }
-      return throwError(500, `File(${path}) could not update`);
+      return throwError(500, `File(${path}): ${error.message}`);
     }
 
     return c.json(updated, 200);
@@ -60,7 +60,7 @@ export class UploadController implements IUploadController {
       if (error.message === 'Object not found') {
         return throwError(404, `File(${path}) not found`);
       }
-      return throwError(500, error.message);
+      return throwError(500, `File(${path}): ${error.message}`);
     }
 
     return c.body(null, 204);
