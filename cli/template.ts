@@ -11,7 +11,7 @@ import type {
   ${Name}InputData,
   ${Name}Model,
 } from '~/types.ts';
-import { throwError } from '~/middleware/error_handler.ts';
+import { throwError } from '~/helper/error.ts';
 
 export class ${Name}Controller implements I${Name}Controller {
   #${name}Repository: ${Name}Model
@@ -91,24 +91,23 @@ export const routerTemplate = (
   const Name = name.replace(/\b[a-z]/, (letter) => letter.toUpperCase());
   const routers = Object.keys(endpoints).map((method) =>
     endpoints[method].map((endpoint) =>
-      `${name}.${method.toLowerCase()}('${endpoint}', ${name}Controller);`
+      `.${method.toLowerCase()}('${endpoint}', ${name}Controller)`
     )
-  ).flat().join('\n  ');
+  ).flat().join('\n   ');
 
   return `import type { I${Name}Controller } from '~/types.ts';
   import { Hono } from 'hono';
-import { z } from 'zod';
+import * as v from 'valibot';
 import { isAuth } from '~/middleware/auth.ts';
 import { validate } from '~/middleware/validator.ts';
-
-const ${name} = new Hono();
 
 const validate${Name} = validate({});
 
 export default function ${name}Router(${name}Controller: I${Name}Controller) {
-  ${routers}
+  const ${name} = new Hono()
+    ${routers}
 
-  return router;
+  return ${name};
 }
 `;
 };
