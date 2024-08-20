@@ -250,6 +250,7 @@
     "https://deno.land/x/zod@v3.22.4/mod.ts": "64e55237cb4410e17d968cd08975566059f27638ebb0b86048031b987ba251c4",
     "https://deno.land/x/zod@v3.22.4/types.ts": "724185522fafe43ee56a52333958764c8c8cd6ad4effa27b42651df873fc151e",
     "https://esm.sh/@faker-js/faker@v8.4.1": "21d589a68f956f90bcf4031bc6f26f5a5c531ca4bd798e16ec33094ea6560bce",
+    "https://esm.sh/@supabase/storage-js@2.5.5": "7d9a0b7aa7918a05f5cab4fe014a0322b8aca37b7137adf80156a30941dfdb80",
     "https://esm.sh/@supabase/supabase-js@2.43.4": "b6163f4f90c7018f43fdd9bab1b7ef5bcbb74114352de77dfbc49e53e23a0174",
     "https://esm.sh/v135/@faker-js/faker@8.4.1/denonext/faker.mjs": "bf2af6fc7f2660f80df3c0fda1185082478ef84a73b1aa27ea761977f6fd8426",
     "https://esm.sh/v135/@supabase/auth-js@2.64.2/denonext/auth-js.mjs": "f87ccfa4e23123f7ab122f814fa37ce26c00457a3e32cea718a726d72fec1f37",
