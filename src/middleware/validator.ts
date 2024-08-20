@@ -9,9 +9,7 @@ export const validate = (schema: v.ObjectEntries) => {
 
     const result = await v.safeParseAsync(
       validation,
-      isFormData(contentType || '')
-        ? await c.req.parseBody()
-        : await c.req.json(),
+      isFormData(contentType) ? await c.req.parseBody() : await c.req.json(),
     );
 
     if (!result.success) {
@@ -22,6 +20,6 @@ export const validate = (schema: v.ObjectEntries) => {
   });
 };
 
-function isFormData(contentType: string): boolean {
+function isFormData(contentType: string = ''): boolean {
   return contentType.includes('multipart/form-data');
 }
