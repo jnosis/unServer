@@ -22,7 +22,7 @@
     "faker": "https://esm.sh/@faker-js/faker@v8.4.1",
     "hono": "jsr:@hono/hono@4.4.6",
     "joinjoaomgcd": "jsr:@unface/joinjoaomgcd@1.0.1",
-    "logtape": "jsr:@logtape/logtape@0.4.2",
+    "logtape": "jsr:@logtape/logtape@0.6.3",
     "mongo": "https://deno.land/x/mongo@v0.32.0/mod.ts",
     "supabase": "https://esm.sh/@supabase/supabase-js@2.43.4",
     "supabase/storage": "https://esm.sh/@supabase/storage-js@2.5.5",
