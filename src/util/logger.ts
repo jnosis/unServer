@@ -19,9 +19,7 @@ export const formatter = (record: LogRecord) => {
     }${formatMsg(record.properties)}`,
   );
 
-  return [
-    msg,
-  ];
+  return msg;
 };
 
 export const recordKv = await Deno.openKv();

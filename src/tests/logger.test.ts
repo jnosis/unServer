@@ -157,7 +157,7 @@ describe('Logger', () => {
     it('General log without start', () => {
       const msg = faker.word.sample();
       const record = createLogRecord({ message: [msg] });
-      const formatted = formatter(record)[0].split(' ');
+      const formatted = formatter(record).split(' ');
 
       assertEquals(formatted[0].split('/').length, 3);
       assertEquals(formatted[1].split(':').length, 3);
@@ -174,7 +174,7 @@ describe('Logger', () => {
         message: [msg],
         properties: { start },
       });
-      const formatted = formatter(record)[0].split(' ');
+      const formatted = formatter(record).split(' ');
 
       assertEquals(formatted[5], '-');
       assertEquals(formatted[6].slice(-2), 'ms');
@@ -183,7 +183,7 @@ describe('Logger', () => {
     it('Router Log without message', () => {
       const options = createMessageOptions();
       const record = createLogRecord({ level: 'debug', properties: options });
-      const formatted = formatter(record)[0].split(' ');
+      const formatted = formatter(record).split(' ');
 
       assertEquals(formatted[4], options.method);
       assertEquals(formatted[5], options.path);
@@ -196,7 +196,7 @@ describe('Logger', () => {
       const options = createMessageOptions();
       const message = faker.word.sample();
       const record = createLogRecord({ properties: { ...options, message } });
-      const formatted = formatter(record)[0].split(' ');
+      const formatted = formatter(record).split(' ');
 
       assertNotEquals(formatted[7], '-');
       assertEquals(formatted[7], message);
@@ -219,7 +219,7 @@ describe('Logger', () => {
         record.timestamp,
       ]);
 
-      assertEquals(value?.message, formatter(record)[0] + '\n\t');
+      assertEquals(value?.message, formatter(record) + '\n\t');
       assertEquals(value?.error, error);
     });
 
@@ -240,7 +240,7 @@ describe('Logger', () => {
       ]);
       const { message, error: recordedError } = value!;
 
-      assertEquals(message.split('-')[0], formatter(record)[0].split('-')[0]);
+      assertEquals(message.split('-')[0], formatter(record).split('-')[0]);
       assertEquals(message.endsWith('\n\t'), true);
       assertEquals(recordedError, error);
     });
