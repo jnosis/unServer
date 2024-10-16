@@ -39,7 +39,7 @@ export class UploadController implements IUploadController {
     const { data: updated, error } = await this.#uploadRepository
       .update(path, { file, path }, isAuth);
 
-    if (error) {
+    if (!updated) {
       if (error.message === 'Object not found') {
         return throwError(404, `File(${path}) not found`);
       }
