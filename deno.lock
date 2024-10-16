@@ -8,7 +8,7 @@
     "jsr:@cliffy/keycode@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/prompt@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/table@1.0.0-rc.7": "1.0.0-rc.7",
-    "jsr:@hono/hono@4.4.6": "4.4.6",
+    "jsr:@hono/hono@4.6.5": "4.6.5",
     "jsr:@logtape/logtape@0.6.3": "0.6.3",
     "jsr:@std/assert@1.0.6": "1.0.6",
     "jsr:@std/assert@^1.0.6": "1.0.6",
@@ -81,8 +81,8 @@
         "jsr:@std/fmt@~1.0.2"
       ]
     },
-    "@hono/hono@4.4.6": {
-      "integrity": "aa557ca9930787ee86b9ca1730691f1ce1c379174c2cb244d5934db2b6314453"
+    "@hono/hono@4.6.5": {
+      "integrity": "68efe4a0ab7c4fb082cb71aa894a25e1c6cfad6d124dc943471e6758a7a1bdee"
     },
     "@logtape/logtape@0.6.3": {
       "integrity": "64cac3459fddf0455b85d36c8ca3e21764d6b2965c426fb40a0e4a98be436d2b"
@@ -252,7 +252,7 @@
     "dependencies": [
       "jsr:@cliffy/command@1.0.0-rc.7",
       "jsr:@cliffy/prompt@1.0.0-rc.7",
-      "jsr:@hono/hono@4.4.6",
+      "jsr:@hono/hono@4.6.5",
       "jsr:@logtape/logtape@0.6.3",
       "jsr:@std/assert@1.0.6",
       "jsr:@std/fmt@1.0.2",
