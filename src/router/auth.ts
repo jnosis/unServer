@@ -1,4 +1,4 @@
-import type { IUserController } from '~/types.ts';
+import type { AuthEnv, IUserController } from '~/types.ts';
 import { Hono } from 'hono';
 import * as v from 'valibot';
 import { isAuth } from '~/middleware/auth.ts';
@@ -18,7 +18,7 @@ const validateSignup = [
 ];
 
 export default function userRouter(userController: IUserController) {
-  const auth = new Hono()
+  const auth = new Hono<AuthEnv>()
     .post('/signup', ...validateSignup, userController.signup)
     .post('/login', validateCredential, userController.login)
     .post('/logout', userController.logout)

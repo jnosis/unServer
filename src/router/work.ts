@@ -1,4 +1,4 @@
-import type { IWorkController } from '~/types.ts';
+import type { AuthEnv, IWorkController } from '~/types.ts';
 import { Hono } from 'hono';
 import * as v from 'valibot';
 import { isAuth } from '~/middleware/auth.ts';
@@ -24,7 +24,7 @@ const validateWork = validate({
 });
 
 export default function workRouter(workController: IWorkController) {
-  const work = new Hono()
+  const work = new Hono<AuthEnv>()
     .get('/', workController.getAll)
     .get('/:id', workController.getByTitle)
     .post('/', isAuth, validateWork, workController.add)

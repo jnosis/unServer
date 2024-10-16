@@ -16,7 +16,7 @@ type API<
 // deno-lint-ignore no-explicit-any
 type AnyAPI = API<AuthEnv, any, any>;
 
-const hono = new Hono();
+const hono = new Hono<AuthEnv>();
 
 export default function apiRouter(apis: Array<API | AnyAPI>) {
   const endPoints: { [path: string]: string[] } = {};

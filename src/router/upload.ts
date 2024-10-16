@@ -1,4 +1,4 @@
-import type { IUploadController } from '~/types.ts';
+import type { AuthEnv, IUploadController } from '~/types.ts';
 import { Hono } from 'hono';
 import { format } from '@std/fmt/bytes';
 import * as v from 'valibot';
@@ -31,7 +31,7 @@ const validateUpload = validate({
 });
 
 export default function uploadRouter(uploadController: IUploadController) {
-  const upload = new Hono()
+  const upload = new Hono<AuthEnv>()
     .post('/', isAuth, validateUpload, uploadController.upload)
     .put('/*', isAuth, validateUpload, uploadController.update)
     .delete('/*', isAuth, uploadController.delete);

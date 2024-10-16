@@ -74,8 +74,8 @@ export type AuthEnv = {
 
 export type UserPath = 'signup' | 'login' | 'logout' | 'me';
 export interface IUserController extends IController<UserPath> {
-  signup: Handler<Env, string, Input, HonoResponse<AuthToken>>;
-  login: Handler<Env, string, Input, HonoResponse<AuthToken>>;
+  signup: Handler<AuthEnv, string, Input, HonoResponse<AuthToken>>;
+  login: Handler<AuthEnv, string, Input, HonoResponse<AuthToken>>;
   logout: Handler;
   me: Handler<AuthEnv, string, Input, HonoResponse<AuthToken>>;
 }
