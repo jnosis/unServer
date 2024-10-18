@@ -27,7 +27,7 @@ export const isAuth = async (c: Context<AuthEnv>, next: Next) => {
 
   try {
     const decoded = await verifyJwtToken(token);
-    const user = await userRepository.findById(decoded.id);
+    const user = await userRepository.findById(decoded.id as string);
     if (!user) {
       return throwError(AUTH_ERROR.status, AUTH_ERROR.message);
     }

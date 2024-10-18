@@ -12,7 +12,7 @@ export async function createJwtToken(id: string) {
 export async function verifyJwtToken(token: string) {
   try {
     return await verify(token, jwt.secretKey, 'HS512');
-  } catch (e) {
-    return e;
+  } catch (_) {
+    return { id: undefined };
   }
 }
