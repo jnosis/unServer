@@ -21,7 +21,7 @@
     "bcrypt": "https://deno.land/x/bcrypt@v0.4.1/mod.ts",
     "faker": "https://esm.sh/@faker-js/faker@v8.4.1",
     "hono": "jsr:@hono/hono@4.6.13",
-    "joinjoaomgcd": "jsr:@unface/joinjoaomgcd@1.0.1",
+    "joinjoaomgcd": "jsr:@unface/joinjoaomgcd@1.0.2",
     "logtape": "jsr:@logtape/logtape@0.8.0",
     "mongo": "https://deno.land/x/mongo@v0.32.0/mod.ts",
     "supabase": "https://esm.sh/@supabase/supabase-js@2.43.4",
