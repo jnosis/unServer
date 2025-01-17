@@ -30,8 +30,11 @@ try {
   await mongodb.connect();
   log.info('MongoDB connected', { start });
 } catch (error) {
-  log.error(error);
-  recorder.error(error, { error });
+  const message = error instanceof Error
+    ? error.message
+    : 'Unknown error in MongoDB connection';
+  log.error(message);
+  recorder.error(message, { error });
 }
 
 export default mongodb;
