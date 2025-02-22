@@ -4,6 +4,7 @@ import type {
   UploadData,
   UploadModel,
 } from '~/types.ts';
+import { StorageError } from 'supabase/storage';
 import { supabase, supabaseWithAuth } from '~/supabase.ts';
 
 class UploadRepository implements UploadModel {
@@ -31,6 +32,12 @@ class UploadRepository implements UploadModel {
   }
 
   async update(path: string, upload: UploadData, isAuth?: boolean) {
+    const { data: isExist } = await this.#getSupabase(isAuth)
+      .exists(path);
+    if (!isExist) {
+      return { data: null, error: new StorageError('Object not found') };
+    }
+
     const { data, error } = await this.#getSupabase(isAuth)
       .update(path, upload.file);
     if (data) return { data: { path, name: upload.file.name }, error: null };
@@ -38,12 +45,15 @@ class UploadRepository implements UploadModel {
   }
 
   async remove(path: string, isAuth?: boolean) {
-    const { error } = await this.download(path, { isAuth });
-    if (error) return { data: null, error };
+    const { data: isExist } = await this.#getSupabase(isAuth)
+      .exists(path);
+    if (!isExist) {
+      return { data: null, error: new StorageError('Object not found') };
+    }
     const { data: d } = await this.#getSupabase(isAuth)
       .remove([path]);
     const data = d ? d.length : 0;
-    return { data, error };
+    return { data, error: null };
   }
 
   #getSupabase(isAuth?: boolean) {

@@ -1,5 +1,5 @@
-import { createClient } from 'supabase';
 import type { Database } from '~/types.ts';
+import { createClient } from 'supabase';
 import config from '~/config.ts';
 
 export const supabase = createClient<Database>(
