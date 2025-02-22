@@ -39,6 +39,7 @@ deno task create --create-router
 
 ### TODO
 
+- Add router error logs
 - Fix a issue where work title could not be changed
 - Add image loader to supabase
 - Migrate cloudinary to supabase storage
