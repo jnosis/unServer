@@ -3,6 +3,10 @@ import type { ObjectId } from 'mongo';
 import type { StorageError } from 'supabase/storage';
 import type { Supabase } from '~/supabase.ts';
 
+export type ServerOptions = {
+  readonly name: string;
+};
+
 export type BcryptOptions = {
   readonly saltRound: number;
 };
@@ -49,6 +53,7 @@ export type UploadOptions = {
 };
 
 export type Config = {
+  readonly server: ServerOptions;
   readonly bcrypt: BcryptOptions;
   readonly join: JoinOptions;
   readonly jwt: JwtOptions;

@@ -28,7 +28,7 @@ app.notFound(notFoundHandler);
 app.onError(errorHandler);
 
 app.get('/', (c) => {
-  return c.text('Welcome to unServer');
+  return c.text(`Welcome to ${config.server.name}`);
 });
 
 app.route(
@@ -48,6 +48,6 @@ app.route(
 Deno.serve({
   port: 3000,
   onListen: ({ hostname, port }) => {
-    log.info(`Server running on ${hostname}:${port}`, { start });
+    log.info(`${config.server.name} running on ${hostname}:${port}`, { start });
   },
 }, app.fetch);

@@ -26,7 +26,7 @@ async function sendErrorToDevice(c: Context, message: string, status: number) {
   const { method, path } = c.req;
   await joinjoaomgcd.sendPush({
     deviceId: config.join.deviceId,
-    title: `unServer Error on ${method} ${path} ${status}`,
+    title: `${config.server.name} Error on ${method} ${path} ${status}`,
     text: message,
   });
 }
